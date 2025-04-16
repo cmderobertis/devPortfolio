@@ -36,8 +36,8 @@ const Navbar = () => {
                     experience
                   </a>
                 </li>
-                <NavLink className="navbar-brand text-center" to={"/pages/projects"}>
-                  <h2 className="fw-bold mb-0">Cameron De Robertis</h2>
+                <NavLink className="nav-item text-end" to={"/projects"}>
+                  <a className="nav-link">projects</a>
                 </NavLink>
                 <li className="nav-item text-end">
                   <button className="btn btn-info">contact</button>

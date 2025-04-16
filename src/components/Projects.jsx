@@ -8,27 +8,27 @@ const projects = [
     title: 'Project 1',
     description: 'A short description of Project 1.',
     images: [
-      'https://source.unsplash.com/random/800x600?sig=1',
-      'https://source.unsplash.com/random/800x600?sig=2',
-      'https://source.unsplash.com/random/800x600?sig=3',
+      'https://github.com/cmderobertis/cmderobertis/blob/main/demo-filesystem.gif',
+      'https://loremflickr.com/420/240?random=2',
+      'https://loremflickr.com/320/240?random=3',
     ],
   },
   {
     title: 'Project 2',
     description: 'A short description of Project 2.',
     images: [
-      'https://source.unsplash.com/random/800x600?sig=4',
-      'https://source.unsplash.com/random/800x600?sig=5',
-      'https://source.unsplash.com/random/800x600?sig=6',
+      'https://loremflickr.com/320/240?random=1',
+      'https://loremflickr.com/420/240?random=2',
+      'https://loremflickr.com/320/240?random=3',
     ],
   },
   {
     title: 'Project 3',
     description: 'A short description of Project 3.',
     images: [
-      'https://source.unsplash.com/random/800x600?sig=7',
-      'https://source.unsplash.com/random/800x600?sig=8',
-      'https://source.unsplash.com/random/800x600?sig=9',
+      'https://loremflickr.com/320/240?random=1',
+      'https://loremflickr.com/420/240?random=2',
+      'https://loremflickr.com/320/240?random=3',
     ],
   },
 ];
@@ -57,7 +57,7 @@ const ProjectCarousel = ({ images }) => {
 
 const Projects = () => {
   return (
-    <div>
+    <div className='container-lg'>
       <h1 className="text-3xl font-bold text-center my-8">My Projects</h1>
       {projects.map((project, index) => (
         <div key={index} className="mb-12">
