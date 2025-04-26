@@ -36,12 +36,14 @@ const Navbar = () => {
                     experience
                   </a>
                 </li>
-                <NavLink className="nav-item text-end" to={"/projects"}>
-                  <a className="nav-link">projects</a>
+                <NavLink className="nav-item text-end" to={"/sim-interactive"}>
+                  {/* Keep NavLink wrapping the li content for consistency if needed, or simplify */}
+                  <span className="nav-link">stuff</span> 
                 </NavLink>
-                <li className="nav-item text-end">
-                  <button className="btn btn-info">contact</button>
-                </li>
+                <a className="nav-item btn btn-info text-light ms-3 text-end" href="mailto:cmderobertis@gmail.com">
+                  {/* Replace button with NavLink */}
+                  contact
+                </a>
               </ul>
             </div>
           </div>
