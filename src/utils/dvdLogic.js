@@ -5,15 +5,15 @@ export const logoHeight = 100;
 // DVD Logo SVG path data (simplified for Path2D)
 export const dvdLogoPath = [
     // Outer shape
-    "M40,0 L120,0 C140,0 160,20 160,40 L160,60 C160,80 140,100 120,100 L40,100 C20,100 0,80 0,60 L0,40 C0,20 20,0 40,0 Z",
+    "M40,0 C60,0 100,0 120,0 L120,0 C140,0 160,20 160,40 L160,60 C160,80 140,100 120,100 L40,100 C20,100 0,80 0,60 L0,40 C0,20 20,0 40,0 Z",
     // Inner cutout - Note: Path2D doesn't directly support cutouts like SVG fill-rules.
     // We'll handle this by drawing the outer path, then the inner path with background color, or using compositing.
     // For simplicity here, we might just draw the outer path and simulate the look.
     // Or, draw outer, then draw inner with background color (less robust).
     // Let's stick to drawing the outer shape and text separately if needed.
-    // "M50,20 L110,20 C120,20 130,30 130,40 L130,60 C130,70 120,80 110,80 L50,80 C40,80 30,70 30,60 L30,40 C30,30 40,20 50,20 Z",
+     "M50,20 L110,20 C120,20 130,30 130,40 L130,60 C130,70 120,80 110,80 L50,80 C40,80 30,70 30,60 L30,40 C30,30 40,20 50,20 Z",
     // "DVD" letters - This is complex to draw directly. We'll omit for simplicity or draw simple text.
-    // "M65,35 L65,65 L75,65 L75,50 L90,65 L100,65 L100,35 L90,35 L90,50 L75,35 Z"
+     "M65,35 L65,65 L75,65 L75,50 L90,65 L100,65 L100,35 L90,35 L90,50 L75,35 Z"
 ];
 
 // Colors for the DVD logo
@@ -107,19 +107,28 @@ export function createNewLogo(canvasWidth, canvasHeight, baseSpeed) {
 
 // Helper function to lighten or darken a color
 export function shadeColor(color, percent) {
-    let R = parseInt(color.substring(1,3), 16);
-    let G = parseInt(color.substring(3,5), 16);
-    let B = parseInt(color.substring(5,7), 16);
+    let R, G, B;
+
+    if (typeof color === 'string' && color.startsWith('#')) {
+        R = parseInt(color.substring(1, 3), 16);
+        G = parseInt(color.substring(3, 5), 16);
+        B = parseInt(color.substring(5, 7), 16);
+    } else if (Array.isArray(color) && color.length === 3) {
+        [R, G, B] = color;
+    } else {
+        throw new Error("Invalid color format. Expected hex string or an array of 3 RGB values.");
+    }
 
     R = parseInt(String(R * (100 + percent) / 100), 10);
     G = parseInt(String(G * (100 + percent) / 100), 10);
     B = parseInt(String(B * (100 + percent) / 100), 10);
 
     R = Math.min(255, Math.max(0, R));
-        G = Math.min(255, Math.max(0, G));
-        B = Math.min(255, Math.max(0, B));
-    
-        const RR = R.toString(16).padStart(2, '0');
+    G = Math.min(255, Math.max(0, G));
+    B = Math.min(255, Math.max(0, B));
+
+    // Return as hex string for now, can adapt if needed
+    const RR = R.toString(16).padStart(2, '0');
         const GG = G.toString(16).padStart(2, '0');
         const BB = B.toString(16).padStart(2, '0');
     

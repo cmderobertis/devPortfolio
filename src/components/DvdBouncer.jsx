@@ -220,7 +220,8 @@ const DvdBouncer = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         let currentMaxSpeed = 0;
-        const nextLogos = logosRef.current.map(logo => {
+        const logosAfterProcessing = [];
+        logosRef.current.forEach(logo => { // Iterate over the current logos
             let { x, y, vx, vy, color, width, height, scale } = logo;
 
             let nextX = x + vx;
@@ -280,13 +281,28 @@ const DvdBouncer = () => {
             if (!didBounce) {
                 x = nextX;
                 y = nextY;
+            } else {
+                if (width >= canvas.width) {
+                    // Logo became wider than canvas - split it
+                    const centerX = x + width / 2; // Use the original logo's center
+                    const centerY = y + height / 2; // Use the original logo's center
+                    // Create two new logos at the center of the old one
+                    logosAfterProcessing.push(createNewLogo(canvas.width, canvas.height, baseSpeed, centerX, centerY));
+                    logosAfterProcessing.push(createNewLogo(canvas.width, canvas.height, baseSpeed, centerX, centerY));
+                    return; // Skip adding the old logo to logosAfterProcessing
+                } else if (height >= canvas.height) {
+                    // Logo became taller than canvas - split it
+                    const centerX = x + width / 2;
+                    const centerY = y + height / 2;
+                    logosAfterProcessing.push(createNewLogo(canvas.width, canvas.height, baseSpeed, centerX, centerY));
+                    logosAfterProcessing.push(createNewLogo(canvas.width, canvas.height, baseSpeed, centerX, centerY));
+                    return; // Skip adding the old logo to logosAfterProcessing
+                }
             }
 
             if (Math.abs(vx) < 0.1 && Math.abs(vy) < 0.1) {
-                 vx = (vx >= 0 ? 0.1 : -0.1) * baseSpeed;
-                 vy = (vy >= 0 ? 0.1 : -0.1) * baseSpeed;
+                // No code here, but keeping the block for structure
             }
-
              x = Math.max(0, Math.min(x, canvas.width - width));
              y = Math.max(0, Math.min(y, canvas.height - height));
 
@@ -299,14 +315,16 @@ const DvdBouncer = () => {
             // Use the simplified drawing function (which now has access to top-level constants)
             drawSimplifiedLogo(ctx, { ...logo, x, y, color, width, height });
 
-            return { ...logo, x, y, vx, vy, color, width, height, scale };
-        });
+            // If the logo wasn't replaced, add it to the next frame's logos
+            logosAfterProcessing.push({ ...logo, x, y, vx, vy, color, width, height, scale });
+        }); // Added closing bracket for forEach
 
-        logosRef.current = nextLogos;
+        // Update the logos reference with the processed logos
+        logosRef.current = logosAfterProcessing;
         setMaxSpeed(prevMax => Math.max(prevMax, currentMaxSpeed));
 
         animationFrameId.current = requestAnimationFrame(animate);
-    }, [speedMultiplier, growthMultiplier, baseSpeed, angleVariation, maxSpeed, showToast, createParticles, createImpactFlash, getNextColor]); // Removed logoWidth, logoHeight dependency
+    }, [angleVariation, createImpactFlash, createParticles, growthMultiplier, maxSpeed, showToast, speedMultiplier, baseSpeed]); // Added missing dependencies
 
     useEffect(() => {
         animationFrameId.current = requestAnimationFrame(animate);
@@ -378,7 +396,7 @@ const DvdBouncer = () => {
          handleButtonPress(e);
          setControlsVisible(!controlsVisible);
          showToast(controlsVisible ? '🎮 Controls hidden' : '🎮 Controls visible');
-    }
+    };
 
     return (
         <div className="dvd-bouncer-container">

@@ -7,6 +7,8 @@
     background-color: #282c34; /* Softer dark background */
     touch-action: none;
     display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100vh;
     width: 100vw;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Cleaner font */
@@ -16,13 +18,13 @@
 
 .dvd-canvas {
     display: block;
-    width: 100%;
-    height: 100%;
+    width: 80%;
+    height: 80%;
     touch-action: none;
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: auto;
     z-index: 1;
+    border-color: #33444c;
+    border-style: solid;
 }
 
 /* Effect Containers (Keep structure, visuals simplified below) */
@@ -90,7 +92,7 @@
     grid-column: 1 / 2;
 }
 
-/* Modern Slider Styles */
+/* Modern Slider Styles deepen background*/
 .control-group input[type="range"] {
     grid-column: 2 / 3;
     -webkit-appearance: none;
@@ -342,7 +344,7 @@
 /* Simplified Ripple Effect */
 .ripple.simple {
     border-radius: 50%;
-    /* background: radial-gradient(circle, rgba(0, 255, 255, 0.4) 0%, rgba(255, 0, 255, 0) 70%); */
+    /* background: radial-gradient(circle, rgba(0, 255, 255, 0.4) 0%, rgba(255, 0, 255, 0) 70%);
     border: 2px solid rgba(255, 255, 255, 0.5); /* Simple border */
     background: none;
     animation: ripple-effect-simple 0.7s ease-out forwards;
