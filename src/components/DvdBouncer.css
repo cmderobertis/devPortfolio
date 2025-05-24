@@ -1,0 +1,390 @@
+
+/* Base Container & Canvas */
+.dvd-bouncer-container {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #282c34; /* Softer dark background */
+    touch-action: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Cleaner font */
+    position: relative;
+    color: #f1f1f1; /* Light text color */
+}
+
+.dvd-canvas {
+    display: block;
+    width: 80%;
+    height: 80%;
+    touch-action: none;
+    position: auto;
+    z-index: 1;
+    border-color: #33444c;
+    border-style: solid;
+}
+
+/* Effect Containers (Keep structure, visuals simplified below) */
+.particle-container,
+.ripple-container,
+.flash-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 50;
+}
+.flash-container { z-index: 40; }
+.particle-container { z-index: 50; }
+.ripple-container { z-index: 60; }
+
+/* Controls Panel */
+#controls {
+    position: fixed;
+    bottom: 20px;
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Center horizontally */
+    color: #f1f1f1;
+    background-color: rgba(40, 44, 52, 0.85); /* Match background, slightly transparent */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    padding: 15px 20px;
+    border-radius: 12px; /* Modern radius */
+    z-index: 100;
+    font-size: 13px; /* Slightly smaller font */
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Reduced gap */
+    max-width: 350px; /* Limit width */
+    width: 90%; /* Responsive width */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Softer shadow */
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.4s ease;
+    opacity: 1;
+}
+
+#controls.hidden {
+    transform: translateX(-50%) translateY(calc(100% + 30px));
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Control Group Layout */
+.control-group {
+    display: grid; /* Use grid for better alignment */
+    grid-template-columns: auto 1fr auto auto; /* Label | Slider | Value | Icon */
+    align-items: center;
+    gap: 10px; /* Space between elements */
+    width: 100%;
+}
+
+.control-label {
+    font-weight: 500;
+    text-align: left;
+    white-space: nowrap;
+    color: #aaa; /* Dim label color */
+    grid-column: 1 / 2;
+}
+
+/* Modern Slider Styles deepen background*/
+.control-group input[type="range"] {
+    grid-column: 2 / 3;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px; /* Slimmer track */
+    background: #4a505a; /* Darker track background */
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+/* Slider Track Hover */
+.control-group input[type="range"]:hover {
+     background: #5a606a;
+}
+
+/* Slider Thumb */
+.control-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #00aaff; /* Brighter accent color */
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.control-group input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #00aaff;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 5px rgba(0, 170, 255, 0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Slider Thumb Hover/Active */
+.control-group input[type="range"]:hover::-webkit-slider-thumb,
+.control-group input[type="range"]:focus::-webkit-slider-thumb {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(0, 170, 255, 0.8);
+}
+.control-group input[type="range"]:hover::-moz-range-thumb,
+.control-group input[type="range"]:focus::-moz-range-thumb {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(0, 170, 255, 0.8);
+}
+
+.control-value {
+    grid-column: 3 / 4;
+    min-width: 45px;
+    text-align: right;
+    font-weight: bold;
+    color: #f1f1f1;
+    font-size: 0.9em;
+}
+
+/* Control Icon (Font Awesome) */
+.control-icon {
+    grid-column: 4 / 5;
+    font-size: 16px; /* Adjust icon size */
+    color: #777; /* Dim icon color */
+    text-align: center;
+    min-width: 20px;
+    transition: color 0.2s ease;
+}
+
+.control-group:hover .control-icon {
+    color: #00aaff; /* Highlight icon on group hover */
+}
+
+
+/* Button Row & Buttons */
+.button-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+#controls button {
+    background-color: rgba(74, 80, 90, 0.7); /* Slightly lighter button background */
+    color: #f1f1f1;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    padding: 8px 12px; /* Adjust padding */
+    min-width: 40px; /* Ensure minimum width for icon */
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+    font-family: inherit; /* Use main font */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px; /* Icon size */
+    position: relative;
+    overflow: hidden;
+}
+
+#controls button:hover {
+    background-color: rgba(90, 96, 106, 0.8);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+#controls button:active {
+    transform: scale(0.95);
+}
+
+/* Toggle Controls Button */
+.control-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(40, 44, 52, 0.8); /* Match controls background */
+    color: #f1f1f1;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    width: 45px; /* Slightly smaller */
+    height: 45px;
+    cursor: pointer;
+    z-index: 101; /* Above controls */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px; /* Icon size */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.control-toggle:hover {
+    background-color: rgba(60, 64, 72, 0.9);
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Status & Speed Indicator (Simplified) */
+.status-display {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    color: #ccc;
+    background-color: rgba(40, 44, 52, 0.8); /* Match background */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    padding: 6px 12px;
+    border-radius: 20px;
+    z-index: 100;
+    font-size: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.status-display.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.speed-indicator {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    width: 45px; /* Smaller */
+    height: 45px;
+    border-radius: 50%;
+    background-color: rgba(40, 44, 52, 0.8);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #f1f1f1;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+/* Remove speed indicator fill/gradient */
+.speed-indicator::before {
+    display: none;
+}
+
+/* Toast Notifications (Simplified) */
+.toast-container {
+    position: fixed;
+    bottom: 80px; /* Position above controls */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column-reverse; /* Stack upwards */
+    align-items: center; /* Center toasts */
+    gap: 8px;
+    pointer-events: none;
+}
+
+.toast {
+    background: rgba(20, 22, 26, 0.9); /* Darker toast */
+    color: #f1f1f1;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    min-width: auto; /* Allow smaller toasts */
+    max-width: 300px;
+    opacity: 0;
+    transform: translateY(10px); /* Animate from bottom */
+    transition: all 0.3s ease-out;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: inherit;
+    font-size: 0.85em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: auto;
+}
+
+.toast.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Remove toast ::before pulse */
+.toast::before {
+    display: none;
+}
+
+/* Simplified Particle Effects */
+.particle.simple {
+    background: rgba(255, 255, 255, 0.5); /* Simple white, semi-transparent */
+    border-radius: 50%;
+    /* No complex gradient */
+}
+
+/* Simplified Ripple Effect */
+.ripple.simple {
+    border-radius: 50%;
+    /* background: radial-gradient(circle, rgba(0, 255, 255, 0.4) 0%, rgba(255, 0, 255, 0) 70%);
+    border: 2px solid rgba(255, 255, 255, 0.5); /* Simple border */
+    background: none;
+    animation: ripple-effect-simple 0.7s ease-out forwards;
+}
+
+@keyframes ripple-effect-simple {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(2); opacity: 0; }
+}
+
+/* Simplified Impact Flash Effect */
+.impact-flash.simple {
+    background: rgba(255, 255, 255, 0.6); /* Simple white flash */
+    width: 5px; /* Thinner flash */
+    border-radius: 2px;
+    animation: flash-fade-simple 0.2s ease-out forwards;
+}
+
+@keyframes flash-fade-simple {
+    0% { opacity: 0.8; }
+    100% { opacity: 0; }
+}
+
+/* Button Press Effect (Keep subtle) */
+.button-press {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background-color: rgba(255, 255, 255, 0.1); /* More subtle */
+    opacity: 0;
+    transform: scale(0);
+    animation: press-effect 0.4s ease-out;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes press-effect {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
