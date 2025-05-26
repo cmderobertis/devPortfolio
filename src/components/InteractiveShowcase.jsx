@@ -43,7 +43,16 @@ const InteractiveShowcase = () => {
   const pages = [
     //{ path: '/', title: 'Home Page', description: 'The main landing page.' },
     //{ path: '/projects', title: 'Projects', description: 'Showcase of different projects.' },
-    { path: '/sim-interactive/dvd', title: 'DVD Bouncer', description: 'Bouncing DVD logo simulation.' }, // Add the new DVD page
+    {
+      path: "/sim-interactive/dvd",
+      title: "DVD Bouncer",
+      description: "Bouncing DVD logo",
+    }, // Add the new DVD page
+    {
+      path: "/sim-interactive/breakout",
+      title: "Breakout",
+      description: "Breakout game",
+    },
     // Add more pages here as they are created
   ];
 
