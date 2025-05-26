@@ -330,7 +330,7 @@ const BreakoutGame = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4" style={{ backgroundColor: currentScheme.background }}>
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 w-full" style={{ backgroundColor: currentScheme.background }}>
       {gameState === 'menu' && (
         <div className="text-center space-y-6">
           <h1 className="text-6xl font-bold mb-8" style={{ color: currentScheme.ball }}>
@@ -379,7 +379,7 @@ const BreakoutGame = () => {
 
       {(gameState === 'playing' || gameState === 'levelComplete') && (
         <div className="relative">
-          <div className="flex justify-between items-center mb-4 w-full">
+          <div className="flex justify-between items-center mb-6 w-full">
             <div style={{ color: currentScheme.paddle }}>
               Level: {level}/40
             </div>
@@ -473,7 +473,7 @@ const BreakoutGame = () => {
           </div>
 
           {/* Control buttons */}
-          <div className="flex justify-center items-center space-x-4 mt-4">
+          <div className="flex justify-center items-center space-x-6 mt-6">
             <button
               onMouseDown={() => setPaddleX(prev => Math.max(0, prev - 30))}
               onTouchStart={() => setPaddleX(prev => Math.max(0, prev - 30))}
