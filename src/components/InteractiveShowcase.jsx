@@ -53,6 +53,11 @@ const InteractiveShowcase = () => {
       title: "Breakout",
       description: "Breakout game",
     },
+    { // New entry for Emergence Engine
+      path: "/sim-interactive/emergence",
+      title: "Emergence Engine",
+      description: "Complex systems & cellular automata simulations."
+    }
     // Add more pages here as they are created
   ];
 
