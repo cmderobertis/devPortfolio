@@ -1,0 +1,254 @@
+/* Enhanced Material 3 Design Styles for Portfolio */
+
+/* Root CSS Custom Properties for Consistent Theming */
+
+
+/* Material 3 Design System Enhancements */
+.card {
+  border-radius: 16px !important;
+  border: none;
+  background-color: var(--surface-color);
+  color: var(--on-surface-color);
+  box-shadow: 0 1px 3px var(--shadow-color);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px var(--shadow-color);
+  transform: translateY(-2px);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Enhanced Button Styling */
+.btn {
+  border-radius: 20px !important;
+  font-weight: 500;
+  padding: 0.5rem 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px var(--shadow-color);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px var(--shadow-color);
+}
+
+.btn-sm {
+  padding: 0.25rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* Badge Enhancements */
+.badge {
+  border-radius: 16px !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+}
+
+.badge.fs-6 {
+  font-size: 1rem !important;
+  padding: 0.75rem 1.5rem;
+}
+
+/* Typography Enhancements */
+.display-4, .display-5 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.lead {
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* Enhanced Color System */
+.text-primary {
+  color: var(--primary-color) !important;
+}
+
+.bg-primary {
+  background-color: var(--primary-color) !important;
+}
+
+.border-primary {
+  border-color: var(--primary-color) !important;
+}
+
+/* Icon Enhancements */
+.fas, .fab {
+  line-height: inherit;
+}
+
+/* Blockquote Styling */
+.blockquote {
+  border-left: 4px solid var(--primary-color);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+}
+
+/* List Styling */
+.list-unstyled li {
+  padding: 0.25rem 0;
+}
+
+/* Enhanced Shadows */
+.shadow-sm {
+  box-shadow: 0 1px 3px var(--shadow-color) !important;
+}
+
+.shadow {
+  box-shadow: 0 4px 6px var(--shadow-color) !important;
+}
+
+.shadow-lg {
+  box-shadow: 0 10px 25px var(--shadow-color) !important;
+}
+
+/* Smooth Transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Enhanced Focus States for Accessibility */
+.btn:focus,
+.nav-link:focus,
+a:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  .display-4 {
+    font-size: 2.5rem;
+  }
+  
+  .display-5 {
+    font-size: 2rem;
+  }
+  
+  .lead {
+    font-size: 1.1rem;
+  }
+  
+  .badge.fs-6 {
+    font-size: 0.875rem !important;
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Enhanced Border Radius */
+.rounded {
+  border-radius: 12px !important;
+}
+
+/* Navbar Enhancements */
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.nav-link {
+  font-weight: 500;
+  border-radius: 8px;
+  margin: 0 0.25rem;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  background-color: rgba(25, 118, 210, 0.1);
+  transform: translateY(-1px);
+}
+
+.nav-link.active {
+  background-color: var(--primary-color);
+  color: white !important;
+}
+
+/* Print Styles for Resume Page */
+@media print {
+  .navbar,
+  .btn,
+  footer {
+    display: none !important;
+  }
+  
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    page-break-inside: avoid;
+  }
+  
+  .container-fluid {
+    padding: 0 !important;
+  }
+  
+  body {
+    font-size: 12pt;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+}
+
+/* Animation Enhancements */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: slideUp 0.6s ease-out;
+}
+
+/* Custom utility classes */
+.text-decoration-none:hover {
+  text-decoration: none !important;
+}
+
+.border-start {
+  border-left: 4px solid !important;
+}
+
+.border-4 {
+  border-width: 4px !important;
+}
+
+/* Enhanced spacing for better visual hierarchy */
+.gap-3 {
+  gap: 1rem !important;
+}
+
+.gap-2 {
+  gap: 0.5rem !important;
+}
+
+/* Position utilities */
+.position-relative {
+  position: relative !important;
+}
+
+.position-absolute {
+  position: absolute !important;
+}
+
+/* Opacity utilities */
+.opacity-10 {
+  opacity: 0.1 !important;
+}
+
+/* Overflow utilities */
+.overflow-hidden {
+  overflow: hidden !important;
+}

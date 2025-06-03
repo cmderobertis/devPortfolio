@@ -19,7 +19,7 @@ import {
     // drawLogoOnCanvas, // Not used if only using simplified
     getNextColor
 } from '../utils/dvdLogic';
-import './DvdBouncer.css'; // Import component CSS
+import '../styles/DvdBouncer.css'; // Import component CSS
 import '@fortawesome/fontawesome-free/css/all.min.css'; // Import Font Awesome CSS
 
 // Assign top-level constants

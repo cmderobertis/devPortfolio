@@ -2,10 +2,15 @@ import { useState } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Navbar from "./components/Navbar"
 import Body from "./components/Body"
-import InteractiveShowcase from "./components/InteractiveShowcase";
-import DvdBouncer from "./components/DvdBouncer"; // Import the new DVD component
-import Breakout from "./components/Breakout"; // Import the Breakout game component
-import EmergenceEngine from "./components/EmergenceEngine"; // Added import
+import Bio from "./pages/Bio"
+import Resume from "./pages/Resume"
+import InteractiveShowcase from "./pages/InteractiveShowcase";
+import DvdBouncer from "./pages/DvdBouncer"; // Import the new DVD component
+import Breakout from "./pages/Breakout"; // Import the Breakout game component
+import EmergenceEngine from "./pages/EmergenceEngine"; // Added import
+import "./styles/enhanced-material.css" // Import enhanced Material 3 styling
+import "bootstrap/dist/css/bootstrap.min.css" // Import Bootstrap CSS
+import "./context/ThemeContext"; // Import ThemeContext for theme management
 
 function App() {
   return (
@@ -17,7 +22,10 @@ function App() {
             <>
               <Navbar />
               <Routes>
-                <Route path="/" element={<Body />} />
+                <Route path="/" element={<Resume />} />
+                <Route path="/projects" element={<Body />} />
+                <Route path="/resume" element={<Resume />} />
+                <Route path="/about" element={<Bio />} />
                 <Route path="/sim-interactive" element={<InteractiveShowcase />} />
                 <Route path="/sim-interactive/dvd" element={<DvdBouncer />} />
                 <Route path="/sim-interactive/breakout" element={<Breakout />} />

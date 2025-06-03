@@ -63,7 +63,9 @@ const InteractiveShowcase = () => {
 
   return (
     <div style={containerStyle}>
-      <h1 style={headingStyle}>sim and interactive</h1>
+      <h1 className="text-primary" style={headingStyle}>
+        sim and interactive
+      </h1>
       {pages.map((page) => (
         <div key={page.path} style={cardStyle}>
           <h2>{page.title}</h2>
