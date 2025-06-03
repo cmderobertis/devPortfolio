@@ -66,16 +66,20 @@ const InteractiveShowcase = () => {
       <h1 className="text-primary" style={headingStyle}>
         sim and interactive
       </h1>
-      {pages.map((page) => (
-        <div key={page.path} style={cardStyle}>
-          <h2>{page.title}</h2>
-          <p>{page.description}</p>
-          <Link to={page.path} style={linkStyle}>
-            Visit Page
-          </Link>
+      <div className="row">
+        <div className="col-12 mb-4">
+          {pages.map((page) => (
+            <div key={page.path} className="card shadow-sm">
+              <h2>{page.title}</h2>
+              <p>{page.description}</p>
+              <Link to={page.path} style={linkStyle}>
+                Visit Page
+              </Link>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+        </div>
+      </div>
   );
 };
 
