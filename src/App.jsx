@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Navbar from "./components/Navbar"
-import Body from "./components/Body"
 import Bio from "./pages/Bio"
 import Resume from "./pages/Resume"
 import InteractiveShowcase from "./pages/InteractiveShowcase";
@@ -23,7 +22,6 @@ function App() {
               <Navbar />
               <Routes>
                 <Route path="/" element={<Resume />} />
-                <Route path="/projects" element={<Body />} />
                 <Route path="/resume" element={<Resume />} />
                 <Route path="/about" element={<Bio />} />
                 <Route path="/sim-interactive" element={<InteractiveShowcase />} />
