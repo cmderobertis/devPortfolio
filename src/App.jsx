@@ -7,6 +7,7 @@ import InteractiveShowcase from "./pages/InteractiveShowcase";
 import DvdBouncer from "./pages/DvdBouncer"; // Import the new DVD component
 import Breakout from "./pages/Breakout"; // Import the Breakout game component
 import EmergenceEngine from "./pages/EmergenceEngine"; // Added import
+import DuckKonundrum from "./pages/DuckKonundrum"; // Import Duck Konundrum puzzle
 import "./styles/enhanced-material.css" // Import enhanced Material 3 styling
 import "bootstrap/dist/css/bootstrap.min.css" // Import Bootstrap CSS
 import "./context/ThemeContext"; // Import ThemeContext for theme management
@@ -28,6 +29,7 @@ function App() {
                 <Route path="/sim-interactive/dvd" element={<DvdBouncer />} />
                 <Route path="/sim-interactive/breakout" element={<Breakout />} />
                 <Route path="/sim-interactive/emergence" element={<EmergenceEngine />} /> {/* Added route */}
+                <Route path="/sim-interactive/duck-konundrum" element={<DuckKonundrum />} /> {/* Duck Konundrum puzzle */}
                 {/* Add other non-fullscreen routes here */}
               </Routes>
             </>

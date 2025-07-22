@@ -57,6 +57,11 @@ const InteractiveShowcase = () => {
       path: "/sim-interactive/emergence",
       title: "Emergence Engine",
       description: "Complex systems & cellular automata simulations."
+    },
+    { // Duck Konundrum puzzle
+      path: "/sim-interactive/duck-konundrum",
+      title: "Duck Konundrum",
+      description: "MIT Mystery Hunt puzzle - Harold the duck and team members solve constraints to spell QUACK!"
     }
     // Add more pages here as they are created
   ];
