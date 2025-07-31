@@ -62,6 +62,21 @@ const InteractiveShowcase = () => {
       path: "/sim-interactive/duck-konundrum",
       title: "Duck Konundrum",
       description: "MIT Mystery Hunt puzzle - Harold the duck and team members solve constraints to spell QUACK!"
+    },
+    { // Prism Simulation
+      path: "/sim-interactive/prisms",
+      title: "Prism Light Dispersion",
+      description: "Real-time physics simulation of light refraction through a triangular prism, showing spectral dispersion."
+    },
+    { // 3D Prism Simulation
+      path: "/sim-interactive/prisms3d",
+      title: "3D Prism Light Dispersion",
+      description: "Advanced 3D light simulation with interactive controls, multiple prism shapes, and realistic ray tracing in 3D space."
+    },
+    { // Game of Life
+      path: "/sim-interactive/gameoflife",
+      title: "Conway's Game of Life",
+      description: "Classic cellular automaton simulation with Windows 98 styling, multiple themes, and interactive cell editing."
     }
     // Add more pages here as they are created
   ];
