@@ -1,4 +1,4 @@
-import { useState } from "react"
+import React from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Navbar from "./components/Navbar"
 import Bio from "./pages/Bio"
@@ -11,14 +11,14 @@ import DuckKonundrum from "./pages/DuckKonundrum"; // Import Duck Konundrum puzz
 import Prisms from "./pages/Prisms"; // Import Prism Simulation
 import Prisms3D from "./pages/Prisms3D"; // Import 3D Prism Simulation
 import GameOfLife from "./pages/GameOfLife"; // Import Game of Life
-import GameOfLifeTest from "./pages/GameOfLifeTest"; // Test version
+import MazeStudio from "./pages/MazeStudio"; // Import Maze Studio
 import "./styles/enhanced-material.css" // Import enhanced Material 3 styling
 import "bootstrap/dist/css/bootstrap.min.css" // Import Bootstrap CSS
-import "./context/ThemeContext"; // Import ThemeContext for theme management
+import { ThemeProvider } from "./context/ThemeContext"; // Import ThemeProvider
 
 function App() {
   return (
-    <>
+    <ThemeProvider>
       <BrowserRouter>
         {/* Conditionally render Navbar unless it's the DVD route */}
         <Routes>
@@ -37,13 +37,14 @@ function App() {
                 <Route path="/sim-interactive/prisms" element={<Prisms />} /> {/* Prism Simulation */}
                 <Route path="/sim-interactive/prisms3d" element={<Prisms3D />} /> {/* 3D Prism Simulation */}
                 <Route path="/sim-interactive/gameoflife" element={<GameOfLife />} /> {/* Game of Life */}
+                <Route path="/sim-interactive/maze" element={<MazeStudio />} /> {/* Maze Studio */}
                 {/* Add other non-fullscreen routes here */}
               </Routes>
             </>
           }/>
         </Routes>
       </BrowserRouter>
-    </>
+    </ThemeProvider>
   )
 }
 

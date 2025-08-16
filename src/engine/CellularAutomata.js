@@ -243,9 +243,17 @@ export const updateCellularGrid = (currentGrid, cellularRules) => {
 
       if (cellularRules === 'conway') { // Conway's Game of Life rules
         if (currentGrid[y][x] === 1) { // If cell is alive
-          if (neighbors < 2 || neighbors > 3) newGrid[y][x] = 0; // Dies
+          if (neighbors < 2 || neighbors > 3) {
+            newGrid[y][x] = 0; // Dies (underpopulation/overpopulation)
+          } else {
+            newGrid[y][x] = 1; // Survives (2-3 neighbors)
+          }
         } else { // If cell is dead
-          if (neighbors === 3) newGrid[y][x] = 1; // Born
+          if (neighbors === 3) {
+            newGrid[y][x] = 1; // Born (reproduction)
+          } else {
+            newGrid[y][x] = 0; // Stays dead
+          }
         }
       } else if (cellularRules === 'maze') { // Maze generation rules (example)
         if (currentGrid[y][x] === 1) { // If cell is part of maze (alive)

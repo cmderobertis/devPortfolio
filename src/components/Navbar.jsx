@@ -1,7 +1,10 @@
-import React from "react"
+import React, { useContext } from "react"
 import { NavLink } from "react-router-dom"
+import { ThemeContext } from "../context/ThemeContext"
 
 const Navbar = () => {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+
   return (
     <div className="App">
       <div className="sticky-top">
@@ -39,6 +42,14 @@ const Navbar = () => {
                 <NavLink className="nav-item text-end" to={"/sim-interactive"}>
                   <span className="nav-link">projects</span> 
                 </NavLink>
+                <button 
+                  className="nav-item btn btn-outline-light ms-2" 
+                  onClick={toggleTheme}
+                  title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+                >
+                  {/* toggle between light and dark font awesome icon on click */}
+                  <i className={theme === 'light' ? 'fas fa-moon' : 'fas fa-sun'}></i>
+                </button>
                 <a className="nav-item btn btn-info text-light ms-3 text-end" href="mailto:cmderobertis@gmail.com">
                   contact
                 </a>

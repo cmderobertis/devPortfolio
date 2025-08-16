@@ -48,13 +48,12 @@ export const themes = {
   }
 };
 
-const useGameOfLife = (initialCellsX = 50) => {
+const useGameOfLife = (initialCellsX = 20) => {
   const [numCellsX] = useState(initialCellsX);
   const [cellSize, setCellSize] = useState(10);
   const [numCellsY, setNumCellsY] = useState(30);
   const [grid, setGrid] = useState([]);
-  const [nextGrid, setNextGrid] = useState([]);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [generationsPerSecond, setGenerationsPerSecond] = useState(10);
   const [currentTheme, setCurrentTheme] = useState(themes.minesweeper);
   
@@ -79,10 +78,7 @@ const useGameOfLife = (initialCellsX = 50) => {
     setNumCellsY(newNumCellsY);
     
     const newGrid = createGrid(numCellsX, newNumCellsY);
-    const newNextGrid = createGrid(numCellsX, newNumCellsY);
-    
     setGrid(newGrid);
-    setNextGrid(newNextGrid);
     
     return { cellSize: newCellSize, numCellsY: newNumCellsY };
   }, [numCellsX, createGrid]);
@@ -114,29 +110,44 @@ const useGameOfLife = (initialCellsX = 50) => {
 
   // Compute next generation
   const computeNextGeneration = useCallback(() => {
-    if (!grid.length || !nextGrid.length) return;
+    if (!grid.length) return;
     
-    const newNextGrid = createGrid(numCellsX, numCellsY);
+    const newGrid = createGrid(numCellsX, numCellsY);
     
     for (let x = 0; x < numCellsX; x++) {
       for (let y = 0; y < numCellsY; y++) {
         const neighbors = countNeighbors(x, y, grid);
         const isAlive = grid[x][y] === 1;
 
-        if (isAlive && (neighbors < 2 || neighbors > 3)) {
-          newNextGrid[x][y] = 0; // Dies
-        } else if (!isAlive && neighbors === 3) {
-          newNextGrid[x][y] = 1; // Becomes alive
+        // Conway's Game of Life rules:
+        // 1. Any live cell with fewer than two live neighbors dies (underpopulation)
+        // 2. Any live cell with two or three live neighbors lives on to the next generation
+        // 3. Any live cell with more than three live neighbors dies (overpopulation)
+        // 4. Any dead cell with exactly three live neighbors becomes a live cell (reproduction)
+        
+        if (isAlive) {
+          // Live cell rules
+          if (neighbors < 2) {
+            newGrid[x][y] = 0; // Dies from underpopulation
+          } else if (neighbors === 2 || neighbors === 3) {
+            newGrid[x][y] = 1; // Survives
+          } else {
+            newGrid[x][y] = 0; // Dies from overpopulation
+          }
         } else {
-          newNextGrid[x][y] = grid[x][y]; // Stays the same
+          // Dead cell rules
+          if (neighbors === 3) {
+            newGrid[x][y] = 1; // Becomes alive through reproduction
+          } else {
+            newGrid[x][y] = 0; // Stays dead
+          }
         }
       }
     }
 
-    // Swap grids
-    setGrid(newNextGrid);
-    setNextGrid(grid);
-  }, [grid, nextGrid, numCellsX, numCellsY, countNeighbors, createGrid]);
+    // Update the grid
+    setGrid(newGrid);
+  }, [grid, numCellsX, numCellsY, countNeighbors, createGrid]);
 
   // Toggle cell state
   const toggleCell = useCallback((x, y) => {
@@ -183,7 +194,17 @@ const useGameOfLife = (initialCellsX = 50) => {
     setIsPlaying(prev => !prev);
   }, []);
 
+  // Start/stop game loop based on isPlaying state
+  useEffect(() => {
+    if (isPlaying) {
+      startGameLoop();
+    } else {
+      stopGameLoop();
+    }
+  }, [isPlaying, startGameLoop, stopGameLoop]);
+
   const resetGrid = useCallback(() => {
+    setIsPlaying(false); // Pause before reset
     randomizeGrid();
   }, [randomizeGrid]);
 
@@ -196,6 +217,36 @@ const useGameOfLife = (initialCellsX = 50) => {
       setCurrentTheme(themes[themeName]);
     }
   }, []);
+
+  // Load a test pattern (Glider for testing)
+  const loadTestPattern = useCallback(() => {
+    if (!numCellsX || !numCellsY) return;
+    
+    const newGrid = createGrid(numCellsX, numCellsY);
+    
+    // Add a glider pattern in the top-left
+    const glider = [
+      [0, 1, 0],
+      [0, 0, 1], 
+      [1, 1, 1]
+    ];
+    
+    const startX = 5;
+    const startY = 5;
+    
+    glider.forEach((row, dy) => {
+      row.forEach((cell, dx) => {
+        const x = startX + dx;
+        const y = startY + dy;
+        if (x < numCellsX && y < numCellsY) {
+          newGrid[x][y] = cell;
+        }
+      });
+    });
+    
+    setGrid(newGrid);
+    setIsPlaying(false);
+  }, [numCellsX, numCellsY, createGrid]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -224,6 +275,7 @@ const useGameOfLife = (initialCellsX = 50) => {
     setTheme,
     startGameLoop,
     stopGameLoop,
+    loadTestPattern,
     
     // Themes
     themes

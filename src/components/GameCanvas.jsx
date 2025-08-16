@@ -73,20 +73,21 @@ const GameCanvas = ({
   // Draw the entire grid
   const drawGrid = useCallback(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !grid || !grid.length) return;
+    if (!canvas || !grid || !grid.length || !numCellsX || !numCellsY) return;
 
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
     
     // Clear canvas with background color
     ctx.fillStyle = theme.bg;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Draw all cells
-    for (let x = 0; x < numCellsX; x++) {
-      for (let y = 0; y < numCellsY; y++) {
-        if (grid[x] && grid[x][y] !== undefined) {
-          drawCell(ctx, x, y, grid[x][y]);
-        }
+    // Draw all cells with bounds checking
+    for (let x = 0; x < Math.min(numCellsX, grid.length); x++) {
+      if (!grid[x]) continue;
+      for (let y = 0; y < Math.min(numCellsY, grid[x].length); y++) {
+        const isAlive = grid[x][y] === 1;
+        drawCell(ctx, x, y, isAlive);
       }
     }
   }, [grid, numCellsX, numCellsY, theme, drawCell]);

@@ -77,6 +77,11 @@ const InteractiveShowcase = () => {
       path: "/sim-interactive/gameoflife",
       title: "Conway's Game of Life",
       description: "Classic cellular automaton simulation with Windows 98 styling, multiple themes, and interactive cell editing."
+    },
+    { // Maze Studio
+      path: "/sim-interactive/maze",
+      title: "Maze Studio",
+      description: "Interactive maze generator with 2D/3D rendering, multiple algorithms (DFS, Prim's), pathfinding solvers (BFS, A*), and customizable visualization."
     }
     // Add more pages here as they are created
   ];

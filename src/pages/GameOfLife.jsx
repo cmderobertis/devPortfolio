@@ -24,6 +24,7 @@ const GameOfLife = () => {
     setSpeed,
     setTheme,
     startGameLoop,
+    loadTestPattern,
     
     // Themes
     themes
@@ -129,6 +130,11 @@ const GameOfLife = () => {
             <div className="status-bar-field">
               <button className="btn" onClick={resetGrid}>
                 Reset
+              </button>
+            </div>
+            <div className="status-bar-field">
+              <button className="btn" onClick={loadTestPattern}>
+                Glider
               </button>
             </div>
             <div className="status-bar-field">
