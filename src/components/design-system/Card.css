@@ -1,0 +1,141 @@
+/* Material Design 3 Card Styles */
+
+/* Base Card Styles */
+.md3-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--md-sys-shape-corner-medium);
+  transition: all var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Card Variants */
+.md3-card--elevated {
+  background-color: var(--md-sys-color-surface-container-low);
+  color: var(--md-sys-color-on-surface);
+  box-shadow: var(--md-sys-elevation-level1);
+}
+
+.md3-card--filled {
+  background-color: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-on-surface);
+  box-shadow: none;
+}
+
+.md3-card--outlined {
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  box-shadow: none;
+}
+
+/* Interactive States */
+.md3-card--interactive {
+  cursor: pointer;
+}
+
+.md3-card--interactive:hover {
+  transform: translateY(-2px);
+}
+
+.md3-card--elevated.md3-card--interactive:hover {
+  box-shadow: var(--md-sys-elevation-level2);
+}
+
+.md3-card--filled.md3-card--interactive:hover {
+  box-shadow: var(--md-sys-elevation-level1);
+}
+
+.md3-card--outlined.md3-card--interactive:hover {
+  box-shadow: var(--md-sys-elevation-level1);
+}
+
+/* Focus States for Accessibility */
+.md3-card--interactive:focus {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
+/* State Layer for Interactive Cards */
+.md3-card--interactive::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  transition: background-color var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-standard);
+  pointer-events: none;
+}
+
+.md3-card--interactive:hover::before {
+  background-color: rgba(var(--md-sys-color-primary), var(--md-sys-state-hover-opacity));
+}
+
+.md3-card--interactive:focus::before {
+  background-color: rgba(var(--md-sys-color-primary), var(--md-sys-state-focus-opacity));
+}
+
+.md3-card--interactive:active::before {
+  background-color: rgba(var(--md-sys-color-primary), var(--md-sys-state-pressed-opacity));
+}
+
+/* Card Sections */
+.md3-card__header {
+  padding: var(--md-sys-spacing-4) var(--md-sys-spacing-4) 0 var(--md-sys-spacing-4);
+  position: relative;
+  z-index: 1;
+}
+
+.md3-card__content {
+  padding: var(--md-sys-spacing-4);
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.md3-card__actions {
+  padding: 0 var(--md-sys-spacing-4) var(--md-sys-spacing-4) var(--md-sys-spacing-4);
+  display: flex;
+  gap: var(--md-sys-spacing-2);
+  position: relative;
+  z-index: 1;
+}
+
+.md3-card__actions--start {
+  justify-content: flex-start;
+}
+
+.md3-card__actions--center {
+  justify-content: center;
+}
+
+.md3-card__actions--end {
+  justify-content: flex-end;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .md3-card__header,
+  .md3-card__content,
+  .md3-card__actions {
+    padding-left: var(--md-sys-spacing-3);
+    padding-right: var(--md-sys-spacing-3);
+  }
+  
+  .md3-card__header {
+    padding-bottom: 0;
+  }
+  
+  .md3-card__content {
+    padding-top: var(--md-sys-spacing-3);
+    padding-bottom: var(--md-sys-spacing-3);
+  }
+  
+  .md3-card__actions {
+    padding-top: 0;
+    padding-bottom: var(--md-sys-spacing-3);
+  }
+}

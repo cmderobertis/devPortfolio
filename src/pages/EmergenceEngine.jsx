@@ -1,6 +1,18 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Play, Pause, RotateCcw, Zap, Target, Waves, Box, Grid, Settings2, Edit3 } from 'lucide-react';
 
+// Import MD3 Control Panel components
+import ControlPanel, { 
+    ControlGroup, 
+    SliderControl, 
+    ButtonControl, 
+    SelectControl,
+    ToggleControl,
+    InfoDisplay, 
+    StatusIndicator 
+} from '../components/design-system/ControlPanel';
+import '../components/design-system/ControlPanel.css';
+
 // Import functions from engine
 import { initializeAgents, updateAgents } from '../engine/EmergenceEngineCore.js';
 import {
@@ -324,62 +336,150 @@ const EmergenceEngine = () => {
     <div className="emergence-engine-container">
       <canvas ref={canvasRef} className="emergence-canvas"></canvas>
 
-      <div className="controls-panel">
-        <button onClick={() => setIsRunning(prev => !prev)} disabled={editMode && selectedPattern === 'cellular'}>
-          {isRunning ? <Pause size={18} /> : <Play size={18} />} {isRunning ? 'Pause' : 'Play'}
-        </button>
-        <button onClick={resetSimulation}><RotateCcw size={18} /> Reset</button>
+      {/* Status Indicators */}
+      <div className="emergence-status-indicators">
+        <InfoDisplay 
+          label="Generation" 
+          value={generation} 
+          color="primary"
+          icon="fas fa-clock"
+        />
+        <StatusIndicator 
+          status={isRunning ? "running" : editMode ? "paused" : "idle"} 
+          label={isRunning ? "Running" : editMode ? "Edit Mode" : "Paused"}
+        />
+      </div>
 
-        <select value={selectedPattern} onChange={handlePatternChange}>
-          <option value="flocking">Flocking</option>
-          <option value="neurons">Neurons</option>
-          <option value="economy">Economy</option>
-          <option value="cellular">Cellular Automata</option>
-        </select>
+      {/* Metrics Display */}
+      <div className="emergence-metrics">
+        <InfoDisplay 
+          label="Coherence" 
+          value={emergentMetrics.coherence.toFixed(2)} 
+          color="primary"
+          icon="fas fa-bullseye"
+        />
+        <InfoDisplay 
+          label="Diversity" 
+          value={emergentMetrics.diversity.toFixed(2)} 
+          color="secondary"
+          icon="fas fa-wave-square"
+        />
+        <InfoDisplay 
+          label="Efficiency" 
+          value={emergentMetrics.efficiency.toFixed(2)} 
+          color="success"
+          icon="fas fa-bolt"
+        />
+      </div>
+
+      {/* MD3 Control Panel */}
+      <ControlPanel 
+        title="Emergence Engine Controls"
+        position="bottom"
+        collapsible={true}
+      >
+        <ControlGroup label="Simulation" direction="horizontal">
+          <ButtonControl
+            variant="filled"
+            onClick={() => setIsRunning(prev => !prev)}
+            disabled={editMode && selectedPattern === 'cellular'}
+            icon={isRunning ? "fas fa-pause" : "fas fa-play"}
+          >
+            {isRunning ? 'Pause' : 'Play'}
+          </ButtonControl>
+          
+          <ButtonControl
+            variant="outlined"
+            onClick={resetSimulation}
+            icon="fas fa-redo"
+          >
+            Reset
+          </ButtonControl>
+        </ControlGroup>
+
+        <ControlGroup label="Pattern Type" direction="vertical">
+          <SelectControl
+            label="Simulation Pattern"
+            value={selectedPattern}
+            onChange={handlePatternChange}
+            options={[
+              { value: "flocking", label: "Flocking" },
+              { value: "neurons", label: "Neurons" },
+              { value: "economy", label: "Economy" },
+              { value: "cellular", label: "Cellular Automata" }
+            ]}
+            icon="fas fa-layer-group"
+          />
+
+          {selectedPattern === 'cellular' && (
+            <>
+              <SelectControl
+                label="Cellular Rules"
+                value={cellularRules}
+                onChange={handleCellularRuleChange}
+                options={[
+                  { value: "conway", label: "Conway's Life" },
+                  { value: "maze", label: "Maze (B3/S12345)" },
+                  { value: "coral", label: "Coral (B3/S45678)" }
+                ]}
+                icon="fas fa-th"
+              />
+              
+              <SelectControl
+                label="Simulation Speed"
+                value={simulationSpeed}
+                onChange={(value) => setSimulationSpeed(Number(value))}
+                options={[
+                  { value: simulationSpeeds.slow, label: "Slow" },
+                  { value: simulationSpeeds.default, label: "Normal" },
+                  { value: simulationSpeeds.fast, label: "Fast" }
+                ]}
+                icon="fas fa-tachometer-alt"
+              />
+            </>
+          )}
+        </ControlGroup>
 
         {selectedPattern === 'cellular' && (
-          <>
-            <select value={cellularRules} onChange={handleCellularRuleChange}>
-              <option value="conway">Conway's Life</option>
-              <option value="maze">Maze (B3/S12345)</option>
-              <option value="coral">Coral (B3/S45678)</option>
-            </select>
-            <button onClick={toggle3D}>{is3D ? <Grid size={18} /> : <Box size={18} />} {is3D ? '2D View' : '3D View'}</button>
-            <button
-                onClick={toggleEditMode}
-                className={editMode ? 'edit-mode-active-button' : ''}
-            >
-              <Edit3 size={18} /> {editMode ? 'Exit Edit' : 'Edit Cells'}
-            </button>
-             <select value={simulationSpeed} onChange={(e) => setSimulationSpeed(Number(e.target.value))}>
-                <option value={simulationSpeeds.slow}>Slow</option>
-                <option value={simulationSpeeds.default}>Normal</option>
-                <option value={simulationSpeeds.fast}>Fast</option>
-            </select>
-          </>
+          <ControlGroup label="View & Edit" direction="horizontal">
+            <ToggleControl
+              label={is3D ? '2D View' : '3D View'}
+              checked={is3D}
+              onChange={toggle3D}
+              icon={is3D ? "fas fa-square" : "fas fa-cube"}
+            />
+            
+            <ToggleControl
+              label="Edit Mode"
+              checked={editMode}
+              onChange={toggleEditMode}
+              icon="fas fa-edit"
+            />
+          </ControlGroup>
         )}
-      </div>
 
-      {selectedPattern !== 'cellular' && (
-        <div className="rules-grid">
-          {Object.entries(rules).map(([key, value]) => (
-            <React.Fragment key={key}>
-              <label htmlFor={key}><Settings2 size={14}/>{key}:</label>
-              <input type="range" id={key} name={key} min="0" max="2" step="0.1" value={value} onChange={(e) => handleRuleChange(key, e.target.value)} />
-              <span>{value.toFixed(1)}</span>
-            </React.Fragment>
-          ))}
-        </div>
-      )}
+        {selectedPattern !== 'cellular' && (
+          <ControlGroup label="Rule Parameters" direction="vertical">
+            {Object.entries(rules).map(([key, value]) => (
+              <SliderControl
+                key={key}
+                label={key.charAt(0).toUpperCase() + key.slice(1)}
+                value={value}
+                onChange={(val) => handleRuleChange(key, val)}
+                min={0}
+                max={2}
+                step={0.1}
+                unit=""
+                icon="fas fa-sliders-h"
+              />
+            ))}
+          </ControlGroup>
+        )}
+      </ControlPanel>
 
-      <div className="metrics-bar">
-        <div className="metric-item" title="Coherence: Orderliness of movement or structure. High means uniform."><Target size={16} /> Coherence: {emergentMetrics.coherence.toFixed(2)}</div>
-        <div className="metric-item" title="Diversity: Variety in positions or states. High means spread out or diverse patterns."><Waves size={16} /> Diversity: {emergentMetrics.diversity.toFixed(2)}</div>
-        <div className="metric-item" title="Efficiency: System's ability to maintain state or activity. Varies by model."><Zap size={16} /> Efficiency: {emergentMetrics.efficiency.toFixed(2)}</div>
-      </div>
       {editMode && selectedPattern === 'cellular' && (
         <div className="edit-mode-hint">
-            Use Arrow keys (or W/A/S/D) to move cursor. {is3D ? "Q/E for depth. " : ""}Press Enter/Space to toggle cell state.
+          Use Arrow keys (or W/A/S/D) to move cursor. {is3D ? "Q/E for depth. " : ""}Press Enter/Space to toggle cell state.
         </div>
       )}
     </div>

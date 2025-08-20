@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { vec3, matrix3D } from '../utils/vector3D.js';
 import { N_AIR, calculateRefractiveIndices, COLOR_MAP } from '../utils/opticsUtils.js';
 import { createTriangularPrism, createSquarePrism, transformPrism, rayFaceIntersection, PRISM_SHAPES } from '../utils/prism3D.js';
+import { Button } from '../components/design-system';
 
 const Prism3DSimulation = () => {
   const canvasRef = useRef(null);
@@ -455,35 +456,40 @@ const Prism3DSimulation = () => {
             />
           </div>
 
-          <button 
-            className="btn btn-outline-light btn-sm me-2"
+          <Button 
+            variant="outlined"
+            size="small"
             onClick={() => setIsAnimating(!isAnimating)}
             disabled={manualControl}
+            className="me-2"
           >
             {isAnimating ? 'Pause' : 'Play'}
-          </button>
+          </Button>
           
           {manualControl && (
-            <button 
-              className="btn btn-outline-warning btn-sm"
+            <Button 
+              variant="outlined"
+              size="small"
               onClick={() => {
                 setLightSource({ x: -200, y: 0, z: 0, intensity: 1 });
                 setBeamDirection({ x: 1, y: 0, z: 0 });
               }}
             >
               Reset Beam
-            </button>
+            </Button>
           )}
         </div>
       )}
 
       {/* Toggle controls button */}
-      <button
-        className="position-absolute top-0 end-0 m-3 btn btn-outline-secondary btn-sm"
+      <Button
+        variant="outlined"
+        size="small"
         onClick={() => setShowControls(!showControls)}
+        className="position-absolute top-0 end-0 m-3"
       >
         {showControls ? 'Hide Controls' : 'Show Controls'}
-      </button>
+      </Button>
 
       <canvas
         ref={canvasRef}
@@ -509,13 +515,13 @@ const Prisms3DPage = () => {
         <div className="col-12">
           <div className="d-flex justify-content-between align-items-center mb-4">
             <h1 className="display-4 fw-bold text-primary mb-0">3D Prism Light Dispersion</h1>
-            <button 
-              className="btn btn-outline-secondary"
+            <Button 
+              variant="outlined"
               onClick={() => setShowInfo(!showInfo)}
+              icon={<i className="fas fa-info-circle"></i>}
             >
-              <i className="fas fa-info-circle me-2"></i>
               {showInfo ? 'Hide Info' : 'Show Info'}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

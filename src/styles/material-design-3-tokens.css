@@ -1,0 +1,371 @@
+/* Material Design 3 Design Tokens Foundation */
+/* Based on Google's Material Design 3 specifications */
+
+/* ========================================
+   COLOR SYSTEM - Material Design 3
+   ======================================== */
+
+:root {
+  /* Primary Colors */
+  --md-sys-color-primary: #1976d2;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #d3e3fd;
+  --md-sys-color-on-primary-container: #001c3b;
+
+  /* Secondary Colors */
+  --md-sys-color-secondary: #565e71;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #dae2f9;
+  --md-sys-color-on-secondary-container: #131c2b;
+
+  /* Tertiary Colors */
+  --md-sys-color-tertiary: #705575;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #fad8fd;
+  --md-sys-color-on-tertiary-container: #28132e;
+
+  /* Error Colors */
+  --md-sys-color-error: #ba1a1a;
+  --md-sys-color-on-error: #ffffff;
+  --md-sys-color-error-container: #ffdad6;
+  --md-sys-color-on-error-container: #410002;
+
+  /* Neutral Colors */
+  --md-sys-color-background: #fefbff;
+  --md-sys-color-on-background: #1b1b1f;
+  --md-sys-color-surface: #fefbff;
+  --md-sys-color-on-surface: #1b1b1f;
+  --md-sys-color-surface-variant: #e1e2ec;
+  --md-sys-color-on-surface-variant: #44474f;
+  --md-sys-color-outline: #75777f;
+  --md-sys-color-outline-variant: #c5c6d0;
+
+  /* Surface Containers */
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container-low: #f7f2fa;
+  --md-sys-color-surface-container: #f1f4f9;
+  --md-sys-color-surface-container-high: #eceff4;
+  --md-sys-color-surface-container-highest: #e6e9ee;
+
+  /* Inverse Colors */
+  --md-sys-color-inverse-surface: #2f3033;
+  --md-sys-color-inverse-on-surface: #f1f0f4;
+  --md-sys-color-inverse-primary: #a4c8ff;
+
+  /* Shadow */
+  --md-sys-color-shadow: #000000;
+  --md-sys-color-scrim: #000000;
+}
+
+[data-theme="dark"] {
+  /* Primary Colors - Dark Mode */
+  --md-sys-color-primary: #a4c8ff;
+  --md-sys-color-on-primary: #003062;
+  --md-sys-color-primary-container: #004788;
+  --md-sys-color-on-primary-container: #d3e3fd;
+
+  /* Secondary Colors - Dark Mode */
+  --md-sys-color-secondary: #bec6dc;
+  --md-sys-color-on-secondary: #283041;
+  --md-sys-color-secondary-container: #3e4759;
+  --md-sys-color-on-secondary-container: #dae2f9;
+
+  /* Tertiary Colors - Dark Mode */
+  --md-sys-color-tertiary: #debcdf;
+  --md-sys-color-on-tertiary: #3f2844;
+  --md-sys-color-tertiary-container: #573e5c;
+  --md-sys-color-on-tertiary-container: #fad8fd;
+
+  /* Error Colors - Dark Mode */
+  --md-sys-color-error: #ffb4ab;
+  --md-sys-color-on-error: #690005;
+  --md-sys-color-error-container: #93000a;
+  --md-sys-color-on-error-container: #ffdad6;
+
+  /* Neutral Colors - Dark Mode */
+  --md-sys-color-background: #10131a;
+  --md-sys-color-on-background: #e3e2e6;
+  --md-sys-color-surface: #10131a;
+  --md-sys-color-on-surface: #e3e2e6;
+  --md-sys-color-surface-variant: #44474f;
+  --md-sys-color-on-surface-variant: #c5c6d0;
+  --md-sys-color-outline: #8f9099;
+  --md-sys-color-outline-variant: #44474f;
+
+  /* Surface Containers - Dark Mode */
+  --md-sys-color-surface-container-lowest: #0b0e14;
+  --md-sys-color-surface-container-low: #1b1b1f;
+  --md-sys-color-surface-container: #1f2024;
+  --md-sys-color-surface-container-high: #2a2c2f;
+  --md-sys-color-surface-container-highest: #35373a;
+
+  /* Inverse Colors - Dark Mode */
+  --md-sys-color-inverse-surface: #e3e2e6;
+  --md-sys-color-inverse-on-surface: #2f3033;
+  --md-sys-color-inverse-primary: #1976d2;
+}
+
+/* ========================================
+   TYPOGRAPHY SYSTEM - Material Design 3
+   ======================================== */
+
+:root {
+  /* Font Families */
+  --md-sys-typescale-font-family-brand: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  --md-sys-typescale-font-family-plain: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+
+  /* Display Large */
+  --md-sys-typescale-display-large-font-family: var(--md-sys-typescale-font-family-brand);
+  --md-sys-typescale-display-large-font-weight: 400;
+  --md-sys-typescale-display-large-font-size: 3.5rem;
+  --md-sys-typescale-display-large-line-height: 4rem;
+  --md-sys-typescale-display-large-letter-spacing: -0.02em;
+
+  /* Display Medium */
+  --md-sys-typescale-display-medium-font-family: var(--md-sys-typescale-font-family-brand);
+  --md-sys-typescale-display-medium-font-weight: 400;
+  --md-sys-typescale-display-medium-font-size: 2.8125rem;
+  --md-sys-typescale-display-medium-line-height: 3.25rem;
+  --md-sys-typescale-display-medium-letter-spacing: 0;
+
+  /* Display Small */
+  --md-sys-typescale-display-small-font-family: var(--md-sys-typescale-font-family-brand);
+  --md-sys-typescale-display-small-font-weight: 400;
+  --md-sys-typescale-display-small-font-size: 2.25rem;
+  --md-sys-typescale-display-small-line-height: 2.75rem;
+  --md-sys-typescale-display-small-letter-spacing: 0;
+
+  /* Headline Large */
+  --md-sys-typescale-headline-large-font-family: var(--md-sys-typescale-font-family-brand);
+  --md-sys-typescale-headline-large-font-weight: 400;
+  --md-sys-typescale-headline-large-font-size: 2rem;
+  --md-sys-typescale-headline-large-line-height: 2.5rem;
+  --md-sys-typescale-headline-large-letter-spacing: 0;
+
+  /* Headline Medium */
+  --md-sys-typescale-headline-medium-font-family: var(--md-sys-typescale-font-family-brand);
+  --md-sys-typescale-headline-medium-font-weight: 400;
+  --md-sys-typescale-headline-medium-font-size: 1.75rem;
+  --md-sys-typescale-headline-medium-line-height: 2.25rem;
+  --md-sys-typescale-headline-medium-letter-spacing: 0;
+
+  /* Headline Small */
+  --md-sys-typescale-headline-small-font-family: var(--md-sys-typescale-font-family-brand);
+  --md-sys-typescale-headline-small-font-weight: 400;
+  --md-sys-typescale-headline-small-font-size: 1.5rem;
+  --md-sys-typescale-headline-small-line-height: 2rem;
+  --md-sys-typescale-headline-small-letter-spacing: 0;
+
+  /* Title Large */
+  --md-sys-typescale-title-large-font-family: var(--md-sys-typescale-font-family-brand);
+  --md-sys-typescale-title-large-font-weight: 400;
+  --md-sys-typescale-title-large-font-size: 1.375rem;
+  --md-sys-typescale-title-large-line-height: 1.75rem;
+  --md-sys-typescale-title-large-letter-spacing: 0;
+
+  /* Title Medium */
+  --md-sys-typescale-title-medium-font-family: var(--md-sys-typescale-font-family-plain);
+  --md-sys-typescale-title-medium-font-weight: 500;
+  --md-sys-typescale-title-medium-font-size: 1rem;
+  --md-sys-typescale-title-medium-line-height: 1.5rem;
+  --md-sys-typescale-title-medium-letter-spacing: 0.009em;
+
+  /* Title Small */
+  --md-sys-typescale-title-small-font-family: var(--md-sys-typescale-font-family-plain);
+  --md-sys-typescale-title-small-font-weight: 500;
+  --md-sys-typescale-title-small-font-size: 0.875rem;
+  --md-sys-typescale-title-small-line-height: 1.25rem;
+  --md-sys-typescale-title-small-letter-spacing: 0.007em;
+
+  /* Body Large */
+  --md-sys-typescale-body-large-font-family: var(--md-sys-typescale-font-family-plain);
+  --md-sys-typescale-body-large-font-weight: 400;
+  --md-sys-typescale-body-large-font-size: 1rem;
+  --md-sys-typescale-body-large-line-height: 1.5rem;
+  --md-sys-typescale-body-large-letter-spacing: 0.031em;
+
+  /* Body Medium */
+  --md-sys-typescale-body-medium-font-family: var(--md-sys-typescale-font-family-plain);
+  --md-sys-typescale-body-medium-font-weight: 400;
+  --md-sys-typescale-body-medium-font-size: 0.875rem;
+  --md-sys-typescale-body-medium-line-height: 1.25rem;
+  --md-sys-typescale-body-medium-letter-spacing: 0.016em;
+
+  /* Body Small */
+  --md-sys-typescale-body-small-font-family: var(--md-sys-typescale-font-family-plain);
+  --md-sys-typescale-body-small-font-weight: 400;
+  --md-sys-typescale-body-small-font-size: 0.75rem;
+  --md-sys-typescale-body-small-line-height: 1rem;
+  --md-sys-typescale-body-small-letter-spacing: 0.033em;
+
+  /* Label Large */
+  --md-sys-typescale-label-large-font-family: var(--md-sys-typescale-font-family-plain);
+  --md-sys-typescale-label-large-font-weight: 500;
+  --md-sys-typescale-label-large-font-size: 0.875rem;
+  --md-sys-typescale-label-large-line-height: 1.25rem;
+  --md-sys-typescale-label-large-letter-spacing: 0.007em;
+
+  /* Label Medium */
+  --md-sys-typescale-label-medium-font-family: var(--md-sys-typescale-font-family-plain);
+  --md-sys-typescale-label-medium-font-weight: 500;
+  --md-sys-typescale-label-medium-font-size: 0.75rem;
+  --md-sys-typescale-label-medium-line-height: 1rem;
+  --md-sys-typescale-label-medium-letter-spacing: 0.033em;
+
+  /* Label Small */
+  --md-sys-typescale-label-small-font-family: var(--md-sys-typescale-font-family-plain);
+  --md-sys-typescale-label-small-font-weight: 500;
+  --md-sys-typescale-label-small-font-size: 0.6875rem;
+  --md-sys-typescale-label-small-line-height: 1rem;
+  --md-sys-typescale-label-small-letter-spacing: 0.036em;
+}
+
+/* ========================================
+   ELEVATION SYSTEM - Material Design 3
+   ======================================== */
+
+:root {
+  /* Elevation Levels */
+  --md-sys-elevation-level0: none;
+  --md-sys-elevation-level1: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --md-sys-elevation-level2: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+  --md-sys-elevation-level3: 0px 1px 3px 0px rgba(0, 0, 0, 0.3), 0px 4px 8px 3px rgba(0, 0, 0, 0.15);
+  --md-sys-elevation-level4: 0px 2px 3px 0px rgba(0, 0, 0, 0.3), 0px 6px 10px 4px rgba(0, 0, 0, 0.15);
+  --md-sys-elevation-level5: 0px 4px 4px 0px rgba(0, 0, 0, 0.3), 0px 8px 12px 6px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] {
+  /* Elevation Levels - Dark Mode */
+  --md-sys-elevation-level0: none;
+  --md-sys-elevation-level1: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --md-sys-elevation-level2: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+  --md-sys-elevation-level3: 0px 1px 3px 0px rgba(0, 0, 0, 0.3), 0px 4px 8px 3px rgba(0, 0, 0, 0.15);
+  --md-sys-elevation-level4: 0px 2px 3px 0px rgba(0, 0, 0, 0.3), 0px 6px 10px 4px rgba(0, 0, 0, 0.15);
+  --md-sys-elevation-level5: 0px 4px 4px 0px rgba(0, 0, 0, 0.3), 0px 8px 12px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* ========================================
+   SPACING SYSTEM - Material Design 3
+   ======================================== */
+
+:root {
+  /* Base spacing unit (4px) */
+  --md-sys-spacing-base: 0.25rem;
+  
+  /* Spacing Scale */
+  --md-sys-spacing-1: calc(var(--md-sys-spacing-base) * 1); /* 4px */
+  --md-sys-spacing-2: calc(var(--md-sys-spacing-base) * 2); /* 8px */
+  --md-sys-spacing-3: calc(var(--md-sys-spacing-base) * 3); /* 12px */
+  --md-sys-spacing-4: calc(var(--md-sys-spacing-base) * 4); /* 16px */
+  --md-sys-spacing-5: calc(var(--md-sys-spacing-base) * 5); /* 20px */
+  --md-sys-spacing-6: calc(var(--md-sys-spacing-base) * 6); /* 24px */
+  --md-sys-spacing-8: calc(var(--md-sys-spacing-base) * 8); /* 32px */
+  --md-sys-spacing-10: calc(var(--md-sys-spacing-base) * 10); /* 40px */
+  --md-sys-spacing-12: calc(var(--md-sys-spacing-base) * 12); /* 48px */
+  --md-sys-spacing-16: calc(var(--md-sys-spacing-base) * 16); /* 64px */
+  --md-sys-spacing-20: calc(var(--md-sys-spacing-base) * 20); /* 80px */
+  --md-sys-spacing-24: calc(var(--md-sys-spacing-base) * 24); /* 96px */
+}
+
+/* ========================================
+   SHAPE SYSTEM - Material Design 3
+   ======================================== */
+
+:root {
+  /* Corner Radius */
+  --md-sys-shape-corner-none: 0px;
+  --md-sys-shape-corner-extra-small: 4px;
+  --md-sys-shape-corner-small: 8px;
+  --md-sys-shape-corner-medium: 12px;
+  --md-sys-shape-corner-large: 16px;
+  --md-sys-shape-corner-extra-large: 28px;
+  --md-sys-shape-corner-full: 1rem;
+}
+
+/* ========================================
+   MOTION SYSTEM - Material Design 3
+   ======================================== */
+
+:root {
+  /* Duration */
+  --md-sys-motion-duration-short1: 50ms;
+  --md-sys-motion-duration-short2: 100ms;
+  --md-sys-motion-duration-short3: 150ms;
+  --md-sys-motion-duration-short4: 200ms;
+  --md-sys-motion-duration-medium1: 250ms;
+  --md-sys-motion-duration-medium2: 300ms;
+  --md-sys-motion-duration-medium3: 350ms;
+  --md-sys-motion-duration-medium4: 400ms;
+  --md-sys-motion-duration-long1: 450ms;
+  --md-sys-motion-duration-long2: 500ms;
+  --md-sys-motion-duration-long3: 550ms;
+  --md-sys-motion-duration-long4: 600ms;
+
+  /* Easing */
+  --md-sys-motion-easing-legacy: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --md-sys-motion-easing-linear: cubic-bezier(0.0, 0.0, 1, 1);
+  --md-sys-motion-easing-standard: cubic-bezier(0.2, 0.0, 0, 1.0);
+  --md-sys-motion-easing-standard-accelerate: cubic-bezier(0.3, 0, 1, 1);
+  --md-sys-motion-easing-standard-decelerate: cubic-bezier(0, 0, 0, 1);
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0.0, 0, 1.0);
+  --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0.0, 0.8, 0.15);
+  --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1.0);
+}
+
+/* ========================================
+   STATE LAYERS - Material Design 3
+   ======================================== */
+
+:root {
+  /* Hover State */
+  --md-sys-state-hover-opacity: 0.08;
+  
+  /* Focus State */
+  --md-sys-state-focus-opacity: 0.12;
+  
+  /* Pressed State */
+  --md-sys-state-pressed-opacity: 0.12;
+  
+  /* Dragged State */
+  --md-sys-state-dragged-opacity: 0.16;
+  
+  /* Selected State */
+  --md-sys-state-selected-opacity: 0.08;
+  
+  /* Activated State */
+  --md-sys-state-activated-opacity: 0.12;
+  
+  /* Disabled State */
+  --md-sys-state-disabled-opacity: 0.38;
+  --md-sys-state-disabled-container-opacity: 0.12;
+}
+
+/* ========================================
+   BASE STYLES APPLICATION
+   ======================================== */
+
+/* Apply background and surface colors globally */
+html {
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
+}
+
+body {
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
+  font-family: var(--md-sys-typescale-font-family-plain);
+  font-size: var(--md-sys-typescale-body-large-font-size);
+  font-weight: var(--md-sys-typescale-body-large-font-weight);
+  line-height: var(--md-sys-typescale-body-large-line-height);
+  letter-spacing: var(--md-sys-typescale-body-large-letter-spacing);
+  transition: background-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+              color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+}
+
+/* Ensure smooth theme transitions for all elements */
+* {
+  transition: background-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+              color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+              border-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+              box-shadow var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+}

@@ -9,15 +9,21 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
     "@fortawesome/fontawesome-free": "^6.7.2",
+    "@tanstack/react-table": "^8.21.3",
     "98.css": "^0.1.21",
     "axios": "^0.27.2",
     "bootstrap": "^5.3.7",
+    "date-fns": "^4.1.0",
     "lucide-react": "^0.511.0",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-querybuilder": "^8.8.3",
     "react-router-dom": "^6.3.0",
     "react-slick": "^0.29.0",
+    "reactflow": "^11.11.4",
     "slick-carousel": "^1.8.1"
   },
   "devDependencies": {

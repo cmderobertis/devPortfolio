@@ -1,0 +1,196 @@
+/* Material Design 3 Typography Styles */
+
+/* Base Typography */
+.md3-typography {
+  margin: 0;
+  color: inherit;
+}
+
+/* Display Styles */
+.md3-typography--display-large {
+  font-family: var(--md-sys-typescale-display-large-font-family);
+  font-weight: var(--md-sys-typescale-display-large-font-weight);
+  font-size: var(--md-sys-typescale-display-large-font-size);
+  line-height: var(--md-sys-typescale-display-large-line-height);
+  letter-spacing: var(--md-sys-typescale-display-large-letter-spacing);
+}
+
+.md3-typography--display-medium {
+  font-family: var(--md-sys-typescale-display-medium-font-family);
+  font-weight: var(--md-sys-typescale-display-medium-font-weight);
+  font-size: var(--md-sys-typescale-display-medium-font-size);
+  line-height: var(--md-sys-typescale-display-medium-line-height);
+  letter-spacing: var(--md-sys-typescale-display-medium-letter-spacing);
+}
+
+.md3-typography--display-small {
+  font-family: var(--md-sys-typescale-display-small-font-family);
+  font-weight: var(--md-sys-typescale-display-small-font-weight);
+  font-size: var(--md-sys-typescale-display-small-font-size);
+  line-height: var(--md-sys-typescale-display-small-line-height);
+  letter-spacing: var(--md-sys-typescale-display-small-letter-spacing);
+}
+
+/* Headline Styles */
+.md3-typography--headline-large {
+  font-family: var(--md-sys-typescale-headline-large-font-family);
+  font-weight: var(--md-sys-typescale-headline-large-font-weight);
+  font-size: var(--md-sys-typescale-headline-large-font-size);
+  line-height: var(--md-sys-typescale-headline-large-line-height);
+  letter-spacing: var(--md-sys-typescale-headline-large-letter-spacing);
+}
+
+.md3-typography--headline-medium {
+  font-family: var(--md-sys-typescale-headline-medium-font-family);
+  font-weight: var(--md-sys-typescale-headline-medium-font-weight);
+  font-size: var(--md-sys-typescale-headline-medium-font-size);
+  line-height: var(--md-sys-typescale-headline-medium-line-height);
+  letter-spacing: var(--md-sys-typescale-headline-medium-letter-spacing);
+}
+
+.md3-typography--headline-small {
+  font-family: var(--md-sys-typescale-headline-small-font-family);
+  font-weight: var(--md-sys-typescale-headline-small-font-weight);
+  font-size: var(--md-sys-typescale-headline-small-font-size);
+  line-height: var(--md-sys-typescale-headline-small-line-height);
+  letter-spacing: var(--md-sys-typescale-headline-small-letter-spacing);
+}
+
+/* Title Styles */
+.md3-typography--title-large {
+  font-family: var(--md-sys-typescale-title-large-font-family);
+  font-weight: var(--md-sys-typescale-title-large-font-weight);
+  font-size: var(--md-sys-typescale-title-large-font-size);
+  line-height: var(--md-sys-typescale-title-large-line-height);
+  letter-spacing: var(--md-sys-typescale-title-large-letter-spacing);
+}
+
+.md3-typography--title-medium {
+  font-family: var(--md-sys-typescale-title-medium-font-family);
+  font-weight: var(--md-sys-typescale-title-medium-font-weight);
+  font-size: var(--md-sys-typescale-title-medium-font-size);
+  line-height: var(--md-sys-typescale-title-medium-line-height);
+  letter-spacing: var(--md-sys-typescale-title-medium-letter-spacing);
+}
+
+.md3-typography--title-small {
+  font-family: var(--md-sys-typescale-title-small-font-family);
+  font-weight: var(--md-sys-typescale-title-small-font-weight);
+  font-size: var(--md-sys-typescale-title-small-font-size);
+  line-height: var(--md-sys-typescale-title-small-line-height);
+  letter-spacing: var(--md-sys-typescale-title-small-letter-spacing);
+}
+
+/* Body Styles */
+.md3-typography--body-large {
+  font-family: var(--md-sys-typescale-body-large-font-family);
+  font-weight: var(--md-sys-typescale-body-large-font-weight);
+  font-size: var(--md-sys-typescale-body-large-font-size);
+  line-height: var(--md-sys-typescale-body-large-line-height);
+  letter-spacing: var(--md-sys-typescale-body-large-letter-spacing);
+}
+
+.md3-typography--body-medium {
+  font-family: var(--md-sys-typescale-body-medium-font-family);
+  font-weight: var(--md-sys-typescale-body-medium-font-weight);
+  font-size: var(--md-sys-typescale-body-medium-font-size);
+  line-height: var(--md-sys-typescale-body-medium-line-height);
+  letter-spacing: var(--md-sys-typescale-body-medium-letter-spacing);
+}
+
+.md3-typography--body-small {
+  font-family: var(--md-sys-typescale-body-small-font-family);
+  font-weight: var(--md-sys-typescale-body-small-font-weight);
+  font-size: var(--md-sys-typescale-body-small-font-size);
+  line-height: var(--md-sys-typescale-body-small-line-height);
+  letter-spacing: var(--md-sys-typescale-body-small-letter-spacing);
+}
+
+/* Label Styles */
+.md3-typography--label-large {
+  font-family: var(--md-sys-typescale-label-large-font-family);
+  font-weight: var(--md-sys-typescale-label-large-font-weight);
+  font-size: var(--md-sys-typescale-label-large-font-size);
+  line-height: var(--md-sys-typescale-label-large-line-height);
+  letter-spacing: var(--md-sys-typescale-label-large-letter-spacing);
+}
+
+.md3-typography--label-medium {
+  font-family: var(--md-sys-typescale-label-medium-font-family);
+  font-weight: var(--md-sys-typescale-label-medium-font-weight);
+  font-size: var(--md-sys-typescale-label-medium-font-size);
+  line-height: var(--md-sys-typescale-label-medium-line-height);
+  letter-spacing: var(--md-sys-typescale-label-medium-letter-spacing);
+}
+
+.md3-typography--label-small {
+  font-family: var(--md-sys-typescale-label-small-font-family);
+  font-weight: var(--md-sys-typescale-label-small-font-weight);
+  font-size: var(--md-sys-typescale-label-small-font-size);
+  line-height: var(--md-sys-typescale-label-small-line-height);
+  letter-spacing: var(--md-sys-typescale-label-small-letter-spacing);
+}
+
+/* Color Variants */
+.md3-typography--primary {
+  color: var(--md-sys-color-primary);
+}
+
+.md3-typography--secondary {
+  color: var(--md-sys-color-secondary);
+}
+
+.md3-typography--tertiary {
+  color: var(--md-sys-color-tertiary);
+}
+
+.md3-typography--error {
+  color: var(--md-sys-color-error);
+}
+
+.md3-typography--on-surface {
+  color: var(--md-sys-color-on-surface);
+}
+
+.md3-typography--on-surface-variant {
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.md3-typography--outline {
+  color: var(--md-sys-color-outline);
+}
+
+/* Text Alignment */
+.md3-typography--align-left {
+  text-align: left;
+}
+
+.md3-typography--align-center {
+  text-align: center;
+}
+
+.md3-typography--align-right {
+  text-align: right;
+}
+
+.md3-typography--align-justify {
+  text-align: justify;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  .md3-typography--display-large {
+    font-size: calc(var(--md-sys-typescale-display-large-font-size) * 0.8);
+    line-height: calc(var(--md-sys-typescale-display-large-line-height) * 0.9);
+  }
+  
+  .md3-typography--display-medium {
+    font-size: calc(var(--md-sys-typescale-display-medium-font-size) * 0.8);
+    line-height: calc(var(--md-sys-typescale-display-medium-line-height) * 0.9);
+  }
+  
+  .md3-typography--display-small {
+    font-size: calc(var(--md-sys-typescale-display-small-font-size) * 0.9);
+    line-height: calc(var(--md-sys-typescale-display-small-line-height) * 0.95);
+  }
+}

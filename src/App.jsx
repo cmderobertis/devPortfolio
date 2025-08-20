@@ -12,8 +12,9 @@ import Prisms from "./pages/Prisms"; // Import Prism Simulation
 import Prisms3D from "./pages/Prisms3D"; // Import 3D Prism Simulation
 import GameOfLife from "./pages/GameOfLife"; // Import Game of Life
 import MazeStudio from "./pages/MazeStudio"; // Import Maze Studio
+import DatabaseEditor from "./pages/DatabaseEditor"; // Import Database Editor
 import "./styles/enhanced-material.css" // Import enhanced Material 3 styling
-import "bootstrap/dist/css/bootstrap.min.css" // Import Bootstrap CSS
+//import "bootstrap/dist/css/bootstrap.min.css" // Import Bootstrap CSS
 import { ThemeProvider } from "./context/ThemeContext"; // Import ThemeProvider
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
                 <Route path="/sim-interactive/prisms3d" element={<Prisms3D />} /> {/* 3D Prism Simulation */}
                 <Route path="/sim-interactive/gameoflife" element={<GameOfLife />} /> {/* Game of Life */}
                 <Route path="/sim-interactive/maze" element={<MazeStudio />} /> {/* Maze Studio */}
+                <Route path="/sim-interactive/database-editor" element={<DatabaseEditor />} /> {/* Database Editor */}
                 {/* Add other non-fullscreen routes here */}
               </Routes>
             </>

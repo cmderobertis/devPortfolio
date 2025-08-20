@@ -1,6 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import '../styles/DuckKonundrum.css';
 
+// Import MD3 Control Panel components
+import ControlPanel, { 
+    ControlGroup, 
+    ButtonControl, 
+    InfoDisplay, 
+    StatusIndicator 
+} from '../components/design-system/ControlPanel';
+import '../components/design-system/ControlPanel.css';
+
 // Entity classes
 class Duck {
   constructor(position = 0) {
@@ -517,35 +526,77 @@ const DuckKonundrum = () => {
                 {renderPosition(0)}
               </div>
               
-              {/* Interactive Controls */}
-              <div className="kitchen-controls">
-                <button 
-                  onClick={toggleInstructions}
-                  className={`control-btn ${gameState.instructionsVisible ? 'active-instructions' : ''}`}
-                >
-                  📜 {gameState.instructionsVisible ? 'Hide Instructions' : 'Show Instructions'}
-                </button>
-                <button 
-                  onClick={toggleSwapMode}
-                  className={`control-btn ${gameState.swapMode ? 'active-swap' : ''}`}
-                >
-                  🔄 {gameState.swapMode ? 'Exit Swap Mode' : 'Swap Mode'}
-                </button>
-                {gameState.swapMode && first && second && (
-                  <button onClick={executeSwap} className="control-btn execute-swap">
-                    ↔️ Execute Swap
-                  </button>
-                )}
-                <button onClick={() => rotateMembers(true)} className="control-btn">
-                  ↻ Rotate Clockwise
-                </button>
-                <button onClick={() => rotateMembers(false)} className="control-btn">
-                  ↺ Rotate Counter-Clockwise
-                </button>
-                <button onClick={resetPuzzle} className="control-btn reset-btn">
-                  🔄 Reset Puzzle
-                </button>
-              </div>
+              {/* MD3 Control Panel for Kitchen Actions */}
+              <ControlPanel 
+                title="Game Controls"
+                position="floating"
+                collapsible={false}
+                className="duck-controls-panel"
+              >
+                <ControlGroup label="Navigation" direction="horizontal">
+                  <ButtonControl
+                    variant={gameState.instructionsVisible ? "filled" : "outlined"}
+                    onClick={toggleInstructions}
+                    icon="fas fa-scroll"
+                    size="small"
+                  >
+                    {gameState.instructionsVisible ? 'Hide Instructions' : 'Show Instructions'}
+                  </ButtonControl>
+                </ControlGroup>
+
+                <ControlGroup label="Movement" direction="horizontal">
+                  <ButtonControl
+                    variant={gameState.swapMode ? "filled" : "outlined"}
+                    onClick={toggleSwapMode}
+                    icon="fas fa-exchange-alt"
+                    size="small"
+                  >
+                    {gameState.swapMode ? 'Exit Swap' : 'Swap Mode'}
+                  </ButtonControl>
+                  
+                  {gameState.swapMode && first && second && (
+                    <ButtonControl
+                      variant="filled"
+                      onClick={executeSwap}
+                      icon="fas fa-check"
+                      size="small"
+                    >
+                      Execute Swap
+                    </ButtonControl>
+                  )}
+                </ControlGroup>
+
+                <ControlGroup label="Rotation" direction="horizontal">
+                  <ButtonControl
+                    variant="outlined"
+                    onClick={() => rotateMembers(true)}
+                    icon="fas fa-redo"
+                    size="small"
+                  >
+                    Clockwise
+                  </ButtonControl>
+                  
+                  <ButtonControl
+                    variant="outlined"
+                    onClick={() => rotateMembers(false)}
+                    icon="fas fa-undo"
+                    size="small"
+                  >
+                    Counter-CW
+                  </ButtonControl>
+                </ControlGroup>
+
+                <ControlGroup label="Reset" direction="horizontal">
+                  <ButtonControl
+                    variant="text"
+                    onClick={resetPuzzle}
+                    icon="fas fa-sync-alt"
+                    size="small"
+                  >
+                    Reset Puzzle
+                  </ButtonControl>
+                </ControlGroup>
+              </ControlPanel>
             </div>
             
             {/* Circle Positions */}
@@ -597,7 +648,7 @@ const DuckKonundrum = () => {
                   {puzzleInstructions.map((_, index) => (
                     <button
                       key={index}
-                      className={`step-dot ${index === gameState.currentInstructionStep ? 'active' : ''}`}
+                      className={`btn ${index === gameState.currentInstructionStep ? 'active' : ''}`}
                       onClick={() => goToInstructionStep(index)}
                       title={puzzleInstructions[index].step}
                     >
@@ -617,18 +668,29 @@ const DuckKonundrum = () => {
             </div>
           )}
 
-          {/* Puzzle Status */}
+          {/* MD3 Puzzle Status */}
           <div className="puzzle-status">
             <h4>🎯 Puzzle Status</h4>
-            <div className="status-item">
-              <strong>Members in Circle:</strong> {membersInCircle}/6
+            
+            <div className="duck-status-displays">
+              <InfoDisplay 
+                label="In Circle" 
+                value={`${membersInCircle}/6`} 
+                color="primary"
+                icon="fas fa-users"
+              />
+              <InfoDisplay 
+                label="Letters" 
+                value={gameState.paintedLetters.length} 
+                color="secondary"
+                icon="fas fa-paint-brush"
+              />
+              <StatusIndicator 
+                status={gameState.swapMode ? "running" : "idle"} 
+                label={gameState.swapMode ? 'Swapping' : 'Moving'}
+              />
             </div>
-            <div className="status-item">
-              <strong>Painted Letters:</strong> {gameState.paintedLetters.length}
-            </div>
-            <div className="status-item">
-              <strong>Mode:</strong> {gameState.swapMode ? '🔄 Swapping' : '👤 Moving'}
-            </div>
+
             {gameState.swapMode && (
               <div className="swap-status">
                 <h5>Swap Selection:</h5>

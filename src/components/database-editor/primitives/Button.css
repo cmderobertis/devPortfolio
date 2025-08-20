@@ -1,0 +1,312 @@
+/**
+ * Button Component Styles
+ * Consistent button styling with all variants and states
+ */
+
+.db-button {
+  /* Base styles */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  font-family: var(--font-family-sans);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  position: relative;
+  white-space: nowrap;
+  user-select: none;
+  outline: none;
+  
+  /* Focus styles */
+  focus-visible: none;
+}
+
+.db-button:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* Size variants */
+.db-button--xs {
+  height: 1.5rem;
+  padding: 0 var(--spacing-2);
+  font-size: var(--font-size-xs);
+  gap: var(--spacing-1);
+}
+
+.db-button--sm {
+  height: 2rem;
+  padding: 0 var(--spacing-3);
+  font-size: var(--font-size-sm);
+  gap: var(--spacing-1);
+}
+
+.db-button--md {
+  height: 2.5rem;
+  padding: 0 var(--spacing-4);
+  font-size: var(--font-size-sm);
+  gap: var(--spacing-2);
+}
+
+.db-button--lg {
+  height: 3rem;
+  padding: 0 var(--spacing-5);
+  font-size: var(--font-size-base);
+  gap: var(--spacing-2);
+}
+
+.db-button--xl {
+  height: 3.5rem;
+  padding: 0 var(--spacing-6);
+  font-size: var(--font-size-lg);
+  gap: var(--spacing-3);
+}
+
+/* Icon-only buttons have square aspect ratio */
+.db-button--icon-only.db-button--xs {
+  width: 1.5rem;
+  padding: 0;
+}
+
+.db-button--icon-only.db-button--sm {
+  width: 2rem;
+  padding: 0;
+}
+
+.db-button--icon-only.db-button--md {
+  width: 2.5rem;
+  padding: 0;
+}
+
+.db-button--icon-only.db-button--lg {
+  width: 3rem;
+  padding: 0;
+}
+
+.db-button--icon-only.db-button--xl {
+  width: 3.5rem;
+  padding: 0;
+}
+
+/* Full width variant */
+.db-button--full-width {
+  width: 100%;
+}
+
+/* Primary variant */
+.db-button--primary {
+  background-color: var(--color-primary-600);
+  color: white;
+  border: 1px solid var(--color-primary-600);
+}
+
+.db-button--primary:hover:not(:disabled) {
+  background-color: var(--color-primary-700);
+  border-color: var(--color-primary-700);
+}
+
+.db-button--primary:active:not(:disabled),
+.db-button--primary.db-button--active {
+  background-color: var(--color-primary-800);
+  border-color: var(--color-primary-800);
+}
+
+/* Secondary variant */
+.db-button--secondary {
+  background-color: white;
+  color: var(--color-gray-700);
+  border: 1px solid var(--color-border);
+}
+
+.db-button--secondary:hover:not(:disabled) {
+  background-color: var(--color-gray-50);
+  border-color: var(--color-gray-300);
+}
+
+.db-button--secondary:active:not(:disabled),
+.db-button--secondary.db-button--active {
+  background-color: var(--color-gray-100);
+  border-color: var(--color-gray-400);
+}
+
+/* Danger variant */
+.db-button--danger {
+  background-color: var(--color-error);
+  color: white;
+  border: 1px solid var(--color-error);
+}
+
+.db-button--danger:hover:not(:disabled) {
+  background-color: #dc2626;
+  border-color: #dc2626;
+}
+
+.db-button--danger:active:not(:disabled),
+.db-button--danger.db-button--active {
+  background-color: #b91c1c;
+  border-color: #b91c1c;
+}
+
+/* Ghost variant */
+.db-button--ghost {
+  background-color: transparent;
+  color: var(--color-gray-700);
+  border: 1px solid transparent;
+}
+
+.db-button--ghost:hover:not(:disabled) {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-900);
+}
+
+.db-button--ghost:active:not(:disabled),
+.db-button--ghost.db-button--active {
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-900);
+}
+
+/* Link variant */
+.db-button--link {
+  background-color: transparent;
+  color: var(--color-primary-600);
+  border: 1px solid transparent;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.db-button--link:hover:not(:disabled) {
+  color: var(--color-primary-700);
+  text-decoration: underline;
+}
+
+.db-button--link:active:not(:disabled),
+.db-button--link.db-button--active {
+  color: var(--color-primary-800);
+}
+
+/* Disabled state */
+.db-button--disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.db-button--disabled:hover {
+  transform: none;
+}
+
+/* Loading state */
+.db-button--loading {
+  cursor: wait;
+}
+
+.db-button--loading .db-button__content {
+  opacity: 0.7;
+}
+
+/* Icon styles */
+.db-button__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.db-button__icon svg {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
+
+/* Spinner styles */
+.db-button__spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.db-button__spinner svg {
+  width: 1em;
+  height: 1em;
+}
+
+/* Content wrapper */
+.db-button__content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Dark mode adjustments */
+.db-dark .db-button--secondary {
+  background-color: var(--color-gray-800);
+  color: var(--color-gray-200);
+  border-color: var(--color-gray-600);
+}
+
+.db-dark .db-button--secondary:hover:not(:disabled) {
+  background-color: var(--color-gray-700);
+  border-color: var(--color-gray-500);
+}
+
+.db-dark .db-button--secondary:active:not(:disabled),
+.db-dark .db-button--secondary.db-button--active {
+  background-color: var(--color-gray-600);
+  border-color: var(--color-gray-400);
+}
+
+.db-dark .db-button--ghost {
+  color: var(--color-gray-300);
+}
+
+.db-dark .db-button--ghost:hover:not(:disabled) {
+  background-color: var(--color-gray-800);
+  color: var(--color-gray-100);
+}
+
+.db-dark .db-button--ghost:active:not(:disabled),
+.db-dark .db-button--ghost.db-button--active {
+  background-color: var(--color-gray-700);
+  color: var(--color-gray-100);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .db-button--lg,
+  .db-button--xl {
+    height: 2.5rem;
+    font-size: var(--font-size-sm);
+    padding: 0 var(--spacing-4);
+  }
+  
+  .db-button--icon-only.db-button--lg,
+  .db-button--icon-only.db-button--xl {
+    width: 2.5rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .db-button {
+    border-width: 2px;
+  }
+  
+  .db-button:focus-visible {
+    outline-width: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .db-button {
+    transition: none;
+  }
+  
+  .db-button__spinner svg {
+    animation: none;
+  }
+}

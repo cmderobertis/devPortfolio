@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import useGameOfLife from '../hooks/useGameOfLife.js';
 import GameCanvas from '../components/GameCanvas.jsx';
+import { Button } from '../components/design-system';
 import '98.css/dist/98.css';
 
 const GameOfLife = () => {
@@ -123,19 +124,19 @@ const GameOfLife = () => {
           
           <div className="status-bar">
             <div className="status-bar-field">
-              <button className="btn" onClick={togglePlayPause}>
+              <Button variant="outlined" size="small" onClick={togglePlayPause}>
                 {isPlaying ? 'Pause' : 'Play'}
-              </button>
+              </Button>
             </div>
             <div className="status-bar-field">
-              <button className="btn" onClick={resetGrid}>
+              <Button variant="outlined" size="small" onClick={resetGrid}>
                 Reset
-              </button>
+              </Button>
             </div>
             <div className="status-bar-field">
-              <button className="btn" onClick={loadTestPattern}>
+              <Button variant="outlined" size="small" onClick={loadTestPattern}>
                 Glider
-              </button>
+              </Button>
             </div>
             <div className="status-bar-field">
               <select value={Object.keys(themes).find(key => themes[key] === currentTheme) || 'minesweeper'} onChange={handleThemeChange}>

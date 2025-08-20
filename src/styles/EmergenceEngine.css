@@ -1,4 +1,26 @@
 /* src/styles/EmergenceEngine.css */
+
+/* Status Indicators */
+.emergence-status-indicators {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  gap: 12px;
+  z-index: 100;
+  flex-wrap: wrap;
+}
+
+.emergence-metrics {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 12px;
+  z-index: 100;
+  flex-wrap: wrap;
+}
+
 .emergence-engine-container {
   display: flex;
   flex-direction: column;

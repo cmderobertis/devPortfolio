@@ -1,0 +1,247 @@
+/* Material Design 3 Button Styles */
+
+/* Base Button Styles */
+.md3-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--md-sys-spacing-2);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: 8px;
+  font-family: var(--md-sys-typescale-label-large-font-family);
+  font-weight: var(--md-sys-typescale-label-large-font-weight);
+  font-size: var(--md-sys-typescale-label-large-font-size);
+  line-height: var(--md-sys-typescale-label-large-line-height);
+  letter-spacing: var(--md-sys-typescale-label-large-letter-spacing);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+  overflow: hidden;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Button Sizes */
+.md3-button--small {
+  height: 32px;
+  padding: 0 var(--md-sys-spacing-3);
+  font-size: var(--md-sys-typescale-label-medium-font-size);
+}
+
+.md3-button--medium {
+  height: 40px;
+  padding: 0 var(--md-sys-spacing-6);
+}
+
+.md3-button--large {
+  height: 48px;
+  padding: 0 var(--md-sys-spacing-8);
+  font-size: var(--md-sys-typescale-title-medium-font-size);
+}
+
+/* Icon-only buttons */
+.md3-button--icon-only {
+  aspect-ratio: 1;
+  padding: 0;
+}
+
+.md3-button--small.md3-button--icon-only {
+  width: 32px;
+}
+
+.md3-button--medium.md3-button--icon-only {
+  width: 40px;
+}
+
+.md3-button--large.md3-button--icon-only {
+  width: 48px;
+}
+
+/* Button Variants */
+
+/* Filled Button */
+.md3-button--filled {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border-color: var(--md-sys-color-primary);
+  box-shadow: var(--md-sys-elevation-level0);
+}
+
+.md3-button--filled:hover:not(.md3-button--disabled) {
+  box-shadow: var(--md-sys-elevation-level1);
+  border-color: var(--md-sys-color-primary);
+}
+
+/* Outlined Button */
+.md3-button--outlined {
+  background-color: transparent;
+  color: var(--md-sys-color-primary);
+  border-color: var(--md-sys-color-outline);
+}
+
+.md3-button--outlined:hover:not(.md3-button--disabled) {
+  border-color: var(--md-sys-color-primary);
+  background-color: rgba(var(--md-sys-color-primary-rgb), 0.08);
+}
+
+/* Text Button */
+.md3-button--text {
+  background-color: transparent;
+  color: var(--md-sys-color-primary);
+  border-color: transparent;
+}
+
+.md3-button--text:hover:not(.md3-button--disabled) {
+  border-color: transparent;
+  background-color: rgba(var(--md-sys-color-primary-rgb), 0.08);
+}
+
+/* Elevated Button */
+.md3-button--elevated {
+  background-color: var(--md-sys-color-surface-container-low);
+  color: var(--md-sys-color-primary);
+  border-color: var(--md-sys-color-outline-variant);
+  box-shadow: var(--md-sys-elevation-level1);
+}
+
+.md3-button--elevated:hover:not(.md3-button--disabled) {
+  box-shadow: var(--md-sys-elevation-level2);
+  border-color: var(--md-sys-color-outline);
+  background-color: var(--md-sys-color-surface-container);
+}
+
+/* Tonal Button */
+.md3-button--tonal {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border-color: var(--md-sys-color-secondary-container);
+}
+
+.md3-button--tonal:hover:not(.md3-button--disabled) {
+  border-color: var(--md-sys-color-secondary-container);
+  background-color: var(--md-sys-color-secondary-container);
+}
+
+/* State Layer */
+.md3-button__state-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  transition: background-color var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-standard);
+  pointer-events: none;
+}
+
+/* Hover States */
+.md3-button--filled:hover:not(.md3-button--disabled) .md3-button__state-layer {
+  background-color: rgba(255, 255, 255, var(--md-sys-state-hover-opacity));
+}
+
+.md3-button--outlined:hover:not(.md3-button--disabled) .md3-button__state-layer,
+.md3-button--text:hover:not(.md3-button--disabled) .md3-button__state-layer,
+.md3-button--elevated:hover:not(.md3-button--disabled) .md3-button__state-layer {
+  background-color: rgba(var(--md-sys-color-primary), var(--md-sys-state-hover-opacity));
+}
+
+.md3-button--tonal:hover:not(.md3-button--disabled) .md3-button__state-layer {
+  background-color: rgba(var(--md-sys-color-on-secondary-container), var(--md-sys-state-hover-opacity));
+}
+
+/* Focus States */
+.md3-button:focus:not(.md3-button--disabled) {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
+.md3-button:focus:not(.md3-button--disabled) .md3-button__state-layer {
+  background-color: rgba(var(--md-sys-color-primary), var(--md-sys-state-focus-opacity));
+}
+
+.md3-button--filled:focus:not(.md3-button--disabled) .md3-button__state-layer {
+  background-color: rgba(255, 255, 255, var(--md-sys-state-focus-opacity));
+}
+
+/* Active/Pressed States */
+.md3-button:active:not(.md3-button--disabled) .md3-button__state-layer {
+  background-color: rgba(var(--md-sys-color-primary), var(--md-sys-state-pressed-opacity));
+}
+
+.md3-button--filled:active:not(.md3-button--disabled) .md3-button__state-layer {
+  background-color: rgba(255, 255, 255, var(--md-sys-state-pressed-opacity));
+}
+
+/* Disabled State */
+.md3-button--disabled {
+  opacity: var(--md-sys-state-disabled-opacity);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Loading State */
+.md3-button--loading {
+  cursor: wait;
+  pointer-events: none;
+}
+
+/* Loading Spinner */
+.md3-button__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: md3-button-spin 1s linear infinite;
+}
+
+@keyframes md3-button-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Button Content */
+.md3-button__text {
+  position: relative;
+  z-index: 1;
+}
+
+.md3-button__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  width: 18px;
+  height: 18px;
+}
+
+.md3-button--small .md3-button__icon {
+  width: 16px;
+  height: 16px;
+}
+
+.md3-button--large .md3-button__icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .md3-button {
+    min-height: 44px; /* Increase touch target for mobile */
+  }
+  
+  .md3-button--small {
+    height: 36px;
+  }
+  
+  .md3-button--medium {
+    height: 44px;
+  }
+  
+  .md3-button--large {
+    height: 52px;
+  }
+}

@@ -1,9 +1,11 @@
-import React, { useContext } from "react"
+import React from "react"
 import { NavLink } from "react-router-dom"
-import { ThemeContext } from "../context/ThemeContext"
+import { useTheme } from "../context/ThemeContext"
+import { Button } from "../components/design-system"
+import { CompactThemeToggle } from "./ThemeToggle"
 
 const Navbar = () => {
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { resolvedTheme } = useTheme();
 
   return (
     <div className="App">
@@ -39,27 +41,27 @@ const Navbar = () => {
                     about
                   </NavLink>
                 </li>
-                <NavLink className="nav-item text-end" to={"/sim-interactive"}>
-                  <span className="nav-link">projects</span> 
-                </NavLink>
-                <button 
-                  className="nav-item btn btn-outline-light ms-2" 
-                  onClick={toggleTheme}
-                  title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+                <li className="nav-item text-end">
+                  <NavLink className="nav-link" to={"/sim-interactive"}>
+                    projects
+                  </NavLink>
+                </li>
+                <CompactThemeToggle className="ms-2" />
+                <Button
+                  variant="filled"
+                  size="medium"
+                  href="mailto:cmderobertis@gmail.com"
+                  className="ms-3"
                 >
-                  {/* toggle between light and dark font awesome icon on click */}
-                  <i className={theme === 'light' ? 'fas fa-moon' : 'fas fa-sun'}></i>
-                </button>
-                <a className="nav-item btn btn-info text-light ms-3 text-end" href="mailto:cmderobertis@gmail.com">
-                  contact
-                </a>
+                  contact me
+                </Button>
               </ul>
             </div>
           </div>
         </nav>
       </div>
     </div>
-  )
+  );
 }
 
 export default Navbar

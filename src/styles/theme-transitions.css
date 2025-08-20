@@ -1,0 +1,214 @@
+/* Enhanced Theme Transition Styles */
+/* Ensures smooth transitions between light and dark modes across all components */
+
+/* Global transition enhancement for theme switching */
+html,
+body,
+#root {
+  transition: 
+    background-color var(--md-sys-motion-duration-medium3) var(--md-sys-motion-easing-standard),
+    color var(--md-sys-motion-duration-medium3) var(--md-sys-motion-easing-standard);
+}
+
+/* Enhanced transitions for common elements */
+.navbar,
+.navbar-brand,
+.nav-link,
+.card,
+.btn,
+.button,
+.form-control,
+.form-select,
+.modal,
+.modal-content,
+.dropdown-menu,
+.dropdown-item,
+.alert,
+.badge,
+.progress,
+.progress-bar,
+.list-group-item,
+.table,
+.table th,
+.table td {
+  transition: 
+    background-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+    color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+    border-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+    box-shadow var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+}
+
+/* Canvas and interactive elements */
+canvas,
+.interactive-showcase,
+.emergence-engine-container,
+.dvd-bouncer-container,
+.maze-studio,
+.duck-konundrum {
+  transition: 
+    background-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+    border-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+}
+
+/* Design system components */
+.md3-card,
+.md3-button,
+.md3-container,
+.md3-surface,
+.control-panel,
+.control-group,
+.info-display,
+.status-indicator {
+  transition: 
+    background-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+    color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+    border-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+    box-shadow var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+}
+
+/* Interactive simulation elements */
+.maze-canvas,
+.emergence-canvas,
+.dvd-canvas,
+.game-canvas {
+  transition: 
+    border-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+    box-shadow var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+}
+
+/* Control panels and UI elements */
+.slider-control,
+.button-control,
+.select-control,
+.toggle-control {
+  transition: 
+    background-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+    color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+    border-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+}
+
+/* Text and typography elements */
+h1, h2, h3, h4, h5, h6,
+p, span, div, a,
+.text-primary,
+.text-secondary,
+.text-muted,
+.text-light,
+.text-dark {
+  transition: 
+    color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+}
+
+/* Bootstrap compatibility transitions */
+.bg-primary,
+.bg-secondary,
+.bg-light,
+.bg-dark,
+.bg-white,
+.bg-transparent {
+  transition: 
+    background-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+}
+
+/* Border and outline transitions */
+.border,
+.border-primary,
+.border-secondary,
+.border-light,
+.border-dark {
+  transition: 
+    border-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+}
+
+/* Shadow transitions for elevation changes */
+.shadow,
+.shadow-sm,
+.shadow-lg,
+.card-shadow,
+.elevation-1,
+.elevation-2,
+.elevation-3,
+.elevation-4,
+.elevation-5 {
+  transition: 
+    box-shadow var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+}
+
+/* Enhanced theme switching animation */
+[data-theme="light"],
+[data-theme="dark"] {
+  /* Prevent flash of unstyled content during theme transitions */
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
+}
+
+/* Staggered transition delays for a more polished feel */
+.navbar {
+  transition-delay: 0ms;
+}
+
+.card,
+.md3-card {
+  transition-delay: 50ms;
+}
+
+.btn,
+.md3-button {
+  transition-delay: 100ms;
+}
+
+.form-control,
+.form-select {
+  transition-delay: 150ms;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode adjustments */
+@media (prefers-contrast: high) {
+  /* Ensure sufficient contrast during transitions */
+  .theme-toggle,
+  .navbar,
+  .card,
+  .btn {
+    border-width: 2px;
+  }
+}
+
+/* Dark mode specific transition enhancements */
+[data-theme="dark"] {
+  /* Ensure dark backgrounds transition smoothly */
+  background-color: var(--md-sys-color-background);
+}
+
+[data-theme="dark"] .navbar,
+[data-theme="dark"] .card,
+[data-theme="dark"] .modal-content {
+  /* Enhanced dark mode surface transitions */
+  background-color: var(--md-sys-color-surface-container);
+}
+
+/* Light mode specific transition enhancements */
+[data-theme="light"] {
+  /* Ensure light backgrounds transition smoothly */
+  background-color: var(--md-sys-color-background);
+}
+
+[data-theme="light"] .navbar,
+[data-theme="light"] .card,
+[data-theme="light"] .modal-content {
+  /* Enhanced light mode surface transitions */
+  background-color: var(--md-sys-color-surface-container);
+}

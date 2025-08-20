@@ -1,0 +1,276 @@
+/* Theme Toggle Component - Material Design 3 */
+
+.theme-toggle {
+  /* Base styles using MD3 tokens */
+  background-color: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--md-sys-shape-corner-full);
+  font-family: var(--md-sys-typescale-font-family-plain);
+  cursor: pointer;
+  user-select: none;
+  
+  /* Flexbox layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--md-sys-spacing-2);
+  
+  /* Animation and transitions */
+  transition: 
+    background-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+    border-color var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+    box-shadow var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+    transform var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-standard);
+  
+  /* Accessibility */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Size variants */
+.theme-toggle--small {
+  padding: var(--md-sys-spacing-2) var(--md-sys-spacing-3);
+  font-size: var(--md-sys-typescale-label-medium-font-size);
+  font-weight: var(--md-sys-typescale-label-medium-font-weight);
+  line-height: var(--md-sys-typescale-label-medium-line-height);
+  min-height: 2rem;
+}
+
+.theme-toggle--medium {
+  padding: var(--md-sys-spacing-3) var(--md-sys-spacing-4);
+  font-size: var(--md-sys-typescale-label-large-font-size);
+  font-weight: var(--md-sys-typescale-label-large-font-weight);
+  line-height: var(--md-sys-typescale-label-large-line-height);
+  min-height: 2.5rem;
+}
+
+.theme-toggle--large {
+  padding: var(--md-sys-spacing-4) var(--md-sys-spacing-5);
+  font-size: var(--md-sys-typescale-title-medium-font-size);
+  font-weight: var(--md-sys-typescale-title-medium-font-weight);
+  line-height: var(--md-sys-typescale-title-medium-line-height);
+  min-height: 3rem;
+}
+
+/* Compact variant (icon only) */
+.theme-toggle--compact {
+  padding: var(--md-sys-spacing-2);
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  border-radius: var(--md-sys-shape-corner-full);
+  gap: 0;
+}
+
+/* Style variants */
+.theme-toggle--default {
+  background-color: var(--md-sys-color-surface-container);
+  border-color: var(--md-sys-color-outline-variant);
+}
+
+.theme-toggle--filled {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  border-color: transparent;
+}
+
+.theme-toggle--outlined {
+  background-color: transparent;
+  border-color: var(--md-sys-color-outline);
+  border-width: 1px;
+}
+
+.theme-toggle--text {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--md-sys-color-primary);
+}
+
+/* Icon styling */
+.theme-toggle__icon {
+  font-size: 1.2em;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Label styling */
+.theme-toggle__label {
+  font-weight: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Auto mode indicator */
+.theme-toggle__indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle__auto-indicator {
+  font-size: 0.6em;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+  padding: 0.125rem 0.25rem;
+  background-color: var(--md-sys-color-outline-variant);
+  color: var(--md-sys-color-on-surface-variant);
+  border-radius: var(--md-sys-shape-corner-extra-small);
+}
+
+.theme-toggle__auto-dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 50%;
+  background-color: var(--md-sys-color-primary);
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  animation: pulse 2s infinite;
+}
+
+/* Interactive states */
+.theme-toggle:hover {
+  background-color: var(--md-sys-color-surface-container-high);
+  box-shadow: var(--md-sys-elevation-level1);
+  transform: translateY(-1px);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+  box-shadow: var(--md-sys-elevation-level2);
+}
+
+.theme-toggle:active {
+  transform: translateY(0);
+  box-shadow: var(--md-sys-elevation-level1);
+}
+
+/* Variant-specific hover states */
+.theme-toggle--filled:hover {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.theme-toggle--outlined:hover {
+  background-color: var(--md-sys-color-surface-container-low);
+  border-color: var(--md-sys-color-primary);
+}
+
+.theme-toggle--text:hover {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+/* Theme-specific styling */
+.theme-toggle--light {
+  /* Light mode specific adjustments if needed */
+}
+
+.theme-toggle--dark {
+  /* Dark mode specific adjustments if needed */
+}
+
+.theme-toggle--auto {
+  /* Auto mode indicator */
+  position: relative;
+}
+
+.theme-toggle--auto::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 1px solid var(--md-sys-color-primary);
+  border-radius: inherit;
+  opacity: 0.3;
+  animation: auto-glow 3s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes auto-glow {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.02);
+  }
+}
+
+/* Ripple effect for better Material Design feel */
+.theme-toggle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background-color: var(--md-sys-color-on-surface);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: width var(--md-sys-motion-duration-short4), 
+              height var(--md-sys-motion-duration-short4), 
+              opacity var(--md-sys-motion-duration-short4);
+}
+
+.theme-toggle:active::after {
+  width: 100%;
+  height: 100%;
+  opacity: var(--md-sys-state-pressed-opacity);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .theme-toggle {
+    border-width: 2px;
+    border-color: var(--md-sys-color-outline);
+  }
+  
+  .theme-toggle:focus-visible {
+    outline-width: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle,
+  .theme-toggle::after,
+  .theme-toggle::before,
+  .theme-toggle__auto-dot {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* Mobile touch improvements */
+@media (pointer: coarse) {
+  .theme-toggle {
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+  }
+  
+  .theme-toggle--compact {
+    min-height: 3rem;
+    min-width: 3rem;
+  }
+}

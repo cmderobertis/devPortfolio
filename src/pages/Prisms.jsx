@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { vec } from '../utils/vectorMath.js';
 import { N_AIR, calculateRefractiveIndices, COLOR_MAP } from '../utils/opticsUtils.js';
 import { getLineIntersection, getNormal, refract } from '../utils/rayTracing.js';
+import { Button } from '../components/design-system';
 
 const PrismSimulation = (props) => {
   const canvasRef = useRef(null);
@@ -247,13 +248,13 @@ const PrismPage = () => {
         <div className="col-12">
           <div className="d-flex justify-content-between align-items-center mb-4">
             <h1 className="display-4 fw-bold text-primary mb-0">Prism Light Dispersion</h1>
-            <button 
-              className="btn btn-outline-secondary"
+            <Button 
+              variant="outlined"
               onClick={() => setShowInfo(!showInfo)}
+              icon={<i className="fas fa-info-circle"></i>}
             >
-              <i className="fas fa-info-circle me-2"></i>
               {showInfo ? 'Hide Info' : 'Show Info'}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
