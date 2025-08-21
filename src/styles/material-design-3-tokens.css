@@ -7,7 +7,7 @@
 
 :root {
   /* Primary Colors */
-  --md-sys-color-primary: #1976d2;
+  --md-sys-color-primary: #4c2ba6;
   --md-sys-color-on-primary: #ffffff;
   --md-sys-color-primary-container: #d3e3fd;
   --md-sys-color-on-primary-container: #001c3b;
@@ -59,13 +59,13 @@
 
 [data-theme="dark"] {
   /* Primary Colors - Dark Mode */
-  --md-sys-color-primary: #a4c8ff;
+  --md-sys-color-primary: #43a08f;
   --md-sys-color-on-primary: #003062;
   --md-sys-color-primary-container: #004788;
   --md-sys-color-on-primary-container: #d3e3fd;
 
   /* Secondary Colors - Dark Mode */
-  --md-sys-color-secondary: #bec6dc;
+  --md-sys-color-secondary: #cedab0;
   --md-sys-color-on-secondary: #283041;
   --md-sys-color-secondary-container: #3e4759;
   --md-sys-color-on-secondary-container: #dae2f9;

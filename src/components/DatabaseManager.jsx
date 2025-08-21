@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { Card, CardContent, CardActions, Button, Typography, Combobox } from './design-system';
 
 // Simple LocalStorage Database Implementation
 class SimpleDB {
@@ -139,20 +140,20 @@ function DataTable({ data, columns, onEdit, onDelete, onAdd }) {
 
   const styles = {
     container: {
-      border: '1px solid #e5e7eb',
-      borderRadius: '0.5rem',
+      border: '1px solid var(--md-sys-color-outline-variant)',
+      borderRadius: 'var(--md-sys-shape-corner-medium)',
       overflow: 'hidden',
-      backgroundColor: 'white'
+      backgroundColor: 'var(--md-sys-color-surface-container-lowest)'
     },
     controls: {
-      padding: '1rem',
-      backgroundColor: '#f9fafb',
-      borderBottom: '1px solid #e5e7eb',
+      padding: 'var(--md-sys-spacing-4)',
+      backgroundColor: 'var(--md-sys-color-surface-container)',
+      borderBottom: '1px solid var(--md-sys-color-outline-variant)',
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
       flexWrap: 'wrap',
-      gap: '1rem'
+      gap: 'var(--md-sys-spacing-4)'
     },
     searchInput: {
       padding: '0.5rem',
@@ -166,25 +167,28 @@ function DataTable({ data, columns, onEdit, onDelete, onAdd }) {
       borderCollapse: 'collapse'
     },
     th: {
-      padding: '0.75rem',
-      backgroundColor: '#f9fafb',
-      borderBottom: '1px solid #e5e7eb',
+      padding: 'var(--md-sys-spacing-3)',
+      backgroundColor: 'var(--md-sys-color-surface-container-high)',
+      borderBottom: '1px solid var(--md-sys-color-outline-variant)',
       textAlign: 'left',
-      fontWeight: '600',
-      color: '#374151',
+      fontWeight: 'var(--md-sys-typescale-title-medium-font-weight)',
+      color: 'var(--md-sys-color-on-surface)',
       cursor: 'pointer',
       userSelect: 'none'
     },
     td: {
-      padding: '0.75rem',
-      borderBottom: '1px solid #f3f4f6',
-      color: '#6b7280'
+      padding: 'var(--md-sys-spacing-3)',
+      borderBottom: '1px solid var(--md-sys-color-outline-variant)',
+      color: 'var(--md-sys-color-on-surface)',
+      backgroundColor: 'var(--md-sys-color-surface-container-lowest)'
     },
     editInput: {
       width: '100%',
-      padding: '0.25rem',
-      border: '1px solid #d1d5db',
-      borderRadius: '0.25rem'
+      padding: 'var(--md-sys-spacing-2)',
+      border: '1px solid var(--md-sys-color-outline)',
+      borderRadius: 'var(--md-sys-shape-corner-extra-small)',
+      backgroundColor: 'var(--md-sys-color-surface-container-highest)',
+      color: 'var(--md-sys-color-on-surface)'
     },
     button: {
       padding: '0.375rem 0.75rem',
@@ -267,19 +271,22 @@ function DataTable({ data, columns, onEdit, onDelete, onAdd }) {
   return (
     <div style={styles.container}>
       <div style={styles.controls}>
-        <input
-          style={styles.searchInput}
-          placeholder="Search records..."
+        <Combobox
+          options={[]}
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search records..."
+          onInputChange={(value) => setSearchTerm(value)}
+          onSelectionChange={() => {}}
+          clearable
+          style={{ minWidth: '200px' }}
         />
         {onAdd && (
-          <button
-            style={{ ...styles.button, ...styles.primaryButton }}
+          <Button
+            variant="filled"
             onClick={onAdd}
           >
             Add Record
-          </button>
+          </Button>
         )}
       </div>
       
@@ -336,12 +343,13 @@ function DataTable({ data, columns, onEdit, onDelete, onAdd }) {
               })}
               <td style={styles.td}>
                 {onDelete && (
-                  <button
-                    style={{ ...styles.button, ...styles.dangerButton }}
+                  <Button
+                    variant="outlined"
                     onClick={() => onDelete(row.id)}
+                    style={{ color: 'var(--md-sys-color-error)', borderColor: 'var(--md-sys-color-error)' }}
                   >
                     Delete
-                  </button>
+                  </Button>
                 )}
               </td>
             </tr>
@@ -361,15 +369,18 @@ function QueryBuilder({ tables, onQueryResult }) {
 
   const styles = {
     container: {
-      backgroundColor: 'white',
-      border: '1px solid #e5e7eb',
-      borderRadius: '0.5rem',
-      padding: '1rem'
+      backgroundColor: 'var(--md-sys-color-surface-container-lowest)',
+      border: '1px solid var(--md-sys-color-outline-variant)',
+      borderRadius: 'var(--md-sys-shape-corner-medium)',
+      padding: 'var(--md-sys-spacing-4)'
     },
     section: {
-      marginBottom: '1rem',
-      paddingBottom: '1rem',
-      borderBottom: '1px solid #f3f4f6'
+      marginBottom: 'var(--md-sys-spacing-4)',
+      paddingBottom: 'var(--md-sys-spacing-4)',
+      borderBottom: '1px solid var(--md-sys-color-outline-variant)',
+      backgroundColor: 'var(--md-sys-color-surface-container)',
+      borderRadius: 'var(--md-sys-shape-corner-small)',
+      padding: 'var(--md-sys-spacing-4)'
     },
     select: {
       padding: '0.5rem 0.75rem',
@@ -498,20 +509,20 @@ function QueryBuilder({ tables, onQueryResult }) {
         <h4 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '600' }}>
           1. Select Table
         </h4>
-        <select
-          style={styles.select}
+        <Combobox
+          options={Object.keys(tables).map(tableName => ({ value: tableName, label: tableName }))}
           value={selectedTable}
-          onChange={(e) => {
-            setSelectedTable(e.target.value);
+          placeholder="Choose table..."
+          onSelectionChange={(option) => {
+            const tableName = option?.value || '';
+            setSelectedTable(tableName);
             setSelectedFields([]);
             setConditions([]);
           }}
-        >
-          <option value="" style={styles.option}>Choose table...</option>
-          {Object.keys(tables).map(tableName => (
-            <option key={tableName} value={tableName} style={styles.option}>{tableName}</option>
-          ))}
-        </select>
+          getOptionValue={(option) => option.value}
+          getOptionLabel={(option) => option.label}
+          style={{ minWidth: '200px' }}
+        />
       </div>
 
       {/* Field Selection */}
@@ -529,7 +540,7 @@ function QueryBuilder({ tables, onQueryResult }) {
                 padding: '0.5rem',
                 border: '1px solid #e5e7eb',
                 borderRadius: '0.375rem',
-                backgroundColor: selectedFields.includes(field) ? '#dbeafe' : 'white',
+                backgroundColor: selectedFields.includes(field) ? 'var(--md-sys-color-primary-container)' : 'var(--md-sys-color-surface-container-high)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease'
               }}>
@@ -553,7 +564,7 @@ function QueryBuilder({ tables, onQueryResult }) {
                 <span style={{ 
                   fontSize: '0.875rem',
                   fontWeight: '500',
-                  color: selectedFields.includes(field) ? '#1e40af' : '#374151'
+                  color: selectedFields.includes(field) ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)'
                 }}>
                   {field}
                 </span>
@@ -571,56 +582,67 @@ function QueryBuilder({ tables, onQueryResult }) {
           </h4>
           {conditions.map((condition, index) => (
             <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem', gap: '0.5rem' }}>
-              <select
-                style={styles.select}
+              <Combobox
+                options={tableFields.map(field => ({ value: field, label: field }))}
                 value={condition.field}
-                onChange={(e) => updateCondition(index, 'field', e.target.value)}
-              >
-                <option value="" style={styles.option}>Select field...</option>
-                {tableFields.map(field => (
-                  <option key={field} value={field} style={styles.option}>{field}</option>
-                ))}
-              </select>
+                placeholder="Select field..."
+                onSelectionChange={(option) => updateCondition(index, 'field', option?.value || '')}
+                getOptionValue={(option) => option.value}
+                getOptionLabel={(option) => option.label}
+                style={{ minWidth: '150px' }}
+              />
               
-              <select
-                style={styles.select}
+              <Combobox
+                options={[
+                  { value: '=', label: '=' },
+                  { value: '!=', label: '!=' },
+                  { value: '>', label: '>' },
+                  { value: '<', label: '<' },
+                  { value: 'contains', label: 'contains' }
+                ]}
                 value={condition.operator}
-                onChange={(e) => updateCondition(index, 'operator', e.target.value)}
-              >
-                <option value="=" style={styles.option}>=</option>
-                <option value="!=" style={styles.option}>!=</option>
-                <option value=">" style={styles.option}>{'>'}</option>
-                <option value="<" style={styles.option}>{'<'}</option>
-                <option value="contains" style={styles.option}>contains</option>
-              </select>
+                onSelectionChange={(option) => updateCondition(index, 'operator', option?.value || '=')}
+                getOptionValue={(option) => option.value}
+                getOptionLabel={(option) => option.label}
+                style={{ minWidth: '120px' }}
+              />
               
               <input
-                style={{ ...styles.select, flex: 1 }}
+                style={{ 
+                  padding: 'var(--md-sys-spacing-2)',
+                  border: '1px solid var(--md-sys-color-outline)',
+                  borderRadius: 'var(--md-sys-shape-corner-extra-small)',
+                  backgroundColor: 'var(--md-sys-color-surface-container-highest)',
+                  color: 'var(--md-sys-color-on-surface)',
+                  flex: 1,
+                  fontFamily: 'var(--md-sys-typescale-body-medium-font-family)'
+                }}
                 placeholder="Value"
                 value={condition.value}
                 onChange={(e) => updateCondition(index, 'value', e.target.value)}
               />
               
-              <button
-                style={{ ...styles.button, backgroundColor: '#ef4444', padding: '0.5rem' }}
+              <Button
+                variant="outlined"
                 onClick={() => removeCondition(index)}
+                style={{ color: 'var(--md-sys-color-error)', borderColor: 'var(--md-sys-color-error)' }}
               >
                 Remove
-              </button>
+              </Button>
             </div>
           ))}
-          <button style={styles.button} onClick={addCondition}>
+          <Button variant="tonal" onClick={addCondition}>
             Add Condition
-          </button>
+          </Button>
         </div>
       )}
 
       {/* Execute Query */}
       {selectedTable && (
         <div style={styles.section}>
-          <button style={styles.button} onClick={executeQuery}>
+          <Button variant="filled" onClick={executeQuery}>
             Run Query
-          </button>
+          </Button>
         </div>
       )}
 
@@ -630,12 +652,33 @@ function QueryBuilder({ tables, onQueryResult }) {
           <h4 style={{ marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '600' }}>
             Results ({results.length} records)
           </h4>
-          <div style={{ maxHeight: '300px', overflow: 'auto', border: '1px solid #e5e7eb', borderRadius: '0.375rem' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
-              <thead style={{ backgroundColor: '#f9fafb', position: 'sticky', top: 0 }}>
+          <div style={{ 
+            maxHeight: '300px', 
+            overflow: 'auto', 
+            border: '1px solid var(--md-sys-color-outline-variant)', 
+            borderRadius: 'var(--md-sys-shape-corner-small)',
+            backgroundColor: 'var(--md-sys-color-surface-container-lowest)'
+          }}>
+            <table style={{ 
+              width: '100%', 
+              borderCollapse: 'collapse', 
+              fontSize: 'var(--md-sys-typescale-body-medium-font-size)',
+              fontFamily: 'var(--md-sys-typescale-body-medium-font-family)'
+            }}>
+              <thead style={{ 
+                backgroundColor: 'var(--md-sys-color-surface-container-high)', 
+                position: 'sticky', 
+                top: 0 
+              }}>
                 <tr>
                   {results.length > 0 && Object.keys(results[0]).map(key => (
-                    <th key={key} style={{ padding: '0.5rem', textAlign: 'left', borderBottom: '1px solid #e5e7eb' }}>
+                    <th key={key} style={{ 
+                      padding: 'var(--md-sys-spacing-3)', 
+                      textAlign: 'left', 
+                      borderBottom: '1px solid var(--md-sys-color-outline-variant)',
+                      color: 'var(--md-sys-color-on-surface)',
+                      fontWeight: 'var(--md-sys-typescale-title-medium-font-weight)'
+                    }}>
                       {key}
                     </th>
                   ))}
@@ -645,7 +688,11 @@ function QueryBuilder({ tables, onQueryResult }) {
                 {results.map((row, index) => (
                   <tr key={index}>
                     {Object.values(row).map((value, i) => (
-                      <td key={i} style={{ padding: '0.5rem', borderBottom: '1px solid #f3f4f6' }}>
+                      <td key={i} style={{ 
+                        padding: 'var(--md-sys-spacing-3)', 
+                        borderBottom: '1px solid var(--md-sys-color-outline-variant)',
+                        color: 'var(--md-sys-color-on-surface-variant)'
+                      }}>
                         {String(value)}
                       </td>
                     ))}
@@ -675,26 +722,26 @@ export function DatabaseManager() {
     container: {
       display: 'flex',
       height: '600px',
-      border: '1px solid #e5e7eb',
-      borderRadius: '0.5rem',
+      border: '1px solid var(--md-sys-color-outline-variant)',
+      borderRadius: 'var(--md-sys-shape-corner-medium)',
       overflow: 'hidden',
-      backgroundColor: 'white'
+      backgroundColor: 'var(--md-sys-color-surface-container-lowest)'
     },
     sidebar: {
       width: '250px',
-      backgroundColor: '#f9fafb',
-      borderRight: '1px solid #e5e7eb',
+      backgroundColor: 'var(--md-sys-color-surface-container-low)',
+      borderRight: '1px solid var(--md-sys-color-outline-variant)',
       display: 'flex',
       flexDirection: 'column'
     },
     sidebarHeader: {
-      padding: '1rem',
-      borderBottom: '1px solid #e5e7eb',
-      backgroundColor: 'white'
+      padding: 'var(--md-sys-spacing-4)',
+      borderBottom: '1px solid var(--md-sys-color-outline-variant)',
+      backgroundColor: 'var(--md-sys-color-surface-container)'
     },
     sidebarContent: {
       flex: 1,
-      padding: '1rem',
+      padding: 'var(--md-sys-spacing-4)',
       overflow: 'auto'
     },
     main: {
@@ -703,14 +750,15 @@ export function DatabaseManager() {
       flexDirection: 'column'
     },
     mainHeader: {
-      padding: '1rem',
-      borderBottom: '1px solid #e5e7eb',
-      backgroundColor: '#f9fafb'
+      padding: 'var(--md-sys-spacing-4)',
+      borderBottom: '1px solid var(--md-sys-color-outline-variant)',
+      backgroundColor: 'var(--md-sys-color-surface-container)'
     },
     mainContent: {
       flex: 1,
-      padding: '1rem',
-      overflow: 'auto'
+      padding: 'var(--md-sys-spacing-4)',
+      overflow: 'auto',
+      backgroundColor: 'var(--md-sys-color-surface-container-lowest)'
     },
     button: {
       padding: '0.5rem 1rem',
@@ -755,26 +803,31 @@ export function DatabaseManager() {
       zIndex: 1000
     },
     modalContent: {
-      backgroundColor: 'white',
-      borderRadius: '0.5rem',
-      padding: '2rem',
+      backgroundColor: 'var(--md-sys-color-surface-container)',
+      borderRadius: 'var(--md-sys-shape-corner-large)',
+      padding: 'var(--md-sys-spacing-6)',
       maxWidth: '500px',
-      width: '90%'
+      width: '90%',
+      boxShadow: 'var(--md-sys-elevation-level3)'
     },
     input: {
       width: '100%',
-      padding: '0.5rem',
-      border: '1px solid #d1d5db',
-      borderRadius: '0.375rem',
-      fontSize: '0.875rem',
-      marginBottom: '1rem'
+      padding: 'var(--md-sys-spacing-3)',
+      border: '1px solid var(--md-sys-color-outline)',
+      borderRadius: 'var(--md-sys-shape-corner-small)',
+      fontSize: 'var(--md-sys-typescale-body-large-font-size)',
+      marginBottom: 'var(--md-sys-spacing-4)',
+      backgroundColor: 'var(--md-sys-color-surface-container-highest)',
+      color: 'var(--md-sys-color-on-surface)',
+      fontFamily: 'var(--md-sys-typescale-body-large-font-family)'
     },
     label: {
       display: 'block',
-      fontSize: '0.875rem',
-      fontWeight: '500',
-      color: '#374151',
-      marginBottom: '0.25rem'
+      fontSize: 'var(--md-sys-typescale-body-medium-font-size)',
+      fontWeight: 'var(--md-sys-typescale-body-medium-font-weight)',
+      color: 'var(--md-sys-color-on-surface)',
+      marginBottom: 'var(--md-sys-spacing-1)',
+      fontFamily: 'var(--md-sys-typescale-body-medium-font-family)'
     }
   };
 
@@ -945,34 +998,34 @@ export function DatabaseManager() {
             </div>
             
             {Object.keys(tables).length === 0 ? (
-              <div style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', padding: '1rem 0' }}>
+              <div style={{ 
+                color: 'var(--md-sys-color-on-surface-variant)', 
+                fontSize: 'var(--md-sys-typescale-body-medium-font-size)', 
+                textAlign: 'center', 
+                padding: 'var(--md-sys-spacing-4) 0',
+                fontFamily: 'var(--md-sys-typescale-body-medium-font-family)'
+              }}>
                 No tables found
               </div>
             ) : (
               Object.keys(tables).map(tableName => (
                 <div key={tableName} style={{ display: 'flex', alignItems: 'center' }}>
-                  <button
-                    style={{
-                      ...styles.tableButton,
-                      ...(activeTable === tableName ? styles.activeTableButton : {})
-                    }}
+                  <Button
+                    variant={activeTable === tableName ? 'filled' : 'text'}
                     onClick={() => setActiveTable(tableName)}
+                    style={{ width: '100%', justifyContent: 'flex-start', marginBottom: 'var(--md-sys-spacing-1)' }}
                   >
                     📋 {tableName} ({tables[tableName].length})
-                  </button>
-                  <button
-                    style={{ 
-                      ...styles.button, 
-                      padding: '0.25rem', 
-                      fontSize: '0.75rem',
-                      backgroundColor: 'transparent',
-                      color: '#ef4444'
-                    }}
+                  </Button>
+                  <Button
+                    variant="text"
+                    size="small"
                     onClick={() => handleDeleteTable(tableName)}
                     title="Delete table"
+                    style={{ color: 'var(--md-sys-color-error)', minWidth: 'auto' }}
                   >
                     🗑️
-                  </button>
+                  </Button>
                 </div>
               ))
             )}
@@ -1003,24 +1056,20 @@ export function DatabaseManager() {
               {activeView === 'query' ? 'Query Builder' : (activeTable ? `Table: ${activeTable}` : 'Select a table')}
             </h2>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button
-                style={{
-                  ...styles.button,
-                  ...(activeView === 'table' ? styles.primaryButton : styles.secondaryButton)
-                }}
+              <Button
+                variant={activeView === 'table' ? 'filled' : 'outlined'}
                 onClick={() => setActiveView('table')}
+                icon={<span>📋</span>}
               >
-                📋 Table View
-              </button>
-              <button
-                style={{
-                  ...styles.button,
-                  ...(activeView === 'query' ? styles.primaryButton : styles.secondaryButton)
-                }}
+                Table View
+              </Button>
+              <Button
+                variant={activeView === 'query' ? 'filled' : 'outlined'}
                 onClick={() => setActiveView('query')}
+                icon={<span>🔍</span>}
               >
-                🔍 Query Builder
-              </button>
+                Query Builder
+              </Button>
             </div>
           </div>
         </div>
@@ -1044,21 +1093,22 @@ export function DatabaseManager() {
           ) : (
             <div style={{ 
               textAlign: 'center', 
-              color: '#6b7280', 
-              padding: '3rem',
-              fontSize: '1rem'
+              color: 'var(--md-sys-color-on-surface-variant)', 
+              padding: 'var(--md-sys-spacing-12)',
+              fontSize: 'var(--md-sys-typescale-body-large-font-size)',
+              fontFamily: 'var(--md-sys-typescale-body-large-font-family)'
             }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🗄️</div>
               <h3 style={{ marginBottom: '1rem' }}>Welcome to Database Manager</h3>
               <p style={{ marginBottom: '2rem' }}>
                 Select a table from the sidebar to view and manage your data, or create a new table to get started.
               </p>
-              <button
-                style={{ ...styles.button, ...styles.primaryButton }}
+              <Button
+                variant="filled"
                 onClick={() => setShowCreateTable(true)}
               >
                 Create Your First Table
-              </button>
+              </Button>
             </div>
           )}
         </div>
@@ -1078,18 +1128,18 @@ export function DatabaseManager() {
               autoFocus
             />
             <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button
-                style={{ ...styles.button, ...styles.primaryButton }}
+              <Button
+                variant="filled"
                 onClick={handleCreateTable}
               >
                 Create Table
-              </button>
-              <button
-                style={{ ...styles.button, ...styles.secondaryButton }}
+              </Button>
+              <Button
+                variant="outlined"
                 onClick={() => setShowCreateTable(false)}
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -1115,18 +1165,18 @@ export function DatabaseManager() {
               </div>
             ))}
             <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button
-                style={{ ...styles.button, ...styles.primaryButton }}
+              <Button
+                variant="filled"
                 onClick={handleSaveRecord}
               >
                 Save Record
-              </button>
-              <button
-                style={{ ...styles.button, ...styles.secondaryButton }}
+              </Button>
+              <Button
+                variant="outlined"
                 onClick={() => setShowAddModal(false)}
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </div>
         </div>

@@ -1,26 +1,27 @@
 import { useState } from 'react';
 import DatabaseManager from '../components/DatabaseManager.jsx';
+import { Card, CardContent, Button, Typography, Container } from '../components/design-system';
 
 const DatabaseEditor = () => {
   const [activeTab, setActiveTab] = useState('overview');
 
   const containerStyle = {
-    backgroundColor: '#f8fafc',
+    backgroundColor: 'var(--md-sys-color-surface-container-lowest)',
     minHeight: '100vh',
-    padding: '2rem 0'
+    padding: 'var(--md-sys-spacing-8) 0'
   };
 
   const headerStyle = {
-    backgroundColor: 'white',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-    padding: '3rem 0',
-    marginBottom: '2rem'
+    backgroundColor: 'var(--md-sys-color-surface)',
+    boxShadow: 'var(--md-sys-elevation-level1)',
+    padding: 'var(--md-sys-spacing-12) 0',
+    marginBottom: 'var(--md-sys-spacing-8)'
   };
 
   const contentWrapperStyle = {
     maxWidth: '1200px',
     margin: '0 auto',
-    padding: '0 1rem'
+    padding: '0 var(--md-sys-spacing-4)'
   };
 
   const titleStyle = {
@@ -122,88 +123,98 @@ const DatabaseEditor = () => {
         return (
           <div>
             <div style={featureGridStyle}>
-              <div style={featureCardStyle}>
-                <div style={{ ...iconStyle, color: '#3b82f6' }}>🗄️</div>
-                <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#111827' }}>
-                  LocalStorage Database
-                </h3>
-                <p style={{ color: '#6b7280', lineHeight: '1.6' }}>
-                  Transform browser localStorage into a powerful database with CRUD operations, 
-                  schema validation, and relationship mapping.
-                </p>
-              </div>
+              <Card variant="elevated">
+                <CardContent style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '3rem', marginBottom: 'var(--md-sys-spacing-4)', color: 'var(--md-sys-color-primary)' }}>🗄️</div>
+                  <Typography variant="headline-small" style={{ marginBottom: 'var(--md-sys-spacing-4)', color: 'var(--md-sys-color-on-surface)' }}>
+                    LocalStorage Database
+                  </Typography>
+                  <Typography variant="body-medium" style={{ color: 'var(--md-sys-color-on-surface-variant)', lineHeight: 1.6 }}>
+                    Transform browser localStorage into a powerful database with CRUD operations, 
+                    schema validation, and relationship mapping.
+                  </Typography>
+                </CardContent>
+              </Card>
 
-              <div style={featureCardStyle}>
-                <div style={{ ...iconStyle, color: '#10b981' }}>🔍</div>
-                <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#111827' }}>
-                  Visual Query Builder
-                </h3>
-                <p style={{ color: '#6b7280', lineHeight: '1.6' }}>
-                  Build complex queries with a drag-and-drop interface. No SQL knowledge required 
-                  for filtering, sorting, and joining data.
-                </p>
-              </div>
+              <Card variant="elevated">
+                <CardContent style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '3rem', marginBottom: 'var(--md-sys-spacing-4)', color: 'var(--md-sys-color-secondary)' }}>🔍</div>
+                  <Typography variant="headline-small" style={{ marginBottom: 'var(--md-sys-spacing-4)', color: 'var(--md-sys-color-on-surface)' }}>
+                    Visual Query Builder
+                  </Typography>
+                  <Typography variant="body-medium" style={{ color: 'var(--md-sys-color-on-surface-variant)', lineHeight: 1.6 }}>
+                    Build complex queries with a drag-and-drop interface. No SQL knowledge required 
+                    for filtering, sorting, and joining data.
+                  </Typography>
+                </CardContent>
+              </Card>
 
-              <div style={featureCardStyle}>
-                <div style={{ ...iconStyle, color: '#f59e0b' }}>⚙️</div>
-                <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#111827' }}>
-                  Schema Editor
-                </h3>
-                <p style={{ color: '#6b7280', lineHeight: '1.6' }}>
-                  Design database schemas visually with type validation, constraints, 
-                  and relationship definitions.
-                </p>
-              </div>
+              <Card variant="elevated">
+                <CardContent style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '3rem', marginBottom: 'var(--md-sys-spacing-4)', color: 'var(--md-sys-color-tertiary)' }}>⚙️</div>
+                  <Typography variant="headline-small" style={{ marginBottom: 'var(--md-sys-spacing-4)', color: 'var(--md-sys-color-on-surface)' }}>
+                    Schema Editor
+                  </Typography>
+                  <Typography variant="body-medium" style={{ color: 'var(--md-sys-color-on-surface-variant)', lineHeight: 1.6 }}>
+                    Design database schemas visually with type validation, constraints, 
+                    and relationship definitions.
+                  </Typography>
+                </CardContent>
+              </Card>
             </div>
 
-            <div style={cardStyle}>
-              <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#111827' }}>
-                Key Features
-              </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
-                <div>
-                  <h4 style={{ color: '#3b82f6', marginBottom: '0.5rem' }}>Database Operations</h4>
-                  <ul style={{ color: '#6b7280', lineHeight: '1.6', paddingLeft: '1.5rem' }}>
-                    <li>Create, Read, Update, Delete (CRUD)</li>
-                    <li>Schema inference and validation</li>
-                    <li>Type-safe operations</li>
-                    <li>Relationship mapping</li>
-                  </ul>
+            <Card variant="outlined">
+              <CardContent>
+                <Typography variant="headline-small" style={{ marginBottom: 'var(--md-sys-spacing-4)', color: 'var(--md-sys-color-on-surface)' }}>
+                  Key Features
+                </Typography>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 'var(--md-sys-spacing-4)' }}>
+                  <div>
+                    <Typography variant="title-medium" style={{ color: 'var(--md-sys-color-primary)', marginBottom: 'var(--md-sys-spacing-2)' }}>Database Operations</Typography>
+                    <ul style={{ color: 'var(--md-sys-color-on-surface-variant)', lineHeight: 1.6, paddingLeft: 'var(--md-sys-spacing-6)' }}>
+                      <li>Create, Read, Update, Delete (CRUD)</li>
+                      <li>Schema inference and validation</li>
+                      <li>Type-safe operations</li>
+                      <li>Relationship mapping</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <Typography variant="title-medium" style={{ color: 'var(--md-sys-color-secondary)', marginBottom: 'var(--md-sys-spacing-2)' }}>Data Management</Typography>
+                    <ul style={{ color: 'var(--md-sys-color-on-surface-variant)', lineHeight: 1.6, paddingLeft: 'var(--md-sys-spacing-6)' }}>
+                      <li>Visual data tables with editing</li>
+                      <li>Advanced filtering and sorting</li>
+                      <li>Bulk operations</li>
+                      <li>Export/Import (JSON, CSV)</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <Typography variant="title-medium" style={{ color: 'var(--md-sys-color-tertiary)', marginBottom: 'var(--md-sys-spacing-2)' }}>Developer Experience</Typography>
+                    <ul style={{ color: 'var(--md-sys-color-on-surface-variant)', lineHeight: 1.6, paddingLeft: 'var(--md-sys-spacing-6)' }}>
+                      <li>TypeScript-like validation</li>
+                      <li>Error handling & recovery</li>
+                      <li>Performance optimized</li>
+                      <li>Accessibility compliant</li>
+                    </ul>
+                  </div>
                 </div>
-                <div>
-                  <h4 style={{ color: '#10b981', marginBottom: '0.5rem' }}>Data Management</h4>
-                  <ul style={{ color: '#6b7280', lineHeight: '1.6', paddingLeft: '1.5rem' }}>
-                    <li>Visual data tables with editing</li>
-                    <li>Advanced filtering and sorting</li>
-                    <li>Bulk operations</li>
-                    <li>Export/Import (JSON, CSV)</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 style={{ color: '#f59e0b', marginBottom: '0.5rem' }}>Developer Experience</h4>
-                  <ul style={{ color: '#6b7280', lineHeight: '1.6', paddingLeft: '1.5rem' }}>
-                    <li>TypeScript-like validation</li>
-                    <li>Error handling & recovery</li>
-                    <li>Performance optimized</li>
-                    <li>Accessibility compliant</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         );
 
       case 'demo':
         return (
           <div>
-            <div style={cardStyle}>
-              <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#111827' }}>
-                Live Database Manager
-              </h3>
-              <p style={{ color: '#6b7280', marginBottom: '1rem' }}>
-                Full-featured localStorage database management interface with real CRUD operations.
-              </p>
-            </div>
+            <Card variant="outlined">
+              <CardContent>
+                <Typography variant="headline-small" style={{ marginBottom: 'var(--md-sys-spacing-4)', color: 'var(--md-sys-color-on-surface)' }}>
+                  Live Database Manager
+                </Typography>
+                <Typography variant="body-medium" style={{ color: 'var(--md-sys-color-on-surface-variant)', marginBottom: 'var(--md-sys-spacing-4)' }}>
+                  Full-featured localStorage database management interface with real CRUD operations.
+                </Typography>
+              </CardContent>
+            </Card>
             <DatabaseManager />
           </div>
         );
@@ -288,49 +299,49 @@ const DatabaseEditor = () => {
     <div style={containerStyle}>
       <div style={headerStyle}>
         <div style={contentWrapperStyle}>
-          <h1 style={titleStyle}>
+          <Typography variant="display-large" style={{ color: 'var(--md-sys-color-primary)', textAlign: 'center', marginBottom: 'var(--md-sys-spacing-4)' }}>
             LocalStorage Database Editor
-          </h1>
-          <h2 style={subtitleStyle}>
+          </Typography>
+          <Typography variant="headline-medium" style={{ color: 'var(--md-sys-color-on-surface-variant)', textAlign: 'center', marginBottom: 'var(--md-sys-spacing-4)' }}>
             Professional database management for browser storage
-          </h2>
-          <p style={descriptionStyle}>
+          </Typography>
+          <Typography variant="body-large" style={{ color: 'var(--md-sys-color-on-surface-variant)', maxWidth: '800px', margin: '0 auto var(--md-sys-spacing-8)', textAlign: 'center', lineHeight: 1.6 }}>
             A comprehensive database management interface that transforms localStorage into a powerful, 
             queryable database with visual tools for schema design, data manipulation, and relationship mapping.
-          </p>
+          </Typography>
           
           <div style={buttonContainerStyle}>
-            <button 
-              style={buttonStyle('primary')}
+            <Button 
+              variant="filled"
               onClick={() => window.history.back()}
+              icon={<span>←</span>}
             >
-              <i className="fas fa-arrow-left" style={{ marginRight: '0.5rem' }}></i>
               Back to Showcase
-            </button>
+            </Button>
           </div>
         </div>
       </div>
 
       <div style={contentWrapperStyle}>
         <div style={tabStyle}>
-          <button 
-            style={tabButtonStyle(activeTab === 'overview')}
+          <Button 
+            variant={activeTab === 'overview' ? 'filled' : 'text'}
             onClick={() => setActiveTab('overview')}
           >
             Overview
-          </button>
-          <button 
-            style={tabButtonStyle(activeTab === 'demo')}
+          </Button>
+          <Button 
+            variant={activeTab === 'demo' ? 'filled' : 'text'}
             onClick={() => setActiveTab('demo')}
           >
             Demo
-          </button>
-          <button 
-            style={tabButtonStyle(activeTab === 'technical')}
+          </Button>
+          <Button 
+            variant={activeTab === 'technical' ? 'filled' : 'text'}
             onClick={() => setActiveTab('technical')}
           >
             Technical Details
-          </button>
+          </Button>
         </div>
 
         {renderTabContent()}
