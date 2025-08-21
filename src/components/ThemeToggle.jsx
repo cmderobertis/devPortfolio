@@ -49,9 +49,10 @@ export const ThemeToggle = ({ variant = 'default', size = 'medium', className = 
       aria-label={themeInfo.nextLabel}
       title={themeInfo.nextLabel}
       type="button"
+      icon={themeInfo.icon}
     >
       <span className="theme-toggle__icon" aria-hidden="true">
-        {themeInfo.icon}
+        <i className={themeInfo.icon}></i>
       </span>
       <span className="theme-toggle__label">
         {themeInfo.label}
@@ -74,12 +75,12 @@ export const CompactThemeToggle = ({ className = '' }) => {
   const getIcon = () => {
     switch (mode) {
       case THEME_MODES.LIGHT:
-        return "fas fa-sun";
+        return 'fas fa-sun';
       case THEME_MODES.DARK:
-        return '🌙';
+        return 'fas fa-moon';
       case THEME_MODES.AUTO:
       default:
-        return isDark ? '🌙' : '☀️';
+        return isDark ? 'fas fa-moon' : 'fas fa-sun';
     }
   };
 
@@ -106,17 +107,15 @@ export const CompactThemeToggle = ({ className = '' }) => {
   return (
     <button
       className={classes}
+      icon={getIcon()}
       onClick={toggleTheme}
       aria-label={getAriaLabel()}
       title={getAriaLabel()}
       type="button"
     >
       <span className="theme-toggle__icon" aria-hidden="true">
-        {getIcon()}
+        <i className={getIcon()}></i>
       </span>
-      {isAuto && (
-        <span className="theme-toggle__auto-dot" aria-hidden="true"></span>
-      )}
     </button>
   );
 };

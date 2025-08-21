@@ -2,7 +2,6 @@ import React, { createContext, useState, useEffect, useCallback, useContext } fr
 
 // Available theme modes
 export const THEME_MODES = {
-  AUTO: 'auto',
   LIGHT: 'light',
   DARK: 'dark'
 };

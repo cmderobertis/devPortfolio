@@ -1,7 +1,7 @@
 import React from "react"
 import { NavLink } from "react-router-dom"
 import { useTheme } from "../context/ThemeContext"
-import { Button } from "../components/design-system"
+import { Button, Typography } from "../components/design-system"
 import { CompactThemeToggle } from "./ThemeToggle"
 
 const Navbar = () => {
@@ -10,10 +10,16 @@ const Navbar = () => {
   return (
     <div className="App">
       <div className="sticky-top">
-        <nav className="navbar navbar-expand-sm navbar-dark bg-primary">
+        <nav className="navbar navbar-expand-sm navbar-dark">
           <div className="container-lg">
             <NavLink className="navbar-brand text-center" to={"/"}>
-              <h2 className="fw-bold mb-0">Cameron De Robertis</h2>
+              <Typography
+                variant="display-large"
+                className="hero-title"
+                align="center"
+              >
+                Cameron De Robertis
+              </Typography>
             </NavLink>
             <button
               className="navbar-toggler"
