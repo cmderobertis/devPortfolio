@@ -54,7 +54,7 @@ const useGameOfLife = (initialCellsX = 20) => {
   const [numCellsY, setNumCellsY] = useState(30);
   const [grid, setGrid] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [generationsPerSecond, setGenerationsPerSecond] = useState(10);
+  const [generationsPerSecond, setGenerationsPerSecond] = useState(3);
   const [currentTheme, setCurrentTheme] = useState(themes.minesweeper);
   
   const lastUpdateTimeRef = useRef(0);
@@ -83,12 +83,13 @@ const useGameOfLife = (initialCellsX = 20) => {
     return { cellSize: newCellSize, numCellsY: newNumCellsY };
   }, [numCellsX, createGrid]);
 
-  // Randomize the grid
+  // Randomize the grid with less chaos
   const randomizeGrid = useCallback(() => {
     const newGrid = createGrid(numCellsX, numCellsY);
     for (let x = 0; x < numCellsX; x++) {
       for (let y = 0; y < numCellsY; y++) {
-        newGrid[x][y] = Math.random() > 0.75 ? 1 : 0;
+        // Reduced randomness for more stable patterns
+        newGrid[x][y] = Math.random() > 0.85 ? 1 : 0;
       }
     }
     setGrid(newGrid);
@@ -162,9 +163,9 @@ const useGameOfLife = (initialCellsX = 20) => {
 
   // Game loop
   const gameLoop = useCallback((timestamp) => {
-    animationIdRef.current = requestAnimationFrame(gameLoop);
-
-    if (!isPlaying) return;
+    if (!isPlaying) {
+      return;
+    }
 
     const elapsed = timestamp - lastUpdateTimeRef.current;
     const interval = 1000 / generationsPerSecond;
@@ -173,6 +174,8 @@ const useGameOfLife = (initialCellsX = 20) => {
       lastUpdateTimeRef.current = timestamp - (elapsed % interval);
       computeNextGeneration();
     }
+
+    animationIdRef.current = requestAnimationFrame(gameLoop);
   }, [isPlaying, generationsPerSecond, computeNextGeneration]);
 
   // Start/stop the game loop
@@ -218,34 +221,57 @@ const useGameOfLife = (initialCellsX = 20) => {
     }
   }, []);
 
-  // Load a test pattern (Glider for testing)
+  // Load a test pattern (Multiple interesting patterns)
   const loadTestPattern = useCallback(() => {
     if (!numCellsX || !numCellsY) return;
     
     const newGrid = createGrid(numCellsX, numCellsY);
     
-    // Add a glider pattern in the top-left
+    // Glider pattern
     const glider = [
       [0, 1, 0],
       [0, 0, 1], 
       [1, 1, 1]
     ];
     
-    const startX = 5;
-    const startY = 5;
+    // Oscillator pattern (blinker)
+    const blinker = [
+      [1],
+      [1],
+      [1]
+    ];
     
-    glider.forEach((row, dy) => {
-      row.forEach((cell, dx) => {
-        const x = startX + dx;
-        const y = startY + dy;
-        if (x < numCellsX && y < numCellsY) {
-          newGrid[x][y] = cell;
-        }
+    // Small exploder
+    const smallExploder = [
+      [0, 1, 0],
+      [1, 1, 1],
+      [1, 0, 1],
+      [0, 1, 0]
+    ];
+    
+    // Place multiple patterns
+    const patterns = [
+      { pattern: glider, x: 5, y: 5 },
+      { pattern: blinker, x: 15, y: 8 },
+      { pattern: smallExploder, x: 25, y: 10 },
+      { pattern: glider, x: 35, y: 15 }
+    ];
+    
+    patterns.forEach(({ pattern, x: startX, y: startY }) => {
+      pattern.forEach((row, dy) => {
+        row.forEach((cell, dx) => {
+          const x = startX + dx;
+          const y = startY + dy;
+          if (x < numCellsX && y < numCellsY) {
+            newGrid[x][y] = cell;
+          }
+        });
       });
     });
     
     setGrid(newGrid);
-    setIsPlaying(false);
+    // Don't automatically pause the game when loading patterns
+    // setIsPlaying(false);
   }, [numCellsX, numCellsY, createGrid]);
 
   // Cleanup on unmount

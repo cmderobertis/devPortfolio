@@ -8,6 +8,7 @@ import DataTable from './DataTable.jsx';
 import { LocalStorageDB } from '../utils/localStorageDB.js';
 
 export function TableViewer({ tableName, onClose }) {
+  console.log('TableViewer rendering!', { tableName });
   const [db] = useState(() => new LocalStorageDB());
   const [data, setData] = useState([]);
   const [schema, setSchema] = useState({});

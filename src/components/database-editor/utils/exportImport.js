@@ -526,14 +526,12 @@ export class ExportImportManager {
         stringValue.includes(this.csvQuoteChar) || 
         stringValue.includes('\n') || 
         stringValue.includes('\r')) {
-      return this.csvQuoteChar + 
-             stringValue.replace(new RegExp(this.csvQuoteChar, 'g'), this.csvEscapeChar + this.csvQuoteChar) + 
-             this.csvQuoteChar;
+      return this.csvQuoteChar + stringValue.replace(new RegExp(this.csvQuoteChar, 'g'), this.csvEscapeChar + this.csvQuoteChar) + this.csvQuoteChar;
     }
     
     return stringValue;
   }
-
+  
   /**
    * Parse CSV line
    * @param {string} line - CSV line

@@ -1,0 +1,281 @@
+/* Material Design 3 TextField Styles */
+
+.md3-textfield {
+  --_container-height: 56px;
+  --_input-height: 24px;
+  --_label-height: 16px;
+  --_border-width: 1px;
+  --_focus-border-width: 2px;
+  
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  min-width: 200px;
+  font-family: var(--md-sys-typescale-body-large-font);
+  font-size: var(--md-sys-typescale-body-large-size);
+  line-height: var(--md-sys-typescale-body-large-line-height);
+}
+
+.md3-textfield__container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: var(--_container-height);
+  border-radius: var(--md-sys-shape-corner-extra-small);
+  transition: all var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-standard);
+}
+
+/* Outlined variant (default) */
+.md3-textfield--outlined .md3-textfield__container {
+  border: var(--_border-width) solid var(--md-sys-color-outline);
+  background-color: transparent;
+}
+
+.md3-textfield--outlined.md3-textfield--focused .md3-textfield__container {
+  border-color: var(--md-sys-color-primary);
+  border-width: var(--_focus-border-width);
+}
+
+.md3-textfield--outlined.md3-textfield--error .md3-textfield__container {
+  border-color: var(--md-sys-color-error);
+}
+
+.md3-textfield--outlined.md3-textfield--disabled .md3-textfield__container {
+  border-color: var(--md-sys-color-outline);
+  opacity: 0.38;
+}
+
+/* Filled variant */
+.md3-textfield--filled .md3-textfield__container {
+  background-color: var(--md-sys-color-surface-container-highest);
+  border: none;
+  border-bottom: var(--_border-width) solid var(--md-sys-color-on-surface-variant);
+  border-radius: var(--md-sys-shape-corner-extra-small) var(--md-sys-shape-corner-extra-small) 0 0;
+}
+
+.md3-textfield--filled.md3-textfield--focused .md3-textfield__container {
+  border-bottom-color: var(--md-sys-color-primary);
+  border-bottom-width: var(--_focus-border-width);
+}
+
+.md3-textfield--filled.md3-textfield--error .md3-textfield__container {
+  border-bottom-color: var(--md-sys-color-error);
+}
+
+/* Input wrapper */
+.md3-textfield__input-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 var(--md-sys-spacing-4);
+}
+
+/* Label */
+.md3-textfield__label {
+  position: absolute;
+  left: var(--md-sys-spacing-4);
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: var(--md-sys-typescale-body-large-size);
+  line-height: var(--md-sys-typescale-body-large-line-height);
+  transition: all var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-standard);
+  pointer-events: none;
+  background-color: transparent;
+  z-index: 1;
+}
+
+/* Label floating state */
+.md3-textfield--populated .md3-textfield__label,
+.md3-textfield--focused .md3-textfield__label {
+  transform: translateY(-50%) scale(0.75);
+  font-size: var(--md-sys-typescale-body-small-size);
+  line-height: var(--md-sys-typescale-body-small-line-height);
+  color: var(--md-sys-color-primary);
+}
+
+.md3-textfield--outlined.md3-textfield--populated .md3-textfield__label,
+.md3-textfield--outlined.md3-textfield--focused .md3-textfield__label {
+  top: 0;
+  padding: 0 var(--md-sys-spacing-1);
+  background-color: var(--md-sys-color-surface);
+}
+
+.md3-textfield--filled.md3-textfield--populated .md3-textfield__label,
+.md3-textfield--filled.md3-textfield--focused .md3-textfield__label {
+  top: var(--md-sys-spacing-2);
+}
+
+.md3-textfield--error .md3-textfield__label {
+  color: var(--md-sys-color-error) !important;
+}
+
+/* Input */
+.md3-textfield__input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--md-sys-color-on-surface);
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.md3-textfield--populated .md3-textfield__input,
+.md3-textfield--focused .md3-textfield__input {
+  margin-top: var(--md-sys-spacing-2);
+}
+
+.md3-textfield__input::placeholder {
+  color: var(--md-sys-color-on-surface-variant);
+  opacity: 0.6;
+}
+
+.md3-textfield__input:disabled {
+  color: var(--md-sys-color-on-surface);
+  opacity: 0.38;
+}
+
+/* Textarea specific */
+.md3-textfield__input[rows] {
+  resize: vertical;
+  min-height: calc(var(--_input-height) * 2);
+  padding-top: var(--md-sys-spacing-2);
+  padding-bottom: var(--md-sys-spacing-2);
+}
+
+/* Placeholder for outlined variant */
+.md3-textfield__placeholder {
+  position: absolute;
+  left: 0;
+  color: var(--md-sys-color-on-surface-variant);
+  opacity: 0.6;
+  pointer-events: none;
+  transition: opacity var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-standard);
+}
+
+.md3-textfield--populated .md3-textfield__placeholder,
+.md3-textfield--focused .md3-textfield__placeholder {
+  opacity: 0;
+}
+
+/* Prefix and Suffix */
+.md3-textfield__prefix,
+.md3-textfield__suffix {
+  display: flex;
+  align-items: center;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: var(--md-sys-typescale-body-large-size);
+}
+
+.md3-textfield__prefix {
+  padding-left: var(--md-sys-spacing-4);
+}
+
+.md3-textfield__suffix {
+  padding-right: var(--md-sys-spacing-4);
+  gap: var(--md-sys-spacing-1);
+}
+
+/* Clear button */
+.md3-textfield__clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  border-radius: var(--md-sys-shape-corner-full);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  transition: all var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-standard);
+}
+
+.md3-textfield__clear:hover {
+  background-color: var(--md-sys-color-on-surface-variant);
+  color: var(--md-sys-color-surface);
+}
+
+/* State layer */
+.md3-textfield__state-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  transition: all var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-standard);
+}
+
+.md3-textfield:hover .md3-textfield__state-layer {
+  background-color: var(--md-sys-color-on-surface);
+  opacity: var(--md-sys-state-hover-state-layer-opacity);
+}
+
+.md3-textfield--focused .md3-textfield__state-layer {
+  background-color: var(--md-sys-color-primary);
+  opacity: var(--md-sys-state-focus-state-layer-opacity);
+}
+
+/* Helper text */
+.md3-textfield__helper-text {
+  margin-top: var(--md-sys-spacing-1);
+  padding: 0 var(--md-sys-spacing-4);
+  font-size: var(--md-sys-typescale-body-small-size);
+  line-height: var(--md-sys-typescale-body-small-line-height);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.md3-textfield--error .md3-textfield__helper-text {
+  color: var(--md-sys-color-error);
+}
+
+/* Character counter */
+.md3-textfield__counter {
+  margin-top: var(--md-sys-spacing-1);
+  padding: 0 var(--md-sys-spacing-4);
+  font-size: var(--md-sys-typescale-body-small-size);
+  line-height: var(--md-sys-typescale-body-small-line-height);
+  color: var(--md-sys-color-on-surface-variant);
+  text-align: right;
+}
+
+/* Size variants */
+.md3-textfield--small {
+  --_container-height: 40px;
+  --_input-height: 20px;
+  font-size: var(--md-sys-typescale-body-medium-size);
+}
+
+.md3-textfield--large {
+  --_container-height: 64px;
+  --_input-height: 28px;
+  font-size: var(--md-sys-typescale-body-large-size);
+}
+
+/* Disabled state */
+.md3-textfield--disabled {
+  pointer-events: none;
+}
+
+.md3-textfield--disabled .md3-textfield__input {
+  cursor: not-allowed;
+}
+
+/* Focus within (for better keyboard navigation) */
+.md3-textfield:focus-within .md3-textfield__container {
+  border-color: var(--md-sys-color-primary);
+  border-width: var(--_focus-border-width);
+}
+
+.md3-textfield--error:focus-within .md3-textfield__container {
+  border-color: var(--md-sys-color-error);
+}

@@ -6,6 +6,8 @@ import './Typography.css';
 import './Container.css';
 import './ThemeProvider.css';
 import './Combobox.css';
+import './TextField.css';
+import './Checkbox.css';
 
 // Export all components
 export { default as Card, CardHeader, CardContent, CardActions } from './Card';
@@ -14,6 +16,8 @@ export { default as Typography } from './Typography';
 export { default as Container, Section, Grid } from './Container';
 export { default as ThemeProvider, ThemeToggle, useTheme } from './ThemeProvider';
 export { default as Combobox } from './Combobox';
+export { default as TextField } from './TextField';
+export { default as Checkbox } from './Checkbox';
 
 // Component library version
 export const VERSION = '1.0.0';

@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Card, CardContent, CardActions, Button, Typography, Combobox } from './design-system';
+import { Card, CardContent, CardActions, Button, Typography, Combobox, TextField, Checkbox } from './design-system';
 
 // Simple LocalStorage Database Implementation
 class SimpleDB {
@@ -137,6 +137,7 @@ function DataTable({ data, columns, onEdit, onDelete, onAdd }) {
   const [sortDirection, setSortDirection] = useState('asc');
   const [searchTerm, setSearchTerm] = useState('');
   const [editingCell, setEditingCell] = useState(null);
+  const [columnFilters, setColumnFilters] = useState({});
 
   const styles = {
     container: {
@@ -208,10 +209,61 @@ function DataTable({ data, columns, onEdit, onDelete, onAdd }) {
     }
   };
 
+  // Determine column data types and unique values
+  const columnInfo = useMemo(() => {
+    const info = {};
+    
+    columns.forEach(column => {
+      const values = data.map(row => row[column]).filter(val => val != null);
+      
+      if (values.length === 0) {
+        info[column] = { type: 'text', uniqueValues: [] };
+        return;
+      }
+
+      // Determine data type
+      let type = 'text';
+      const firstValue = values[0];
+      
+      if (typeof firstValue === 'boolean') {
+        type = 'boolean';
+      } else if (typeof firstValue === 'number') {
+        type = 'number';
+      } else if (typeof firstValue === 'string') {
+        // Check if it's a date
+        const dateValue = new Date(firstValue);
+        if (!isNaN(dateValue.getTime()) && firstValue.includes('-')) {
+          type = 'date';
+        } else {
+          // Check if categorical (less than 20 unique values)
+          const uniqueValues = [...new Set(values)];
+          if (uniqueValues.length <= 20 && uniqueValues.length > 1) {
+            type = 'categorical';
+            info[column] = { type, uniqueValues };
+            return;
+          }
+        }
+      }
+      
+      info[column] = { type, uniqueValues: [] };
+    });
+    
+    return info;
+  }, [data, columns]);
+
+  // Update column filter
+  const updateColumnFilter = useCallback((field, value) => {
+    setColumnFilters(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  }, []);
+
   // Filter and sort data
-  const processedData = useState(() => {
+  const processedData = useMemo(() => {
     let filtered = data;
     
+    // Apply global search filter
     if (searchTerm) {
       filtered = data.filter(row =>
         Object.values(row).some(value =>
@@ -219,6 +271,28 @@ function DataTable({ data, columns, onEdit, onDelete, onAdd }) {
         )
       );
     }
+
+    // Apply column filters
+    Object.entries(columnFilters).forEach(([field, filterValue]) => {
+      if (filterValue != null && filterValue !== '' && filterValue !== false) {
+        filtered = filtered.filter(row => {
+          const cellValue = row[field];
+          const columnType = columnInfo[field]?.type;
+
+          switch (columnType) {
+            case 'boolean':
+              return filterValue === true ? cellValue === true : cellValue === false;
+            case 'categorical':
+              return cellValue === filterValue;
+            case 'text':
+            case 'number':
+            case 'date':
+            default:
+              return String(cellValue).toLowerCase().includes(String(filterValue).toLowerCase());
+          }
+        });
+      }
+    });
     
     if (sortField) {
       filtered = [...filtered].sort((a, b) => {
@@ -241,7 +315,7 @@ function DataTable({ data, columns, onEdit, onDelete, onAdd }) {
     }
     
     return filtered;
-  }, [data, searchTerm, sortField, sortDirection])[0];
+  }, [data, searchTerm, columnFilters, sortField, sortDirection, columnInfo]);
 
   const handleSort = (field) => {
     if (sortField === field) {
@@ -258,6 +332,69 @@ function DataTable({ data, columns, onEdit, onDelete, onAdd }) {
       onEdit(record.id, { [field]: value });
     }
     setEditingCell(null);
+  };
+
+  const renderColumnFilter = (column) => {
+    const columnType = columnInfo[column]?.type || 'text';
+    const filterValue = columnFilters[column] || '';
+
+    switch (columnType) {
+      case 'boolean':
+        return (
+          <div style={{ width: '120px' }}>
+            <Combobox
+              options={[
+                { label: 'All', value: '' },
+                { label: 'True', value: true },
+                { label: 'False', value: false }
+              ]}
+              value={filterValue}
+              placeholder="Filter..."
+              onSelectionChange={(option) => updateColumnFilter(column, option?.value || '')}
+              getOptionValue={(option) => option.value}
+              getOptionLabel={(option) => option.label}
+            />
+          </div>
+        );
+      
+      case 'categorical':
+        const options = [
+          { label: 'All', value: '' },
+          ...columnInfo[column].uniqueValues.map(value => ({
+            label: String(value),
+            value: value
+          }))
+        ];
+        return (
+          <div style={{ width: '150px' }}>
+            <Combobox
+              options={options}
+              value={filterValue}
+              placeholder="Filter..."
+              onSelectionChange={(option) => updateColumnFilter(column, option?.value || '')}
+              getOptionValue={(option) => option.value}
+              getOptionLabel={(option) => option.label}
+            />
+          </div>
+        );
+      
+      case 'text':
+      case 'number':
+      case 'date':
+      default:
+        return (
+          <div style={{ width: '150px' }}>
+            <TextField
+              value={filterValue}
+              placeholder="Filter..."
+              size="small"
+              variant="outlined"
+              clearable
+              onChange={(e) => updateColumnFilter(column, e.target.value)}
+            />
+          </div>
+        );
+    }
   };
 
   if (!data.length) {
@@ -308,6 +445,24 @@ function DataTable({ data, columns, onEdit, onDelete, onAdd }) {
               </th>
             ))}
             <th style={styles.th}>Actions</th>
+          </tr>
+          {/* Column filters */}
+          <tr style={{ 
+            backgroundColor: 'var(--md-sys-color-surface-container-low)', 
+            borderBottom: '1px solid var(--md-sys-color-outline-variant)' 
+          }}>
+            {columns.map(column => (
+              <th key={`filter-${column}`} style={{ 
+                padding: 'var(--md-sys-spacing-2)', 
+                backgroundColor: 'var(--md-sys-color-surface-container-low)' 
+              }}>
+                {renderColumnFilter(column)}
+              </th>
+            ))}
+            <th style={{ 
+              padding: 'var(--md-sys-spacing-2)', 
+              backgroundColor: 'var(--md-sys-color-surface-container-low)' 
+            }}></th>
           </tr>
         </thead>
         <tbody>

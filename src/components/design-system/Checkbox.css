@@ -1,0 +1,252 @@
+/* Material Design 3 Checkbox Styles */
+
+.md3-checkbox {
+  --_size: 40px;
+  --_checkbox-size: 18px;
+  --_border-width: 2px;
+  
+  position: relative;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--md-sys-spacing-2);
+  cursor: pointer;
+  font-family: var(--md-sys-typescale-body-large-font);
+  font-size: var(--md-sys-typescale-body-large-size);
+  line-height: var(--md-sys-typescale-body-large-line-height);
+}
+
+.md3-checkbox--disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+}
+
+.md3-checkbox__container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--_size);
+  height: var(--_size);
+  flex-shrink: 0;
+}
+
+/* Hidden native checkbox */
+.md3-checkbox__input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: inherit;
+  z-index: 1;
+}
+
+/* Visual checkbox background */
+.md3-checkbox__background {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--_checkbox-size);
+  height: var(--_checkbox-size);
+  border: var(--_border-width) solid var(--md-sys-color-on-surface-variant);
+  border-radius: var(--md-sys-shape-corner-extra-small);
+  background-color: transparent;
+  transition: all var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-standard);
+}
+
+/* Checked state */
+.md3-checkbox--checked .md3-checkbox__background {
+  background-color: var(--md-sys-color-primary);
+  border-color: var(--md-sys-color-primary);
+}
+
+.md3-checkbox--indeterminate .md3-checkbox__background {
+  background-color: var(--md-sys-color-primary);
+  border-color: var(--md-sys-color-primary);
+}
+
+/* Error state */
+.md3-checkbox--error .md3-checkbox__background {
+  border-color: var(--md-sys-color-error);
+}
+
+.md3-checkbox--error.md3-checkbox--checked .md3-checkbox__background,
+.md3-checkbox--error.md3-checkbox--indeterminate .md3-checkbox__background {
+  background-color: var(--md-sys-color-error);
+  border-color: var(--md-sys-color-error);
+}
+
+/* Checkmark */
+.md3-checkbox__checkmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-standard);
+}
+
+.md3-checkbox--checked .md3-checkbox__checkmark,
+.md3-checkbox--indeterminate .md3-checkbox__checkmark {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.md3-checkbox__checkmark-path {
+  width: 12px;
+  height: 12px;
+  fill: var(--md-sys-color-on-primary);
+  stroke: var(--md-sys-color-on-primary);
+  stroke-width: 2;
+}
+
+.md3-checkbox--error .md3-checkbox__checkmark-path {
+  fill: var(--md-sys-color-on-error);
+  stroke: var(--md-sys-color-on-error);
+}
+
+/* State layer for hover/focus/press states */
+.md3-checkbox__state-layer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--_size);
+  height: var(--_size);
+  border-radius: var(--md-sys-shape-corner-full);
+  background-color: transparent;
+  transition: all var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-standard);
+  pointer-events: none;
+}
+
+/* Hover state */
+.md3-checkbox:hover .md3-checkbox__state-layer {
+  background-color: var(--md-sys-color-on-surface);
+  opacity: var(--md-sys-state-hover-state-layer-opacity);
+}
+
+.md3-checkbox--checked:hover .md3-checkbox__state-layer,
+.md3-checkbox--indeterminate:hover .md3-checkbox__state-layer {
+  background-color: var(--md-sys-color-primary);
+  opacity: var(--md-sys-state-hover-state-layer-opacity);
+}
+
+.md3-checkbox--error:hover .md3-checkbox__state-layer {
+  background-color: var(--md-sys-color-error);
+  opacity: var(--md-sys-state-hover-state-layer-opacity);
+}
+
+/* Focus state */
+.md3-checkbox--focused .md3-checkbox__state-layer {
+  background-color: var(--md-sys-color-on-surface);
+  opacity: var(--md-sys-state-focus-state-layer-opacity);
+}
+
+.md3-checkbox--focused.md3-checkbox--checked .md3-checkbox__state-layer,
+.md3-checkbox--focused.md3-checkbox--indeterminate .md3-checkbox__state-layer {
+  background-color: var(--md-sys-color-primary);
+  opacity: var(--md-sys-state-focus-state-layer-opacity);
+}
+
+.md3-checkbox--focused.md3-checkbox--error .md3-checkbox__state-layer {
+  background-color: var(--md-sys-color-error);
+  opacity: var(--md-sys-state-focus-state-layer-opacity);
+}
+
+/* Pressed state */
+.md3-checkbox:active .md3-checkbox__state-layer {
+  background-color: var(--md-sys-color-on-surface);
+  opacity: var(--md-sys-state-pressed-state-layer-opacity);
+}
+
+.md3-checkbox--checked:active .md3-checkbox__state-layer,
+.md3-checkbox--indeterminate:active .md3-checkbox__state-layer {
+  background-color: var(--md-sys-color-primary);
+  opacity: var(--md-sys-state-pressed-state-layer-opacity);
+}
+
+.md3-checkbox--error:active .md3-checkbox__state-layer {
+  background-color: var(--md-sys-color-error);
+  opacity: var(--md-sys-state-pressed-state-layer-opacity);
+}
+
+/* Label */
+.md3-checkbox__label {
+  color: var(--md-sys-color-on-surface);
+  cursor: inherit;
+  user-select: none;
+  margin-top: 1px; /* Slight adjustment for better visual alignment */
+}
+
+.md3-checkbox--disabled .md3-checkbox__label {
+  color: var(--md-sys-color-on-surface);
+}
+
+.md3-checkbox--error .md3-checkbox__label {
+  color: var(--md-sys-color-error);
+}
+
+/* Helper text */
+.md3-checkbox__helper-text {
+  margin-top: var(--md-sys-spacing-1);
+  margin-left: calc(var(--_size) + var(--md-sys-spacing-2));
+  font-size: var(--md-sys-typescale-body-small-size);
+  line-height: var(--md-sys-typescale-body-small-line-height);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.md3-checkbox--error .md3-checkbox__helper-text {
+  color: var(--md-sys-color-error);
+}
+
+/* Size variants */
+.md3-checkbox--small {
+  --_size: 32px;
+  --_checkbox-size: 16px;
+  font-size: var(--md-sys-typescale-body-medium-size);
+  line-height: var(--md-sys-typescale-body-medium-line-height);
+}
+
+.md3-checkbox--small .md3-checkbox__checkmark-path {
+  width: 10px;
+  height: 10px;
+  stroke-width: 1.5;
+}
+
+.md3-checkbox--large {
+  --_size: 48px;
+  --_checkbox-size: 20px;
+  font-size: var(--md-sys-typescale-body-large-size);
+  line-height: var(--md-sys-typescale-body-large-line-height);
+}
+
+.md3-checkbox--large .md3-checkbox__checkmark-path {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.5;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .md3-checkbox__background {
+    border-width: 3px;
+  }
+  
+  .md3-checkbox--checked .md3-checkbox__background,
+  .md3-checkbox--indeterminate .md3-checkbox__background {
+    border: 3px solid var(--md-sys-color-on-primary);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .md3-checkbox__background,
+  .md3-checkbox__checkmark,
+  .md3-checkbox__state-layer {
+    transition: none;
+  }
+}

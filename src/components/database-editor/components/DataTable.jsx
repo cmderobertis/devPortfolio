@@ -3,7 +3,10 @@
  * Professional data table with sorting, filtering, pagination, and editing
  */
 
-import React, { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
+import { TextField, Combobox, Checkbox } from '../../design-system';
+
+console.log('DataTable module loaded!');
 
 export function DataTable({ 
   data = [], 
@@ -17,92 +20,156 @@ export function DataTable({
   editable = false,
   selectable = false
 }) {
+  console.log('DataTable rendering with filters!', { data, columns });
   const [currentPage, setCurrentPage] = useState(1);
   const [sortField, setSortField] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState(new Set());
   const [editingCell, setEditingCell] = useState(null);
+  const [columnFilters, setColumnFilters] = useState({});
 
   // Styles
   const tableContainerStyle = {
-    border: '1px solid #e5e7eb',
-    borderRadius: '0.5rem',
+    border: '1px solid var(--md-sys-color-outline-variant)',
+    borderRadius: 'var(--md-sys-shape-corner-medium)',
     overflow: 'hidden',
-    backgroundColor: 'white',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+    backgroundColor: 'var(--md-sys-color-surface)',
+    boxShadow: 'var(--md-sys-elevation-level1)'
   };
 
   const tableStyle = {
     width: '100%',
     borderCollapse: 'collapse',
-    fontSize: '0.875rem'
+    fontSize: 'var(--md-sys-typescale-body-medium-size)'
   };
 
   const headerStyle = {
-    backgroundColor: '#f9fafb',
-    borderBottom: '1px solid #e5e7eb'
+    backgroundColor: 'var(--md-sys-color-surface-container)',
+    borderBottom: '1px solid var(--md-sys-color-outline-variant)'
   };
 
   const headerCellStyle = {
-    padding: '0.75rem',
+    padding: 'var(--md-sys-spacing-3)',
     textAlign: 'left',
     fontWeight: '600',
-    color: '#374151',
+    color: 'var(--md-sys-color-on-surface)',
     cursor: sortable ? 'pointer' : 'default',
-    userSelect: 'none'
+    userSelect: 'none',
+    verticalAlign: 'top'
+  };
+
+  const filterHeaderStyle = {
+    padding: 'var(--md-sys-spacing-2)',
+    backgroundColor: 'var(--md-sys-color-surface-container-low)',
+    borderBottom: '1px solid var(--md-sys-color-outline-variant)'
   };
 
   const cellStyle = {
-    padding: '0.75rem',
-    borderBottom: '1px solid #f3f4f6',
-    color: '#6b7280'
+    padding: 'var(--md-sys-spacing-3)',
+    borderBottom: '1px solid var(--md-sys-color-outline-variant)',
+    color: 'var(--md-sys-color-on-surface-variant)'
   };
 
   const editingCellStyle = {
     ...cellStyle,
-    padding: '0.25rem'
+    padding: 'var(--md-sys-spacing-1)'
   };
 
   const inputStyle = {
     width: '100%',
-    padding: '0.375rem',
-    border: '1px solid #d1d5db',
-    borderRadius: '0.25rem',
-    fontSize: '0.875rem'
-  };
-
-  const searchInputStyle = {
-    padding: '0.5rem',
-    border: '1px solid #d1d5db',
-    borderRadius: '0.375rem',
-    fontSize: '0.875rem',
-    width: '300px'
+    padding: 'var(--md-sys-spacing-2)',
+    border: '1px solid var(--md-sys-color-outline)',
+    borderRadius: 'var(--md-sys-shape-corner-small)',
+    fontSize: 'var(--md-sys-typescale-body-medium-size)',
+    backgroundColor: 'var(--md-sys-color-surface)',
+    color: 'var(--md-sys-color-on-surface)'
   };
 
   const buttonStyle = (variant = 'primary') => {
     const variants = {
-      primary: { backgroundColor: '#3b82f6', color: 'white' },
-      secondary: { backgroundColor: '#f3f4f6', color: '#374151' },
-      danger: { backgroundColor: '#ef4444', color: 'white' }
+      primary: { 
+        backgroundColor: 'var(--md-sys-color-primary)', 
+        color: 'var(--md-sys-color-on-primary)' 
+      },
+      secondary: { 
+        backgroundColor: 'var(--md-sys-color-surface-container)', 
+        color: 'var(--md-sys-color-on-surface)' 
+      },
+      danger: { 
+        backgroundColor: 'var(--md-sys-color-error)', 
+        color: 'var(--md-sys-color-on-error)' 
+      }
     };
 
     return {
-      padding: '0.375rem 0.75rem',
+      padding: 'var(--md-sys-spacing-2) var(--md-sys-spacing-3)',
       border: 'none',
-      borderRadius: '0.25rem',
-      fontSize: '0.75rem',
+      borderRadius: 'var(--md-sys-shape-corner-small)',
+      fontSize: 'var(--md-sys-typescale-label-medium-size)',
       cursor: 'pointer',
-      margin: '0 0.125rem',
+      margin: '0 var(--md-sys-spacing-1)',
       ...variants[variant]
     };
   };
 
-  // Process data with search and sort
+  // Determine column data types and unique values
+  const columnInfo = useMemo(() => {
+    const info = {};
+    
+    columns.forEach(column => {
+      const field = column.field || column;
+      const values = data.map(row => row[field]).filter(val => val != null);
+      
+      if (values.length === 0) {
+        info[field] = { type: 'text', uniqueValues: [] };
+        return;
+      }
+
+      // Determine data type
+      let type = 'text';
+      const firstValue = values[0];
+      
+      if (typeof firstValue === 'boolean') {
+        type = 'boolean';
+      } else if (typeof firstValue === 'number') {
+        type = 'number';
+      } else if (typeof firstValue === 'string') {
+        // Check if it's a date
+        const dateValue = new Date(firstValue);
+        if (!isNaN(dateValue.getTime()) && firstValue.includes('-')) {
+          type = 'date';
+        } else {
+          // Check if categorical (less than 20 unique values)
+          const uniqueValues = [...new Set(values)];
+          if (uniqueValues.length <= 20 && uniqueValues.length > 1) {
+            type = 'categorical';
+            info[field] = { type, uniqueValues };
+            return;
+          }
+        }
+      }
+      
+      info[field] = { type, uniqueValues: [] };
+    });
+    
+    return info;
+  }, [data, columns]);
+
+  // Update column filter
+  const updateColumnFilter = useCallback((field, value) => {
+    setColumnFilters(prev => ({
+      ...prev,
+      [field]: value
+    }));
+    setCurrentPage(1); // Reset to first page when filtering
+  }, []);
+
+  // Process data with search, column filters, and sort
   const processedData = useMemo(() => {
     let filtered = data;
 
-    // Apply search filter
+    // Apply global search filter
     if (searchTerm) {
       filtered = data.filter(row =>
         Object.values(row).some(value =>
@@ -110,6 +177,28 @@ export function DataTable({
         )
       );
     }
+
+    // Apply column filters
+    Object.entries(columnFilters).forEach(([field, filterValue]) => {
+      if (filterValue != null && filterValue !== '' && filterValue !== false) {
+        filtered = filtered.filter(row => {
+          const cellValue = row[field];
+          const columnType = columnInfo[field]?.type;
+
+          switch (columnType) {
+            case 'boolean':
+              return filterValue === true ? cellValue === true : cellValue === false;
+            case 'categorical':
+              return cellValue === filterValue;
+            case 'text':
+            case 'number':
+            case 'date':
+            default:
+              return String(cellValue).toLowerCase().includes(String(filterValue).toLowerCase());
+          }
+        });
+      }
+    });
 
     // Apply sorting
     if (sortField) {
@@ -135,7 +224,7 @@ export function DataTable({
     }
 
     return filtered;
-  }, [data, searchTerm, sortField, sortDirection]);
+  }, [data, searchTerm, columnFilters, sortField, sortDirection, columnInfo]);
 
   // Pagination
   const totalPages = Math.ceil(processedData.length / pageSize);
@@ -177,10 +266,74 @@ export function DataTable({
     setSelectedRows(newSelected);
   }, [selectable, selectedRows]);
 
+  const renderColumnFilter = (column) => {
+    const field = column.field || column;
+    const columnType = columnInfo[field]?.type || 'text';
+    const filterValue = columnFilters[field] || '';
+
+    switch (columnType) {
+      case 'boolean':
+        return (
+          <div style={{ width: '120px' }}>
+            <Combobox
+              options={[
+                { label: 'All', value: '' },
+                { label: 'True', value: true },
+                { label: 'False', value: false }
+              ]}
+              value={filterValue}
+              placeholder="Filter..."
+              onSelectionChange={(option) => updateColumnFilter(field, option?.value || '')}
+              getOptionValue={(option) => option.value}
+              getOptionLabel={(option) => option.label}
+            />
+          </div>
+        );
+      
+      case 'categorical':
+        const options = [
+          { label: 'All', value: '' },
+          ...columnInfo[field].uniqueValues.map(value => ({
+            label: String(value),
+            value: value
+          }))
+        ];
+        return (
+          <div style={{ width: '150px' }}>
+            <Combobox
+              options={options}
+              value={filterValue}
+              placeholder="Filter..."
+              onSelectionChange={(option) => updateColumnFilter(field, option?.value || '')}
+              getOptionValue={(option) => option.value}
+              getOptionLabel={(option) => option.label}
+            />
+          </div>
+        );
+      
+      case 'text':
+      case 'number':
+      case 'date':
+      default:
+        return (
+          <div style={{ width: '150px' }}>
+            <TextField
+              value={filterValue}
+              placeholder="Filter..."
+              size="small"
+              variant="outlined"
+              clearable
+              onChange={(e) => updateColumnFilter(field, e.target.value)}
+            />
+          </div>
+        );
+    }
+  };
+
   const renderSortIcon = (field) => {
     if (!sortable || sortField !== field) return null;
     return (
-      <span style={{ marginLeft: '0.25rem', fontSize: '0.75rem' }}>
+      <span style={{ marginLeft: 'var(--md-sys-spacing-1)', fontSize: 'var(--md-sys-typescale-label-small-size)' }}>
         {sortDirection === 'asc' ? '↑' : '↓'}
       </span>
     );
@@ -239,8 +392,8 @@ export function DataTable({
           key={i}
           style={{
             ...buttonStyle('secondary'),
-            backgroundColor: i === currentPage ? '#3b82f6' : '#f3f4f6',
-            color: i === currentPage ? 'white' : '#374151'
+            backgroundColor: i === currentPage ? 'var(--md-sys-color-primary)' : 'var(--md-sys-color-surface-container)',
+            color: i === currentPage ? 'var(--md-sys-color-on-primary)' : 'var(--md-sys-color-on-surface)'
           }}
           onClick={() => setCurrentPage(i)}
         >
@@ -254,9 +407,9 @@ export function DataTable({
         display: 'flex', 
         justifyContent: 'center', 
         alignItems: 'center', 
-        gap: '0.5rem',
-        padding: '1rem',
-        borderTop: '1px solid #e5e7eb'
+        gap: 'var(--md-sys-spacing-2)',
+        padding: 'var(--md-sys-spacing-4)',
+        borderTop: '1px solid var(--md-sys-color-outline-variant)'
       }}>
         <button
           style={buttonStyle('secondary')}
@@ -280,12 +433,12 @@ export function DataTable({
   if (!data.length) {
     return (
       <div style={{ 
-        padding: '2rem', 
+        padding: 'var(--md-sys-spacing-8)', 
         textAlign: 'center', 
-        color: '#6b7280',
-        border: '1px solid #e5e7eb',
-        borderRadius: '0.5rem',
-        backgroundColor: '#f9fafb'
+        color: 'var(--md-sys-color-on-surface-variant)',
+        border: '1px solid var(--md-sys-color-outline-variant)',
+        borderRadius: 'var(--md-sys-shape-corner-medium)',
+        backgroundColor: 'var(--md-sys-color-surface-container-low)'
       }}>
         No data available
       </div>
@@ -294,21 +447,24 @@ export function DataTable({
 
   return (
     <div>
-      {/* Controls */}
+      {/* Global controls */}
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
-        marginBottom: '1rem',
+        marginBottom: 'var(--md-sys-spacing-4)',
         flexWrap: 'wrap',
-        gap: '1rem'
+        gap: 'var(--md-sys-spacing-4)'
       }}>
         {searchable && (
-          <input
-            style={searchInputStyle}
-            placeholder="Search..."
+          <TextField
             value={searchTerm}
+            placeholder="Search all columns..."
+            size="medium"
+            variant="outlined"
+            clearable
             onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ minWidth: '300px' }}
           />
         )}
         
@@ -333,12 +489,13 @@ export function DataTable({
       <div style={tableContainerStyle}>
         <table style={tableStyle}>
           <thead style={headerStyle}>
+            {/* Column headers */}
             <tr>
               {selectable && (
                 <th style={headerCellStyle}>
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={selectedRows.size === currentData.length && currentData.length > 0}
+                    indeterminate={selectedRows.size > 0 && selectedRows.size < currentData.length}
                     onChange={(e) => {
                       if (e.target.checked) {
                         setSelectedRows(new Set(currentData.map((_, i) => startIndex + i)));
@@ -363,14 +520,26 @@ export function DataTable({
                 <th style={headerCellStyle}>Actions</th>
               )}
             </tr>
+            
+            {/* Column filters */}
+            <tr style={filterHeaderStyle}>
+              {selectable && <th style={{ padding: 'var(--md-sys-spacing-2)' }}>
+                <div style={{ fontSize: '10px', color: 'red' }}>FILTERS</div>
+              </th>}
+              {columns.map(column => (
+                <th key={`filter-${column.field || column}`} style={{ padding: 'var(--md-sys-spacing-2)' }}>
+                  {renderColumnFilter(column)}
+                </th>
+              ))}
+              {(editable || onDelete) && <th style={{ padding: 'var(--md-sys-spacing-2)' }}></th>}
+            </tr>
           </thead>
           <tbody>
             {currentData.map((row, rowIndex) => (
               <tr key={rowIndex}>
                 {selectable && (
                   <td style={cellStyle}>
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       checked={selectedRows.has(startIndex + rowIndex)}
                       onChange={() => handleRowSelect(startIndex + rowIndex)}
                     />
@@ -401,9 +570,9 @@ export function DataTable({
 
       {/* Summary */}
       <div style={{ 
-        marginTop: '0.5rem', 
-        fontSize: '0.875rem', 
-        color: '#6b7280',
+        marginTop: 'var(--md-sys-spacing-2)', 
+        fontSize: 'var(--md-sys-typescale-body-small-size)', 
+        color: 'var(--md-sys-color-on-surface-variant)',
         textAlign: 'center'
       }}>
         Showing {startIndex + 1}-{Math.min(endIndex, processedData.length)} of {processedData.length} rows
