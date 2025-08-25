@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import '../styles/DuckKonundrum.css';
+import InteractivePageWrapper from '../components/InteractivePageWrapper';
+import '../components/InteractivePageWrapper.css';
 
 // Import MD3 Control Panel components
 import ControlPanel, { 
@@ -510,7 +512,8 @@ const DuckKonundrum = () => {
   const currentInstruction = puzzleInstructions[gameState.currentInstructionStep];
 
   return (
-    <div className="duck-konundrum">
+    <InteractivePageWrapper>
+      <div className="duck-konundrum">
       <h1>🦆 Interactive Duck Konundrum Puzzle</h1>
       <p>Drag members and Harold around to solve the MIT Mystery Hunt puzzle! Mix paints and discover the hidden word.</p>
 
@@ -826,7 +829,8 @@ const DuckKonundrum = () => {
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </InteractivePageWrapper>
   );
 };
 

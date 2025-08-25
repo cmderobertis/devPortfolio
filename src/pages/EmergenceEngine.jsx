@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Play, Pause, RotateCcw, Zap, Target, Waves, Box, Grid, Settings2, Edit3 } from 'lucide-react';
+import InteractivePageWrapper from '../components/InteractivePageWrapper';
+import '../components/InteractivePageWrapper.css';
 
 // Import MD3 Control Panel components
 import ControlPanel, { 
@@ -333,7 +335,8 @@ const EmergenceEngine = () => {
   };
 
   return (
-    <div className="emergence-engine-container">
+    <InteractivePageWrapper>
+      <div className="emergence-engine-container">
       <canvas ref={canvasRef} className="emergence-canvas"></canvas>
 
       {/* Status Indicators */}
@@ -482,7 +485,8 @@ const EmergenceEngine = () => {
           Use Arrow keys (or W/A/S/D) to move cursor. {is3D ? "Q/E for depth. " : ""}Press Enter/Space to toggle cell state.
         </div>
       )}
-    </div>
+      </div>
+    </InteractivePageWrapper>
   );
 };
 

@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Navbar from "./components/Navbar"
 import Bio from "./pages/Bio"
 import Resume from "./pages/Resume"
-import InteractiveShowcase from "./pages/InteractiveShowcase";
+import InteractiveShowcase from "./pages/InteractiveShowcase copy";
 import DvdBouncer from "./pages/DvdBouncer"; // Import the new DVD component
 import Breakout from "./pages/Breakout"; // Import the Breakout game component
 import EmergenceEngine from "./pages/EmergenceEngine"; // Added import

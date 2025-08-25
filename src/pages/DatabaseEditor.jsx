@@ -1,5 +1,7 @@
 import DatabaseManager from '../components/DatabaseManager.jsx';
 import { Button, Typography } from '../components/design-system';
+import InteractivePageWrapper from '../components/InteractivePageWrapper';
+import '../components/InteractivePageWrapper.css';
 
 const DatabaseEditor = () => {
 
@@ -30,7 +32,8 @@ const DatabaseEditor = () => {
   };
 
   return (
-    <div style={containerStyle}>
+    <InteractivePageWrapper>
+      <div style={containerStyle}>
       <div style={headerStyle}>
         <div style={contentWrapperStyle}>
           <Typography
@@ -58,19 +61,11 @@ const DatabaseEditor = () => {
             relationship mapping.
           </Typography>
 
-          <div style={buttonContainerStyle}>
-            <Button
-              variant="filled"
-              onClick={() => window.history.back()}
-              icon={<span>←</span>}
-            >
-              Back to Showcase
-            </Button>
-          </div>
         </div>
       </div>
       <DatabaseManager />
-    </div>
+      </div>
+    </InteractivePageWrapper>
   );
 };
 

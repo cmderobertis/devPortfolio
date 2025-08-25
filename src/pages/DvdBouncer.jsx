@@ -31,6 +31,10 @@ import ControlPanel, {
 } from "../components/design-system/ControlPanel";
 import "../components/design-system/ControlPanel.css";
 
+// Import Interactive Page Wrapper
+import InteractivePageWrapper from "../components/InteractivePageWrapper";
+import "../components/InteractivePageWrapper.css";
+
 // Assign top-level constants
 const logoWidth = importedLogoWidth;
 const logoHeight = importedLogoHeight;
@@ -430,7 +434,8 @@ const DvdBouncer = () => {
   };
 
   return (
-    <div className="dvd-bouncer-container">
+    <InteractivePageWrapper>
+      <div className="dvd-bouncer-container">
       {/* Effect Containers */}
       <div ref={particleContainerRef} className="particle-container"></div>
       <div ref={rippleContainerRef} className="ripple-container"></div>
@@ -551,7 +556,8 @@ const DvdBouncer = () => {
           </div>
         ))}
       </div>
-    </div>
+      </div>
+    </InteractivePageWrapper>
   );
 };
 
