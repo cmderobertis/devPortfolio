@@ -1,9 +1,11 @@
 import React, { createContext, useState, useEffect, useCallback, useContext } from "react";
+import { COLOR_PALETTES, DEFAULT_PALETTES, getPaletteVariables } from "../config/colorPalettes";
 
 // Available theme modes
 export const THEME_MODES = {
   LIGHT: 'light',
-  DARK: 'dark'
+  DARK: 'dark',
+  AUTO: 'auto'
 };
 
 // Create the theme context with enhanced functionality
@@ -14,9 +16,16 @@ export const ThemeContext = createContext({
   resolvedTheme: THEME_MODES.LIGHT,
   // Is system preference dark?
   systemPrefersDark: false,
+  // Color palette management
+  lightPalette: DEFAULT_PALETTES.light,
+  darkPalette: DEFAULT_PALETTES.dark,
+  currentPalette: DEFAULT_PALETTES.light,
+  availablePalettes: COLOR_PALETTES,
   // Theme manipulation functions
   setMode: () => {},
   toggleTheme: () => {},
+  setLightPalette: () => {},
+  setDarkPalette: () => {},
   // Utility functions
   isDark: false,
   isLight: true,
@@ -42,10 +51,24 @@ export const ThemeProvider = ({ children }) => {
     return false;
   });
 
+  // State for color palettes
+  const [lightPalette, setLightPalette] = useState(() => {
+    const saved = localStorage.getItem("theme-light-palette");
+    return (saved && COLOR_PALETTES.light[saved]) ? saved : DEFAULT_PALETTES.light;
+  });
+
+  const [darkPalette, setDarkPalette] = useState(() => {
+    const saved = localStorage.getItem("theme-dark-palette");
+    return (saved && COLOR_PALETTES.dark[saved]) ? saved : DEFAULT_PALETTES.dark;
+  });
+
   // Calculate resolved theme based on mode and system preference
   const resolvedTheme = mode === THEME_MODES.AUTO 
     ? (systemPrefersDark ? THEME_MODES.DARK : THEME_MODES.LIGHT)
     : mode;
+
+  // Get current palette based on resolved theme
+  const currentPalette = resolvedTheme === THEME_MODES.DARK ? darkPalette : lightPalette;
 
   // Listen for system theme changes
   useEffect(() => {
@@ -85,7 +108,22 @@ export const ThemeProvider = ({ children }) => {
     }
   }, []);
 
-  // Apply theme to DOM whenever resolved theme changes
+  // Set palette functions
+  const setLightPaletteFunc = useCallback((paletteKey) => {
+    if (COLOR_PALETTES.light[paletteKey]) {
+      setLightPalette(paletteKey);
+      localStorage.setItem("theme-light-palette", paletteKey);
+    }
+  }, []);
+
+  const setDarkPaletteFunc = useCallback((paletteKey) => {
+    if (COLOR_PALETTES.dark[paletteKey]) {
+      setDarkPalette(paletteKey);
+      localStorage.setItem("theme-dark-palette", paletteKey);
+    }
+  }, []);
+
+  // Apply theme to DOM whenever resolved theme or palette changes
   useEffect(() => {
     // Save mode preference
     localStorage.setItem("theme-mode", mode);
@@ -99,9 +137,16 @@ export const ThemeProvider = ({ children }) => {
     
     // Set color-scheme for better browser integration
     document.documentElement.style.colorScheme = resolvedTheme;
+
+    // Apply current palette colors as CSS custom properties
+    const paletteVars = getPaletteVariables(resolvedTheme, currentPalette);
+    Object.entries(paletteVars).forEach(([property, value]) => {
+      document.documentElement.style.setProperty(property, value);
+    });
     
     // Announce theme change to screen readers
-    const announcement = `Theme changed to ${resolvedTheme} mode`;
+    const paletteName = COLOR_PALETTES[resolvedTheme][currentPalette]?.name || currentPalette;
+    const announcement = `Theme changed to ${resolvedTheme} mode with ${paletteName} palette`;
     const announcer = document.createElement('div');
     announcer.setAttribute('aria-live', 'polite');
     announcer.setAttribute('aria-atomic', 'true');
@@ -115,7 +160,7 @@ export const ThemeProvider = ({ children }) => {
         announcer.parentNode.removeChild(announcer);
       }
     }, 1000);
-  }, [mode, resolvedTheme]);
+  }, [mode, resolvedTheme, currentPalette]);
 
   // Calculate utility flags
   const isDark = resolvedTheme === THEME_MODES.DARK;
@@ -127,8 +172,14 @@ export const ThemeProvider = ({ children }) => {
     mode,
     resolvedTheme,
     systemPrefersDark,
+    lightPalette,
+    darkPalette,
+    currentPalette,
+    availablePalettes: COLOR_PALETTES,
     setMode: setThemeMode,
     toggleTheme,
+    setLightPalette: setLightPaletteFunc,
+    setDarkPalette: setDarkPaletteFunc,
     isDark,
     isLight,
     isAuto,

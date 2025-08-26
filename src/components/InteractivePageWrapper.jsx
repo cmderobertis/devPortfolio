@@ -1,9 +1,25 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button, Container } from './design-system';
 
 const InteractivePageWrapper = ({ children }) => {
   const location = useLocation();
+  const headerRef = useRef(null);
+
+  // Set CSS custom property for header height
+  useEffect(() => {
+    const updateHeaderHeight = () => {
+      if (headerRef.current) {
+        const height = headerRef.current.offsetHeight;
+        document.documentElement.style.setProperty('--interactive-header-height', `${height}px`);
+      }
+    };
+
+    updateHeaderHeight();
+    window.addEventListener('resize', updateHeaderHeight);
+    
+    return () => window.removeEventListener('resize', updateHeaderHeight);
+  }, []);
 
   // Define all interactive pages with their icons
   const pages = [
@@ -59,7 +75,7 @@ const InteractivePageWrapper = ({ children }) => {
   return (
     <div className="interactive-page-wrapper">
       {/* Navigation Header */}
-      <div className="bg-surface border-bottom shadow-sm">
+      <div ref={headerRef} className="bg-surface border-bottom shadow-sm">
         <Container maxWidth="xl">
           <div className="d-flex align-items-center justify-content-between py-3">
             {/* Back Button */}
@@ -85,18 +101,32 @@ const InteractivePageWrapper = ({ children }) => {
                     title={page.title}
                   >
                     <div
-                      className={`
-                        p-3 rounded-circle d-flex align-items-center justify-content-center
-                        transition-all duration-200 cursor-pointer
-                        ${isActive 
-                          ? 'bg-primary text-on-primary shadow-md border-2 border-primary' 
-                          : 'bg-surface-variant text-on-surface-variant hover:bg-primary hover:text-on-primary hover:shadow-sm'
-                        }
-                      `}
+                      className="p-3 rounded-circle d-flex align-items-center justify-content-center transition-all duration-200 cursor-pointer"
                       style={{
                         width: '48px',
                         height: '48px',
-                        border: isActive ? '2px solid var(--md-sys-color-primary)' : '1px solid var(--md-sys-color-outline-variant)'
+                        backgroundColor: isActive 
+                          ? 'var(--md-sys-color-primary)' 
+                          : 'var(--md-sys-color-surface-variant)',
+                        color: isActive 
+                          ? 'var(--md-sys-color-on-primary)' 
+                          : 'var(--md-sys-color-on-surface-variant)',
+                        border: isActive 
+                          ? '2px solid var(--md-sys-color-primary)' 
+                          : '1px solid var(--md-sys-color-outline-variant)',
+                        transition: 'all 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isActive) {
+                          e.target.style.backgroundColor = 'var(--md-sys-color-primary)';
+                          e.target.style.color = 'var(--md-sys-color-on-primary)';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isActive) {
+                          e.target.style.backgroundColor = 'var(--md-sys-color-surface-variant)';
+                          e.target.style.color = 'var(--md-sys-color-on-surface-variant)';
+                        }
                       }}
                     >
                       <i className={`${page.icon} fa-lg`}></i>

@@ -119,121 +119,111 @@ const InteractiveShowcase = () => {
           <Typography variant="display-medium" color="primary" className="mb-3">
             Interactive pages Claude made under my direction
           </Typography>
-          <Typography variant="headline-small" color="on-surface-variant" className="mb-4">
-            Explore interactive demonstrations of physics, algorithms, games, and complex systems, all vibe coded using Claude Code.
+          <Typography
+            variant="headline-small"
+            color="on-surface-variant"
+            className="mb-4"
+          >
+            Explore interactive demonstrations of physics, algorithms, games,
+            and complex systems, all vibe coded using Claude Code.
           </Typography>
-          <Typography variant="body-large" color="on-surface-variant" className="max-w-3xl mx-auto">
-            Click on any card to experience interactive demonstrations
-            of mathematical concepts and software engineering principles.
+          <Typography
+            variant="body-large"
+            color="on-surface-variant"
+            className="max-w-3xl mx-auto"
+          >
+            Click on any card to experience interactive demonstrations of
+            mathematical concepts and software engineering principles.
           </Typography>
         </div>
 
-        {/* Statistics Section */}
-        <Card variant="filled" className="mb-5">
-          <CardContent>
-            <Grid container spacing={4} className="text-center">
-              <Grid item xs={6} md={3}>
-                <Typography variant="display-small" color="primary" className="mb-1">
-                  {simulations.length}
-                </Typography>
-                <Typography variant="body-medium" color="on-surface-variant">
-                  Interactive Demos
-                </Typography>
-              </Grid>
-              <Grid item xs={6} md={3}>
-                <Typography variant="display-small" color="secondary" className="mb-1">
-                  {Object.keys(groupedSimulations).length}
-                </Typography>
-                <Typography variant="body-medium" color="on-surface-variant">
-                  Categories
-                </Typography>
-              </Grid>
-              <Grid item xs={6} md={3}>
-                <Typography variant="display-small" color="tertiary" className="mb-1">
-                  100%
-                </Typography>
-                <Typography variant="body-medium" color="on-surface-variant">
-                  Interactive
-                </Typography>
-              </Grid>
-            </Grid>
-          </CardContent>
-        </Card>
-
-        {/* Simulation Categories */}
-        {Object.entries(groupedSimulations).map(([category, sims]) => (
-          <div key={category} className="mb-5">
-            <div className="d-flex align-items-center mb-4">
-              <i className={`${getCategoryIcon(category)} fa-2x text-primary me-3`}></i>
-              <div>
-                <Typography variant="headline-small" color="primary">
-                  {category}
-                </Typography>
-                <Typography variant="body-medium" color="on-surface-variant">
-                  {sims.length} simulation{sims.length !== 1 ? 's' : ''}
-                </Typography>
-              </div>
-            </div>
-
-            <Grid container spacing={3}>
-              {sims.map((simulation) => (
-                <Grid item xs={12} md={6} lg={4} key={simulation.path}>
-                  <Link 
-                    to={simulation.path} 
-                    style={{ textDecoration: 'none', color: 'inherit', display: 'block', height: '100%' }}
-                  >
-                    <Card variant="elevated" className="h-100" hover style={{ cursor: 'pointer' }}>
-                      <CardContent>
-                        <div className="d-flex align-items-center mb-3">
-                          <div className={`p-3 rounded-circle bg-${simulation.color} bg-opacity-10 me-3`}>
-                            <i className={`${simulation.icon} fa-2x text-${simulation.color}`}></i>
-                          </div>
-                          <div className="flex-grow-1">
-                            <Typography variant="title-large" className="mb-1">
-                              {simulation.title}
-                            </Typography>
-                            <Typography variant="body-small" color="on-surface-variant">
-                              {simulation.category}
-                            </Typography>
-                          </div>
-                        </div>
-                        
-                        <Typography variant="body-medium" className="mb-4">
-                          {simulation.description}
+        <Grid container spacing={3}>
+          {simulations.map((simulation) => (
+            <Grid item xs={12} md={6} lg={4} key={simulation.path}>
+              <Link
+                to={simulation.path}
+                style={{
+                  textDecoration: "none",
+                  color: "inherit",
+                  display: "block",
+                  height: "100%",
+                }}
+              >
+                <Card
+                  variant="elevated"
+                  className="h-100"
+                  hover
+                  style={{ cursor: "pointer" }}
+                >
+                  <CardContent>
+                    <div className="d-flex align-items-center mb-3">
+                      <div
+                        className="p-3 rounded-circle me-3"
+                        style={{
+                          backgroundColor:
+                            "var(--md-sys-color-primary-container)",
+                          color: "var(--md-sys-color-on-primary-container)",
+                        }}
+                      >
+                        <i
+                          className={`${simulation.icon} fa-2x`}
+                          style={{ color: "var(--md-sys-color-primary)" }}
+                        ></i>
+                      </div>
+                      <div className="flex-grow-1">
+                        <Typography variant="title-large" className="mb-1">
+                          {simulation.title}
                         </Typography>
-                      </CardContent>
-                      
-                      <CardActions align="end">
-                        <Button 
-                          variant="outlined" 
-                          size="small"
-                          icon={<i className="fas fa-play me-1"></i>}
-                          onClick={(e) => e.preventDefault()} // Prevent double navigation
+                        <Typography
+                          variant="body-small"
+                          color="on-surface-variant"
                         >
-                          Launch
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  </Link>
-                </Grid>
-              ))}
+                          {simulation.category}
+                        </Typography>
+                      </div>
+                    </div>
+
+                    <Typography variant="body-medium" className="mb-4">
+                      {simulation.description}
+                    </Typography>
+                  </CardContent>
+
+                  <CardActions align="end">
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      icon={<i className="fas fa-play me-1"></i>}
+                      onClick={(e) => e.preventDefault()} // Prevent double navigation
+                    >
+                      Launch
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Link>
             </Grid>
-          </div>
-        ))}
+          ))}
+        </Grid>
 
         {/* Footer Call-to-Action */}
         <Card variant="outlined" className="text-center">
           <CardContent className="py-5">
-            <Typography variant="headline-small" color="primary" className="mb-3">
+            <Typography
+              variant="headline-small"
+              color="primary"
+              className="mb-3"
+            >
               Explore Interactive Learning
             </Typography>
-            <Typography variant="body-large" color="on-surface-variant" className="mb-4">
-              Unless otherwise noted, all of these were vibe coded using Claude Code and minor manual edits.
+            <Typography
+              variant="body-large"
+              color="on-surface-variant"
+              className="mb-4"
+            >
+              Unless otherwise noted, all of these were vibe coded using Claude
+              Code and minor manual edits.
             </Typography>
-
           </CardContent>
         </Card>
-
       </Container>
     </Section>
   );

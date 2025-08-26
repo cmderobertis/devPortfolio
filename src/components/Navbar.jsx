@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom"
 import { useTheme } from "../context/ThemeContext"
 import { Button, Typography } from "../components/design-system"
 import { CompactThemeToggle } from "./ThemeToggle"
+import ColorPaletteSwatch from "./ColorPaletteSwatch"
 
 const Navbar = () => {
   const { resolvedTheme } = useTheme();
@@ -52,6 +53,7 @@ const Navbar = () => {
                     projects
                   </NavLink>
                 </li>
+                <ColorPaletteSwatch className="ms-2" />
                 <CompactThemeToggle className="ms-2" />
                 <Button
                   variant="filled"
