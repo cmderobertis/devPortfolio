@@ -1,5 +1,15 @@
 import React, { createContext, useState, useEffect, useCallback, useContext } from "react";
-import { COLOR_PALETTES, DEFAULT_PALETTES, getPaletteVariables } from "../config/colorPalettes";
+import { 
+  COLOR_PALETTES, 
+  DEFAULT_PALETTES, 
+  getPaletteVariables, 
+  getColorSchemesByCategory, 
+  getAllCategories, 
+  getCategoryDisplayName, 
+  getSchemeMetadata, 
+  COLOR_SCHEME_CATEGORIES,
+  COLOR_SCHEME_METADATA
+} from "../config/colorPalettes";
 
 // Available theme modes
 export const THEME_MODES = {
@@ -16,11 +26,18 @@ export const ThemeContext = createContext({
   resolvedTheme: THEME_MODES.LIGHT,
   // Is system preference dark?
   systemPrefersDark: false,
-  // Color palette management
+  // Enhanced color palette management
   lightPalette: DEFAULT_PALETTES.light,
   darkPalette: DEFAULT_PALETTES.dark,
   currentPalette: DEFAULT_PALETTES.light,
   availablePalettes: COLOR_PALETTES,
+  // Color scheme utilities
+  getColorSchemesByCategory: () => {},
+  getAllCategories: () => [],
+  getCategoryDisplayName: () => '',
+  getSchemeMetadata: () => null,
+  schemeCategories: COLOR_SCHEME_CATEGORIES,
+  schemeMetadata: COLOR_SCHEME_METADATA,
   // Theme manipulation functions
   setMode: () => {},
   toggleTheme: () => {},
@@ -167,7 +184,7 @@ export const ThemeProvider = ({ children }) => {
   const isLight = resolvedTheme === THEME_MODES.LIGHT;
   const isAuto = mode === THEME_MODES.AUTO;
 
-  // Context value with enhanced functionality
+  // Context value with enhanced functionality and color scheme utilities
   const contextValue = {
     mode,
     resolvedTheme,
@@ -183,6 +200,13 @@ export const ThemeProvider = ({ children }) => {
     isDark,
     isLight,
     isAuto,
+    // Enhanced color scheme utilities
+    getColorSchemesByCategory: (category) => getColorSchemesByCategory(resolvedTheme, category),
+    getAllCategories,
+    getCategoryDisplayName,
+    getSchemeMetadata: (paletteKey) => getSchemeMetadata(resolvedTheme, paletteKey),
+    schemeCategories: COLOR_SCHEME_CATEGORIES,
+    schemeMetadata: COLOR_SCHEME_METADATA,
     // Legacy compatibility
     theme: resolvedTheme
   };

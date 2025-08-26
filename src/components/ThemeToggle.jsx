@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTheme, THEME_MODES } from '../context/ThemeContext';
+import ColorSchemeSelector from './ColorSchemeSelector';
 import './ThemeToggle.css';
 
 // Theme toggle component with accessibility and MD3 design
@@ -117,6 +118,96 @@ export const CompactThemeToggle = ({ className = '' }) => {
         <i className={getIcon()}></i>
       </span>
     </button>
+  );
+};
+
+// Enhanced theme toggle with color scheme selector
+export const ThemeToggleWithColorSelector = ({ variant = 'default', size = 'medium', className = '' }) => {
+  const { mode, resolvedTheme, toggleTheme, isDark, isAuto, currentPalette } = useTheme();
+  const [showColorSelector, setShowColorSelector] = useState(false);
+
+  const getThemeInfo = () => {
+    switch (mode) {
+      case THEME_MODES.LIGHT:
+        return {
+          icon: 'fas fa-sun',
+          label: 'Light mode',
+          nextLabel: 'Switch to dark mode'
+        };
+      case THEME_MODES.DARK:
+        return {
+          icon: 'fas fa-moon',
+          label: 'Dark mode',
+          nextLabel: 'Switch to auto mode'
+        };
+      case THEME_MODES.AUTO:
+      default:
+        return {
+          icon: isDark ? "fas fa-moon" : "fas fa-sun",
+          label: `Auto mode (${resolvedTheme})`,
+          nextLabel: "Switch to light mode",
+        };
+    }
+  };
+
+  const themeInfo = getThemeInfo();
+
+  const baseClasses = [
+    'theme-toggle-group',
+    `theme-toggle-group--${variant}`,
+    `theme-toggle-group--${size}`,
+    isDark ? 'theme-toggle-group--dark' : 'theme-toggle-group--light',
+    className
+  ].filter(Boolean).join(' ');
+
+  return (
+    <>
+      <div className={baseClasses}>
+        <button
+          className="theme-toggle theme-toggle--mode"
+          onClick={toggleTheme}
+          aria-label={themeInfo.nextLabel}
+          title={themeInfo.nextLabel}
+          type="button"
+        >
+          <span className="theme-toggle__icon" aria-hidden="true">
+            <i className={themeInfo.icon}></i>
+          </span>
+          {variant === 'full' && (
+            <span className="theme-toggle__label">
+              {themeInfo.label}
+            </span>
+          )}
+          {isAuto && (
+            <span className="theme-toggle__auto-indicator" aria-hidden="true">
+              AUTO
+            </span>
+          )}
+        </button>
+        
+        <button
+          className="theme-toggle theme-toggle--color"
+          onClick={() => setShowColorSelector(true)}
+          aria-label="Choose color scheme"
+          title="Choose color scheme"
+          type="button"
+        >
+          <span className="theme-toggle__icon" aria-hidden="true">
+            <i className="fas fa-palette"></i>
+          </span>
+          {variant === 'full' && (
+            <span className="theme-toggle__label">
+              Colors
+            </span>
+          )}
+        </button>
+      </div>
+      
+      <ColorSchemeSelector 
+        isOpen={showColorSelector}
+        onClose={() => setShowColorSelector(false)}
+      />
+    </>
   );
 };
 

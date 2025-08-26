@@ -1,4 +1,39 @@
-/* Theme Toggle Component - Material Design 3 */
+/* Enhanced Theme Toggle Component - Material Design 3 with Color Selector */
+
+/* Theme Toggle Group Layout */
+.theme-toggle-group {
+  display: flex;
+  gap: var(--md-sys-spacing-1);
+  align-items: center;
+  background: var(--md-sys-color-surface-container);
+  border-radius: var(--md-sys-shape-corner-full);
+  padding: var(--md-sys-spacing-1);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.theme-toggle-group--full {
+  background: transparent;
+  border: none;
+  gap: var(--md-sys-spacing-2);
+  padding: 0;
+}
+
+.theme-toggle--mode {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.theme-toggle--color {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+.theme-toggle--color:hover {
+  background-color: var(--md-sys-color-secondary);
+  color: var(--md-sys-color-on-secondary);
+}
+
+/* Original Theme Toggle Component */
 
 .theme-toggle {
   /* Base styles using MD3 tokens */
