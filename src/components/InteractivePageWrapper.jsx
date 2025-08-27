@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button, Container } from './design-system';
+import IconButton from './design-system/IconButton';
 
 const InteractivePageWrapper = ({ children }) => {
   const location = useLocation();
@@ -90,7 +91,7 @@ const InteractivePageWrapper = ({ children }) => {
             </Link>
 
             {/* Page Icons Navigation */}
-            <div className="d-flex align-items-center gap-2">
+            <div className="d-flex align-items-center" style={{ gap: 'var(--md-sys-spacing-2)' }}>
               {pages.map((page) => {
                 const isActive = currentPath === page.path;
                 return (
@@ -98,39 +99,15 @@ const InteractivePageWrapper = ({ children }) => {
                     key={page.path}
                     to={page.path}
                     className="text-decoration-none"
-                    title={page.title}
                   >
-                    <div
-                      className="p-3 rounded-circle d-flex align-items-center justify-content-center transition-all duration-200 cursor-pointer"
-                      style={{
-                        width: '48px',
-                        height: '48px',
-                        backgroundColor: isActive 
-                          ? 'var(--md-sys-color-primary)' 
-                          : 'var(--md-sys-color-surface-variant)',
-                        color: isActive 
-                          ? 'var(--md-sys-color-on-primary)' 
-                          : 'var(--md-sys-color-on-surface-variant)',
-                        border: isActive 
-                          ? '2px solid var(--md-sys-color-primary)' 
-                          : '1px solid var(--md-sys-color-outline-variant)',
-                        transition: 'all 0.2s ease',
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isActive) {
-                          e.target.style.backgroundColor = 'var(--md-sys-color-primary)';
-                          e.target.style.color = 'var(--md-sys-color-on-primary)';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isActive) {
-                          e.target.style.backgroundColor = 'var(--md-sys-color-surface-variant)';
-                          e.target.style.color = 'var(--md-sys-color-on-surface-variant)';
-                        }
-                      }}
-                    >
-                      <i className={`${page.icon} fa-lg`}></i>
-                    </div>
+                    <IconButton
+                      icon={page.icon}
+                      variant={isActive ? 'filled' : 'outlined'}
+                      size="large"
+                      ariaLabel={`Navigate to ${page.title}`}
+                      title={page.title}
+                      className={isActive ? 'active' : ''}
+                    />
                   </Link>
                 );
               })}

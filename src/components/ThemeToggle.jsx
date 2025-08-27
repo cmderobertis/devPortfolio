@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTheme, THEME_MODES } from '../context/ThemeContext';
 import ColorSchemeSelector from './ColorSchemeSelector';
+import IconButton from './design-system/IconButton';
 import './ThemeToggle.css';
 
 // Theme toggle component with accessibility and MD3 design
@@ -106,18 +107,15 @@ export const CompactThemeToggle = ({ className = '' }) => {
   ].filter(Boolean).join(' ');
 
   return (
-    <button
-      className={classes}
+    <IconButton
       icon={getIcon()}
       onClick={toggleTheme}
-      aria-label={getAriaLabel()}
+      variant="default"
+      size="medium"
+      ariaLabel={getAriaLabel()}
       title={getAriaLabel()}
-      type="button"
-    >
-      <span className="theme-toggle__icon" aria-hidden="true">
-        <i className={getIcon()}></i>
-      </span>
-    </button>
+      className={`${isAuto ? 'theme-toggle--auto' : ''} ${className}`}
+    />
   );
 };
 
@@ -163,44 +161,24 @@ export const ThemeToggleWithColorSelector = ({ variant = 'default', size = 'medi
   return (
     <>
       <div className={baseClasses}>
-        <button
-          className="theme-toggle theme-toggle--mode"
+        <IconButton
+          icon={themeInfo.icon}
           onClick={toggleTheme}
-          aria-label={themeInfo.nextLabel}
+          variant="filled"
+          size={size}
+          ariaLabel={themeInfo.nextLabel}
           title={themeInfo.nextLabel}
-          type="button"
-        >
-          <span className="theme-toggle__icon" aria-hidden="true">
-            <i className={themeInfo.icon}></i>
-          </span>
-          {variant === 'full' && (
-            <span className="theme-toggle__label">
-              {themeInfo.label}
-            </span>
-          )}
-          {isAuto && (
-            <span className="theme-toggle__auto-indicator" aria-hidden="true">
-              AUTO
-            </span>
-          )}
-        </button>
+          className={isAuto ? 'theme-toggle--auto' : ''}
+        />
         
-        <button
-          className="theme-toggle theme-toggle--color"
+        <IconButton
+          icon="fas fa-palette"
           onClick={() => setShowColorSelector(true)}
-          aria-label="Choose color scheme"
+          variant="secondary"
+          size={size}
+          ariaLabel="Choose color scheme"
           title="Choose color scheme"
-          type="button"
-        >
-          <span className="theme-toggle__icon" aria-hidden="true">
-            <i className="fas fa-palette"></i>
-          </span>
-          {variant === 'full' && (
-            <span className="theme-toggle__label">
-              Colors
-            </span>
-          )}
-        </button>
+        />
       </div>
       
       <ColorSchemeSelector 

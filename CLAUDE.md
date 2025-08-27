@@ -477,3 +477,5 @@ This is a React-based developer portfolio website showcasing Cameron De Robertis
 - Code splitting and lazy loading
 - Asset optimization and compression
 - Performance metrics and monitoring
+
+- Don't use hard-coded values where possible. Always attempt to reference a variable elsewhere. Use responsive units where possible.
