@@ -382,6 +382,38 @@ export const DEFAULT_PALETTES = {
   dark: "blue"
 };
 
+// Hue-based mappings between light and dark mode schemes
+// Each light mode scheme is mapped to its closest dark mode equivalent based on hue
+export const LIGHT_DARK_MAPPINGS = {
+  // Blues - Ocean themes
+  blue: "blue",           // Ocean Blue → Deep Ocean
+  navy: "navy",           // Deep Navy → Midnight Navy
+  indigo: "indigo",       // Corporate Indigo → Dark Corporate
+  
+  // Purples - Mystical themes
+  purple: "purple",       // Royal Purple → Mystic Purple  
+  lavender: "lavender",   // Soft Lavender → Dark Lavender
+  
+  // Greens - Nature themes
+  green: "green",         // Forest Green → Neon Green
+  sage: "sage",           // Garden Sage → Dark Sage
+  teal: "teal",          // Tropical Teal → Cyan Wave
+  
+  // Warm colors - Energy themes
+  orange: "orange",       // Sunset Orange → Amber Glow
+  red: "red",            // Cherry Red → Crimson Fire
+  
+  // Neutrals - Professional themes
+  slate: "slate",        // Neutral Slate → Dark Slate
+  stone: "stone"         // Warm Stone → Dark Stone
+};
+
+// Reverse mapping for dark to light mode transitions
+export const DARK_LIGHT_MAPPINGS = Object.entries(LIGHT_DARK_MAPPINGS).reduce((acc, [light, dark]) => {
+  acc[dark] = light;
+  return acc;
+}, {});
+
 // Enhanced palette variable generator with full MD3 token support
 export const getPaletteVariables = (theme, paletteKey) => {
   const palette = COLOR_PALETTES[theme]?.[paletteKey];
@@ -450,4 +482,39 @@ export const validateColorScheme = (scheme) => {
 
 export const getAccessibilityLevel = (scheme) => {
   return scheme.accessibility?.contrast || 'Unknown';
+};
+
+// Mapping utilities for theme switching with hue preservation
+export const getMappedScheme = (currentTheme, currentScheme, targetTheme) => {
+  if (currentTheme === targetTheme) {
+    return currentScheme;
+  }
+  
+  if (currentTheme === 'light' && targetTheme === 'dark') {
+    return LIGHT_DARK_MAPPINGS[currentScheme] || currentScheme;
+  }
+  
+  if (currentTheme === 'dark' && targetTheme === 'light') {
+    return DARK_LIGHT_MAPPINGS[currentScheme] || currentScheme;
+  }
+  
+  return currentScheme;
+};
+
+export const getOpposingScheme = (currentTheme, currentScheme) => {
+  const targetTheme = currentTheme === 'light' ? 'dark' : 'light';
+  return getMappedScheme(currentTheme, currentScheme, targetTheme);
+};
+
+export const getAllMappedPairs = () => {
+  return Object.entries(LIGHT_DARK_MAPPINGS).map(([lightScheme, darkScheme]) => ({
+    light: {
+      key: lightScheme,
+      ...COLOR_PALETTES.light[lightScheme]
+    },
+    dark: {
+      key: darkScheme,
+      ...COLOR_PALETTES.dark[darkScheme]
+    }
+  }));
 };

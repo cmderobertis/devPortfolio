@@ -1,0 +1,369 @@
+/* Material Design 3 Layout Components */
+
+/* ========================================
+   PAGE COMPONENT
+   ======================================== */
+.md3-page {
+  min-height: 100vh;
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
+}
+
+.md3-page--padded {
+  padding: var(--md-sys-spacing-4);
+}
+
+.md3-page--max-width-sm {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.md3-page--max-width-md {
+  max-width: 905px;
+  margin: 0 auto;
+}
+
+.md3-page--max-width-lg {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.md3-page--max-width-xl {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.md3-page--max-width-full {
+  max-width: 100%;
+}
+
+/* ========================================
+   SECTION COMPONENT
+   ======================================== */
+.md3-section {
+  width: 100%;
+}
+
+.md3-section--background {
+  background-color: var(--md-sys-color-surface-container-lowest);
+  border-radius: var(--md-sys-shape-corner-large);
+  padding: var(--md-sys-spacing-6);
+}
+
+.md3-section--spacing-none {
+  margin: 0;
+}
+
+.md3-section--spacing-xs {
+  margin: var(--md-sys-spacing-2) 0;
+}
+
+.md3-section--spacing-sm {
+  margin: var(--md-sys-spacing-4) 0;
+}
+
+.md3-section--spacing-md {
+  margin: var(--md-sys-spacing-6) 0;
+}
+
+.md3-section--spacing-lg {
+  margin: var(--md-sys-spacing-8) 0;
+}
+
+.md3-section--spacing-xl {
+  margin: var(--md-sys-spacing-12) 0;
+}
+
+/* ========================================
+   STACK COMPONENT
+   ======================================== */
+.md3-stack {
+  display: flex;
+}
+
+.md3-stack--vertical {
+  flex-direction: column;
+}
+
+.md3-stack--horizontal {
+  flex-direction: row;
+}
+
+/* Vertical stack spacing */
+.md3-stack--vertical.md3-stack--spacing-none > * + * {
+  margin-top: 0;
+}
+
+.md3-stack--vertical.md3-stack--spacing-xs > * + * {
+  margin-top: var(--md-sys-spacing-1);
+}
+
+.md3-stack--vertical.md3-stack--spacing-sm > * + * {
+  margin-top: var(--md-sys-spacing-2);
+}
+
+.md3-stack--vertical.md3-stack--spacing-md > * + * {
+  margin-top: var(--md-sys-spacing-4);
+}
+
+.md3-stack--vertical.md3-stack--spacing-lg > * + * {
+  margin-top: var(--md-sys-spacing-6);
+}
+
+.md3-stack--vertical.md3-stack--spacing-xl > * + * {
+  margin-top: var(--md-sys-spacing-8);
+}
+
+/* Horizontal stack spacing */
+.md3-stack--horizontal.md3-stack--spacing-none > * + * {
+  margin-left: 0;
+}
+
+.md3-stack--horizontal.md3-stack--spacing-xs > * + * {
+  margin-left: var(--md-sys-spacing-1);
+}
+
+.md3-stack--horizontal.md3-stack--spacing-sm > * + * {
+  margin-left: var(--md-sys-spacing-2);
+}
+
+.md3-stack--horizontal.md3-stack--spacing-md > * + * {
+  margin-left: var(--md-sys-spacing-4);
+}
+
+.md3-stack--horizontal.md3-stack--spacing-lg > * + * {
+  margin-left: var(--md-sys-spacing-6);
+}
+
+.md3-stack--horizontal.md3-stack--spacing-xl > * + * {
+  margin-left: var(--md-sys-spacing-8);
+}
+
+.md3-stack--align-start {
+  align-items: flex-start;
+}
+
+.md3-stack--align-center {
+  align-items: center;
+}
+
+.md3-stack--align-end {
+  align-items: flex-end;
+}
+
+.md3-stack--align-stretch {
+  align-items: stretch;
+}
+
+.md3-stack--justify-start {
+  justify-content: flex-start;
+}
+
+.md3-stack--justify-center {
+  justify-content: center;
+}
+
+.md3-stack--justify-end {
+  justify-content: flex-end;
+}
+
+.md3-stack--justify-between {
+  justify-content: space-between;
+}
+
+.md3-stack--justify-around {
+  justify-content: space-around;
+}
+
+.md3-stack--justify-evenly {
+  justify-content: space-evenly;
+}
+
+/* ========================================
+   GRID COMPONENT
+   ======================================== */
+.md3-grid {
+  display: grid;
+  width: 100%;
+}
+
+.md3-grid--columns-1 {
+  grid-template-columns: 1fr;
+}
+
+.md3-grid--columns-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.md3-grid--columns-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.md3-grid--columns-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.md3-grid--columns-6 {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.md3-grid--columns-12 {
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.md3-grid--spacing-none {
+  gap: 0;
+}
+
+.md3-grid--spacing-xs {
+  gap: var(--md-sys-spacing-1);
+}
+
+.md3-grid--spacing-sm {
+  gap: var(--md-sys-spacing-2);
+}
+
+.md3-grid--spacing-md {
+  gap: var(--md-sys-spacing-4);
+}
+
+.md3-grid--spacing-lg {
+  gap: var(--md-sys-spacing-6);
+}
+
+.md3-grid--spacing-xl {
+  gap: var(--md-sys-spacing-8);
+}
+
+/* Responsive grid */
+.md3-grid--responsive.md3-grid--columns-12 {
+  grid-template-columns: repeat(12, 1fr);
+}
+
+@media (max-width: 905px) {
+  .md3-grid--responsive.md3-grid--columns-12 {
+    grid-template-columns: repeat(8, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .md3-grid--responsive.md3-grid--columns-12 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ========================================
+   GRID ITEM COMPONENT
+   ======================================== */
+.md3-grid-item {
+  min-width: 0; /* Prevent overflow */
+}
+
+.md3-grid-item--span-1 {
+  grid-column: span 1;
+}
+
+.md3-grid-item--span-2 {
+  grid-column: span 2;
+}
+
+.md3-grid-item--span-3 {
+  grid-column: span 3;
+}
+
+.md3-grid-item--span-4 {
+  grid-column: span 4;
+}
+
+.md3-grid-item--span-5 {
+  grid-column: span 5;
+}
+
+.md3-grid-item--span-6 {
+  grid-column: span 6;
+}
+
+.md3-grid-item--span-7 {
+  grid-column: span 7;
+}
+
+.md3-grid-item--span-8 {
+  grid-column: span 8;
+}
+
+.md3-grid-item--span-9 {
+  grid-column: span 9;
+}
+
+.md3-grid-item--span-10 {
+  grid-column: span 10;
+}
+
+.md3-grid-item--span-11 {
+  grid-column: span 11;
+}
+
+.md3-grid-item--span-12 {
+  grid-column: span 12;
+}
+
+/* Responsive spans */
+@media (min-width: 600px) {
+  .md3-grid-item--span-sm-1 { grid-column: span 1; }
+  .md3-grid-item--span-sm-2 { grid-column: span 2; }
+  .md3-grid-item--span-sm-3 { grid-column: span 3; }
+  .md3-grid-item--span-sm-4 { grid-column: span 4; }
+  .md3-grid-item--span-sm-5 { grid-column: span 5; }
+  .md3-grid-item--span-sm-6 { grid-column: span 6; }
+  .md3-grid-item--span-sm-7 { grid-column: span 7; }
+  .md3-grid-item--span-sm-8 { grid-column: span 8; }
+  .md3-grid-item--span-sm-9 { grid-column: span 9; }
+  .md3-grid-item--span-sm-10 { grid-column: span 10; }
+  .md3-grid-item--span-sm-11 { grid-column: span 11; }
+  .md3-grid-item--span-sm-12 { grid-column: span 12; }
+}
+
+@media (min-width: 905px) {
+  .md3-grid-item--span-md-1 { grid-column: span 1; }
+  .md3-grid-item--span-md-2 { grid-column: span 2; }
+  .md3-grid-item--span-md-3 { grid-column: span 3; }
+  .md3-grid-item--span-md-4 { grid-column: span 4; }
+  .md3-grid-item--span-md-5 { grid-column: span 5; }
+  .md3-grid-item--span-md-6 { grid-column: span 6; }
+  .md3-grid-item--span-md-7 { grid-column: span 7; }
+  .md3-grid-item--span-md-8 { grid-column: span 8; }
+  .md3-grid-item--span-md-9 { grid-column: span 9; }
+  .md3-grid-item--span-md-10 { grid-column: span 10; }
+  .md3-grid-item--span-md-11 { grid-column: span 11; }
+  .md3-grid-item--span-md-12 { grid-column: span 12; }
+}
+
+@media (min-width: 1240px) {
+  .md3-grid-item--span-lg-1 { grid-column: span 1; }
+  .md3-grid-item--span-lg-2 { grid-column: span 2; }
+  .md3-grid-item--span-lg-3 { grid-column: span 3; }
+  .md3-grid-item--span-lg-4 { grid-column: span 4; }
+  .md3-grid-item--span-lg-5 { grid-column: span 5; }
+  .md3-grid-item--span-lg-6 { grid-column: span 6; }
+  .md3-grid-item--span-lg-7 { grid-column: span 7; }
+  .md3-grid-item--span-lg-8 { grid-column: span 8; }
+  .md3-grid-item--span-lg-9 { grid-column: span 9; }
+  .md3-grid-item--span-lg-10 { grid-column: span 10; }
+  .md3-grid-item--span-lg-11 { grid-column: span 11; }
+  .md3-grid-item--span-lg-12 { grid-column: span 12; }
+}
+
+@media (min-width: 1440px) {
+  .md3-grid-item--span-xl-1 { grid-column: span 1; }
+  .md3-grid-item--span-xl-2 { grid-column: span 2; }
+  .md3-grid-item--span-xl-3 { grid-column: span 3; }
+  .md3-grid-item--span-xl-4 { grid-column: span 4; }
+  .md3-grid-item--span-xl-5 { grid-column: span 5; }
+  .md3-grid-item--span-xl-6 { grid-column: span 6; }
+  .md3-grid-item--span-xl-7 { grid-column: span 7; }
+  .md3-grid-item--span-xl-8 { grid-column: span 8; }
+  .md3-grid-item--span-xl-9 { grid-column: span 9; }
+  .md3-grid-item--span-xl-10 { grid-column: span 10; }
+  .md3-grid-item--span-xl-11 { grid-column: span 11; }
+  .md3-grid-item--span-xl-12 { grid-column: span 12; }
+}

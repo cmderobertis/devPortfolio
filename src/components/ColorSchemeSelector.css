@@ -87,11 +87,12 @@
 }
 
 .category-tabs {
-  display: flex;
+  display: flex !important;
   overflow-x: auto;
   background: var(--md-sys-color-surface-container-low);
   border-bottom: 1px solid var(--md-sys-color-outline-variant);
   scrollbar-width: thin;
+  flex-shrink: 0;
 }
 
 .category-tabs::-webkit-scrollbar {
@@ -149,11 +150,14 @@
   background: var(--md-sys-color-surface-container);
   border: 1px solid var(--md-sys-color-outline-variant);
   border-radius: var(--md-sys-shape-corner-medium);
-  padding: var(--md-sys-spacing-4);
+  padding: var(--md-sys-spacing-1);
   cursor: pointer;
   transition: all var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-standard);
   position: relative;
   overflow: hidden;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
 }
 
 .scheme-card:hover {
@@ -173,6 +177,7 @@
   flex-direction: column;
   gap: var(--md-sys-spacing-1);
   margin-bottom: var(--md-sys-spacing-3);
+  padding: var(--md-sys-spacing-1);
 }
 
 .color-row {
@@ -195,6 +200,7 @@
 
 .scheme-info {
   flex: 1;
+  padding: 0 var(--md-sys-spacing-1) var(--md-sys-spacing-1) var(--md-sys-spacing-1);
 }
 
 .scheme-name {

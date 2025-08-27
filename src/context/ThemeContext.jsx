@@ -8,7 +8,12 @@ import {
   getCategoryDisplayName, 
   getSchemeMetadata, 
   COLOR_SCHEME_CATEGORIES,
-  COLOR_SCHEME_METADATA
+  COLOR_SCHEME_METADATA,
+  LIGHT_DARK_MAPPINGS,
+  DARK_LIGHT_MAPPINGS,
+  getMappedScheme,
+  getOpposingScheme,
+  getAllMappedPairs
 } from "../config/colorPalettes";
 
 // Available theme modes
@@ -140,6 +145,30 @@ export const ThemeProvider = ({ children }) => {
     }
   }, []);
 
+  // Set theme mode with automatic hue-based scheme mapping
+  const setThemeModeWithMapping = useCallback((newMode, useMapping = true) => {
+    if (Object.values(THEME_MODES).includes(newMode)) {
+      const previousResolvedTheme = resolvedTheme;
+      const newResolvedTheme = newMode === THEME_MODES.AUTO 
+        ? (systemPrefersDark ? THEME_MODES.DARK : THEME_MODES.LIGHT)
+        : newMode;
+      
+      setMode(newMode);
+      
+      // Apply hue-based mapping if switching themes and mapping is enabled
+      if (useMapping && previousResolvedTheme !== newResolvedTheme) {
+        const currentScheme = previousResolvedTheme === THEME_MODES.DARK ? darkPalette : lightPalette;
+        const mappedScheme = getMappedScheme(previousResolvedTheme, currentScheme, newResolvedTheme);
+        
+        if (newResolvedTheme === THEME_MODES.DARK) {
+          setDarkPaletteFunc(mappedScheme);
+        } else {
+          setLightPaletteFunc(mappedScheme);
+        }
+      }
+    }
+  }, [resolvedTheme, darkPalette, lightPalette, systemPrefersDark, setDarkPaletteFunc, setLightPaletteFunc]);
+
   // Apply theme to DOM whenever resolved theme or palette changes
   useEffect(() => {
     // Save mode preference
@@ -194,6 +223,7 @@ export const ThemeProvider = ({ children }) => {
     currentPalette,
     availablePalettes: COLOR_PALETTES,
     setMode: setThemeMode,
+    setModeWithMapping: setThemeModeWithMapping,
     toggleTheme,
     setLightPalette: setLightPaletteFunc,
     setDarkPalette: setDarkPaletteFunc,
@@ -207,6 +237,12 @@ export const ThemeProvider = ({ children }) => {
     getSchemeMetadata: (paletteKey) => getSchemeMetadata(resolvedTheme, paletteKey),
     schemeCategories: COLOR_SCHEME_CATEGORIES,
     schemeMetadata: COLOR_SCHEME_METADATA,
+    // Hue-based mapping utilities
+    lightDarkMappings: LIGHT_DARK_MAPPINGS,
+    darkLightMappings: DARK_LIGHT_MAPPINGS,
+    getMappedScheme: (currentTheme, currentScheme, targetTheme) => getMappedScheme(currentTheme, currentScheme, targetTheme),
+    getOpposingScheme: (currentTheme, currentScheme) => getOpposingScheme(currentTheme, currentScheme),
+    getAllMappedPairs,
     // Legacy compatibility
     theme: resolvedTheme
   };
