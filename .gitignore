@@ -6,7 +6,16 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
+.claude
+.claude-flow
+.hive-mind
+.roo
+.swarm
+.roomodes
+claude-flow
+claude-flow.bat
+claude-flow.config.json
+claude-flow.ps1
 node_modules
 dist
 dist-ssr
