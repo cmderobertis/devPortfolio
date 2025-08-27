@@ -2,7 +2,7 @@ import React from "react"
 import { NavLink } from "react-router-dom"
 import { useTheme } from "../context/ThemeContext"
 import { Button, Typography } from "../components/design-system"
-import { CompactThemeToggle } from "./ThemeToggle"
+import { ThemeToggleWithColorSelector } from "./ThemeToggle"
 
 const Navbar = () => {
   const { resolvedTheme } = useTheme();
@@ -10,7 +10,7 @@ const Navbar = () => {
   return (
     <div className="App">
       <div className="sticky-top">
-        <nav className="navbar navbar-expand-sm navbar-dark">
+        <nav className={`navbar navbar-expand-sm ${resolvedTheme === 'dark' ? 'navbar-dark' : 'navbar-light'}`}>
           <div className="container-lg">
             <NavLink className="navbar-brand text-center" to={"/"}>
               <Typography
@@ -52,7 +52,11 @@ const Navbar = () => {
                     projects
                   </NavLink>
                 </li>
-                <CompactThemeToggle className="ms-2" />
+                <ThemeToggleWithColorSelector 
+                  variant="default" 
+                  size="medium" 
+                  className="ms-2" 
+                />
                 <Button
                   variant="filled"
                   size="medium"

@@ -6,6 +6,8 @@ import {
   dvdLogoPath as importedDvdLogoPath,
   shadeColor,
 } from "../utils/dvdLogic";
+import { resizeCanvas } from "../utils/interactiveLayout";
+import { useTheme } from "../context/ThemeContext";
 
 // Import the rest of the utils needed inside the component
 import {
@@ -30,6 +32,10 @@ import ControlPanel, {
   StatusIndicator,
 } from "../components/design-system/ControlPanel";
 import "../components/design-system/ControlPanel.css";
+
+// Import Interactive Page Wrapper
+import InteractivePageWrapper from "../components/InteractivePageWrapper";
+import "../components/InteractivePageWrapper.css";
 
 // Assign top-level constants
 const logoWidth = importedLogoWidth;
@@ -70,12 +76,13 @@ const drawSimplifiedLogo = (ctx, logo) => {
 const DvdBouncer = () => {
   const canvasRef = useRef(null);
   const [logos, setLogos] = useState([]);
+  const [currentDvdCount, setCurrentDvdCount] = useState(0);
   const [speedMultiplier, setSpeedMultiplier] = useState(1); // Use percentage directly (1-10)
   const [growthMultiplier, setGrowthMultiplier] = useState(1); // Use percentage directly (1-10)
   const [baseSpeed, setBaseSpeed] = useState(2.0);
   const [angleVariation, setAngleVariation] = useState(10);
   const [controlsVisible, setControlsVisible] = useState(true);
-  const [maxSpeed, setMaxSpeed] = useState(0);
+  const [currentMaxSpeed, setCurrentMaxSpeed] = useState(0);
   const [toasts, setToasts] = useState([]);
   const [status, setStatus] = useState("🔄 DVD Bouncer Ready!");
 
@@ -102,52 +109,6 @@ const DvdBouncer = () => {
     setStatus(message);
   }, []);
 
-  // --- Simplified Particle Effects (Optional) ---
-  const createParticles = useCallback((x, y, count, color) => {
-    const container = particleContainerRef.current;
-    if (!container) return;
-    // Reduce particle count for toned-down effect
-    const reducedCount = Math.floor(count / 3);
-    for (let i = 0; i < reducedCount; i++) {
-      const particle = document.createElement("div");
-      particle.className = "particle simple"; // Add 'simple' class
-      particle.style.left = `${x}px`;
-      particle.style.top = `${y}px`;
-      const size = Math.random() * 2 + 1; // Smaller particles
-      particle.style.width = `${size}px`;
-      particle.style.height = `${size}px`;
-      particle.style.backgroundColor = color;
-      particle.style.opacity = String(Math.random() * 0.4 + 0.2); // Less opaque
-
-      const angle = Math.random() * Math.PI * 2;
-      const speed = Math.random() * 1.5 + 0.5; // Slower speed
-      let vx = Math.cos(angle) * speed;
-      let vy = Math.sin(angle) * speed;
-      let posX = x;
-      let posY = y;
-      let opacity = parseFloat(particle.style.opacity);
-      const maxLife = Math.random() * 15 + 5;
-      let lifetime = 0;
-
-      container.appendChild(particle);
-
-      function animateParticle() {
-        if (lifetime >= maxLife || !particle.parentElement) {
-          if (particle.parentElement) particle.remove();
-          return;
-        }
-        posX += vx;
-        posY += vy;
-        opacity -= parseFloat(particle.style.opacity) / maxLife;
-        particle.style.transform = `translate(${posX - x}px, ${posY - y}px)`;
-        particle.style.opacity = String(Math.max(0, opacity));
-        lifetime++;
-        requestAnimationFrame(animateParticle);
-      }
-      requestAnimationFrame(animateParticle);
-    }
-  }, []);
-
   const handleAddLogo = useCallback(
     (x = null, y = null) => {
       const canvas = canvasRef.current;
@@ -168,19 +129,19 @@ const DvdBouncer = () => {
         );
       }
       setLogos((prev) => [...prev, newLogoData]);
+      const newCount = logosRef.current.length + 1;
       updateStatus(
-        `${logosRef.current.length + 1} DVD logo${
-          logosRef.current.length === 0 ? "" : "s"
-        } bouncing`
+        `${newCount} DVD logo${newCount === 1 ? "" : "s"} bouncing`
       );
-      showToast(`Added DVD Logo #${logosRef.current.length + 1}`);
+      showToast(`Added DVD Logo #${newCount}`);
     },
     [baseSpeed, showToast, updateStatus]
   ); // Removed logoWidth, logoHeight dependency as they are top-level now
 
   const handleReset = useCallback(() => {
     setLogos([]);
-    setMaxSpeed(0);
+    setCurrentDvdCount(0);
+    setCurrentMaxSpeed(0);
     updateStatus("🔄 Simulation reset");
     showToast("🔄 Simulation reset");
   }, [showToast, updateStatus]);
@@ -190,17 +151,12 @@ const DvdBouncer = () => {
     const ctx = canvas?.getContext("2d");
     if (!ctx) return;
 
-    if (
-      canvas.width !== window.innerWidth ||
-      canvas.height !== window.innerHeight
-    ) {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
+    // Resize canvas using utility function
+    resizeCanvas(canvas, controlsVisible, 320);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    let currentMaxSpeed = 0;
+    let frameMaxSpeed = 0;
     const logosAfterProcessing = [];
     logosRef.current.forEach((logo) => {
       // Iterate over the current logos
@@ -222,8 +178,8 @@ const DvdBouncer = () => {
       );
 
       let didBounce = false;
-      const speedMult = speedMultiplier / 100; // Convert percentage for calculation
-      const growthMult = growthMultiplier / 100; // Convert percentage for calculation
+      const speedMult = speedMultiplier / 100; // Use slider value directly (1-10)
+      const growthMult = growthMultiplier / 100; // Use slider value directly (1-10)
 
       if (bounceX) {
         didBounce = true;
@@ -265,7 +221,10 @@ const DvdBouncer = () => {
         x = nextX;
         y = nextY;
       } else {
-        if (width >= canvas.width) {
+        // Check if DVD is too fast - if so, kill it
+        const speed = Math.sqrt(vx * vx + vy * vy);
+        
+        if (width >= canvas.width || speed > 10000) {
           // Logo became wider than canvas - split it
           const centerX = x + width / 2; // Use the original logo's center
           const centerY = y + height / 2; // Use the original logo's center
@@ -322,8 +281,8 @@ const DvdBouncer = () => {
       y = Math.max(0, Math.min(y, canvas.height - height));
 
       const speed = Math.sqrt(vx * vx + vy * vy);
-      currentMaxSpeed = Math.max(currentMaxSpeed, speed);
-      if (didBounce && speed > maxSpeed && speed > 10) {
+      frameMaxSpeed = Math.max(frameMaxSpeed, speed);
+      if (didBounce && speed > currentMaxSpeed && speed > 10) {
         showToast(`🚀 New max speed: ${Math.round(speed)}`);
       }
 
@@ -346,16 +305,19 @@ const DvdBouncer = () => {
 
     // Update the logos reference with the processed logos
     logosRef.current = logosAfterProcessing;
-    setMaxSpeed((prevMax) => Math.max(prevMax, currentMaxSpeed));
+    // Update DVD count and max speed
+    setCurrentDvdCount(logosAfterProcessing.length);
+    setCurrentMaxSpeed(frameMaxSpeed);
 
     animationFrameId.current = requestAnimationFrame(animate);
   }, [
     angleVariation,
     growthMultiplier,
-    maxSpeed,
+    currentMaxSpeed,
     showToast,
     speedMultiplier,
     baseSpeed,
+    controlsVisible,
   ]); // Added missing dependencies
 
   useEffect(() => {
@@ -430,46 +392,51 @@ const DvdBouncer = () => {
   };
 
   return (
-    <div className="dvd-bouncer-container">
-      {/* Effect Containers */}
-      <div ref={particleContainerRef} className="particle-container"></div>
-      <div ref={rippleContainerRef} className="ripple-container"></div>
-      <div ref={flashContainerRef} className="flash-container"></div>
+    <InteractivePageWrapper>
+      <div className="dvd-bouncer-container">
+        {/* Effect Containers */}
+        <div ref={particleContainerRef} className="particle-container"></div>
+        <div ref={rippleContainerRef} className="ripple-container"></div>
+        <div ref={flashContainerRef} className="flash-container"></div>
 
-      <canvas
-        ref={canvasRef}
-        className="dvd-canvas"
-        onClick={handleCanvasClick}
-        onTouchStart={handleCanvasTouch}
-      />
+        {/* Main Content Area */}
+        <div className={`dvd-main-content ${controlsVisible ? 'controls-open' : 'controls-closed'}`}>
+          <canvas
+            ref={canvasRef}
+            className="dvd-canvas"
+            onClick={handleCanvasClick}
+            onTouchStart={handleCanvasTouch}
+          />
 
-      {/* Status Indicators */}
-      <div className="dvd-status-indicators">
-        <InfoDisplay
-          label="DVDs"
-          value={logos.length}
-          color="primary"
-          icon="fas fa-tv"
-        />
-        <InfoDisplay
-          label="Max Speed"
-          value={Math.round(maxSpeed)}
-          color="secondary"
-          icon="fas fa-tachometer-alt"
-        />
-        <StatusIndicator
-          status={logos.length > 0 ? "running" : "idle"}
-          label={status}
-        />
-      </div>
+          {/* Status Indicators */}
+          <div className="dvd-status-indicators">
+            <InfoDisplay
+              label="DVDs"
+              value={currentDvdCount}
+              color="primary"
+              icon="fas fa-tv"
+            />
+            <InfoDisplay
+              label="Max Speed"
+              value={Math.round(currentMaxSpeed)}
+              color="secondary"
+              icon="fas fa-tachometer-alt"
+            />
+            <StatusIndicator
+              status={currentDvdCount > 0 ? "running" : "idle"}
+              label={status}
+            />
+          </div>
+        </div>
 
-      {/* MD3 Control Panel */}
-      <ControlPanel
-        title="DVD Bouncer Controls"
-        position="bottom"
-        collapsible={true}
-        className={controlsVisible ? "" : "md3-control-panel--collapsed"}
-      >
+        {/* Side Control Panel */}
+        <div className={`dvd-controls-sidebar ${controlsVisible ? 'open' : 'closed'}`}>
+          <ControlPanel
+            title="DVD Bouncer Controls"
+            position="static"
+            collapsible={false}
+            className="sidebar-control-panel"
+          >
         <ControlGroup label="Simulation Parameters" direction="vertical">
           <SliderControl
             label="Speed Gain"
@@ -540,18 +507,29 @@ const DvdBouncer = () => {
           >
             {controlsVisible ? "Hide" : "Show"}
           </ButtonControl>
-        </ControlGroup>
-      </ControlPanel>
+          </ControlGroup>
+          </ControlPanel>
 
-      {/* Toast Notifications Container */}
-      <div id="toast-container" className="toast-container">
-        {toasts.map((toast) => (
-          <div key={toast.id} className={`toast visible`}>
-            {toast.message}
-          </div>
-        ))}
+          {/* Control Toggle Button */}
+          <button 
+            className="controls-toggle-btn"
+            onClick={handleToggleControlsClick}
+            aria-label={controlsVisible ? "Hide controls" : "Show controls"}
+          >
+            <i className={`fas ${controlsVisible ? "fa-chevron-right" : "fa-chevron-left"}`}></i>
+          </button>
+        </div>
+
+        {/* Toast Notifications Container */}
+        <div id="toast-container" className="toast-container">
+          {toasts.map((toast) => (
+            <div key={toast.id} className={`toast visible`}>
+              {toast.message}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </InteractivePageWrapper>
   );
 };
 

@@ -1,4 +1,57 @@
-/* Theme Toggle Component - Material Design 3 */
+/* Enhanced Theme Toggle Component - Material Design 3 with Color Selector */
+
+/* Theme Toggle Group Layout */
+.theme-toggle-group {
+  display: flex;
+  gap: var(--md-sys-spacing-2);
+  align-items: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.theme-toggle-group--full {
+  background: transparent;
+  border: none;
+  gap: var(--md-sys-spacing-2);
+  padding: 0;
+}
+
+/* Icon-only circular button styles */
+.theme-toggle--mode,
+.theme-toggle--color {
+  width: calc(var(--md-sys-spacing-base) * 10); /* 2.5rem */
+  height: calc(var(--md-sys-spacing-base) * 10); /* 2.5rem */
+  padding: 0;
+  border-radius: var(--md-sys-shape-corner-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.theme-toggle--mode {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.theme-toggle--mode:hover {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.theme-toggle--color {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+.theme-toggle--color:hover {
+  background-color: var(--md-sys-color-secondary);
+  color: var(--md-sys-color-on-secondary);
+}
+
+/* Original Theme Toggle Component */
 
 .theme-toggle {
   /* Base styles using MD3 tokens */
@@ -53,12 +106,15 @@
   min-height: 3rem;
 }
 
-/* Compact variant (icon only) */
+/* Compact variant (icon only) - Universal circular icon button */
 .theme-toggle--compact {
-  padding: var(--md-sys-spacing-2);
-  min-width: 2.5rem;
-  min-height: 2.5rem;
+  width: calc(var(--md-sys-spacing-base) * 10); /* 2.5rem */
+  height: calc(var(--md-sys-spacing-base) * 10); /* 2.5rem */
+  padding: 0;
   border-radius: var(--md-sys-shape-corner-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 0;
 }
 
@@ -88,11 +144,13 @@
 
 /* Icon styling */
 .theme-toggle__icon {
-  font-size: 1.2em;
+  font-size: calc(var(--md-sys-typescale-title-medium-font-size) * 0.875); /* Responsive icon size */
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
 /* Label styling */
@@ -166,29 +224,20 @@
   color: var(--md-sys-color-on-primary-container);
 }
 
-/* Theme-specific styling */
-.theme-toggle--light {
-  /* Light mode specific adjustments if needed */
-}
-
-.theme-toggle--dark {
-  /* Dark mode specific adjustments if needed */
-}
-
+/* Auto mode indicator for IconButton */
 .theme-toggle--auto {
-  /* Auto mode indicator */
   position: relative;
 }
 
 .theme-toggle--auto::before {
   content: '';
   position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
+  top: calc(var(--md-sys-spacing-base) * -0.5); /* -2px responsive */
+  left: calc(var(--md-sys-spacing-base) * -0.5); /* -2px responsive */
+  right: calc(var(--md-sys-spacing-base) * -0.5); /* -2px responsive */
+  bottom: calc(var(--md-sys-spacing-base) * -0.5); /* -2px responsive */
   border: 1px solid var(--md-sys-color-primary);
-  border-radius: inherit;
+  border-radius: var(--md-sys-shape-corner-full);
   opacity: 0.3;
   animation: auto-glow 3s ease-in-out infinite;
 }

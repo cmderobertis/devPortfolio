@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { Button } from '../components/design-system';
 import "../styles/MazeStudio.css";
+import InteractivePageWrapper from '../components/InteractivePageWrapper';
+import '../components/InteractivePageWrapper.css';
 
 // Import maze generation and pathfinding algorithms
 import { generateDFS2D, generatePrims2D } from '../utils/algorithms/mazeGeneration';
@@ -63,7 +65,8 @@ export default function MazeStudio() {
   }, []);
 
   return (
-    <div className="maze-studio">
+    <InteractivePageWrapper>
+      <div className="maze-studio">
       <aside className="maze-sidebar">
         <h2 className="maze-title">Maze Studio</h2>
         <div className="maze-controls">
@@ -231,6 +234,7 @@ export default function MazeStudio() {
           </div>
         </div>
       </main>
-    </div>
+      </div>
+    </InteractivePageWrapper>
   );
 }

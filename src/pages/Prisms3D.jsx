@@ -3,6 +3,8 @@ import { vec3, matrix3D } from '../utils/vector3D.js';
 import { N_AIR, calculateRefractiveIndices, COLOR_MAP } from '../utils/opticsUtils.js';
 import { createTriangularPrism, createSquarePrism, transformPrism, rayFaceIntersection, PRISM_SHAPES } from '../utils/prism3D.js';
 import { Button } from '../components/design-system';
+import InteractivePageWrapper from '../components/InteractivePageWrapper';
+import '../components/InteractivePageWrapper.css';
 
 const Prism3DSimulation = () => {
   const canvasRef = useRef(null);
@@ -510,7 +512,8 @@ const Prisms3DPage = () => {
   const [showInfo, setShowInfo] = useState(false);
 
   return (
-    <div className="container-lg py-4">
+    <InteractivePageWrapper>
+      <div className="container-lg py-4">
       <div className="row">
         <div className="col-12">
           <div className="d-flex justify-content-between align-items-center mb-4">
@@ -579,7 +582,8 @@ const Prisms3DPage = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </InteractivePageWrapper>
   );
 };
 

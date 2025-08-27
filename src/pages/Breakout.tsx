@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Play, Pause, RotateCcw } from 'lucide-react';
+import InteractivePageWrapper from '../components/InteractivePageWrapper';
+import '../components/InteractivePageWrapper.css';
 
 // Dynamic sizing based on viewport with no overflow
 const useGameDimensions = () => {
@@ -793,7 +795,8 @@ const BreakoutGame = () => {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col overflow-hidden" style={{ backgroundColor: currentScheme.background }}>
+    <InteractivePageWrapper>
+      <div className="w-full h-screen flex flex-col overflow-hidden" style={{ backgroundColor: currentScheme.background }}>
       {gameState === 'menu' && (
         <div className="flex-1 flex items-center justify-center p-4">
           <div className="text-center space-y-4 max-w-3xl w-full">
@@ -954,7 +957,8 @@ const BreakoutGame = () => {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </InteractivePageWrapper>
   );
 };
 

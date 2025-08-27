@@ -3,6 +3,8 @@ import { vec } from '../utils/vectorMath.js';
 import { N_AIR, calculateRefractiveIndices, COLOR_MAP } from '../utils/opticsUtils.js';
 import { getLineIntersection, getNormal, refract } from '../utils/rayTracing.js';
 import { Button } from '../components/design-system';
+import InteractivePageWrapper from '../components/InteractivePageWrapper';
+import '../components/InteractivePageWrapper.css';
 
 const PrismSimulation = (props) => {
   const canvasRef = useRef(null);
@@ -243,7 +245,8 @@ const PrismPage = () => {
   const [showInfo, setShowInfo] = useState(false);
 
   return (
-    <div className="container-lg py-4">
+    <InteractivePageWrapper>
+      <div className="container-lg py-4">
       <div className="row">
         <div className="col-12">
           <div className="d-flex justify-content-between align-items-center mb-4">
@@ -311,7 +314,8 @@ const PrismPage = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </InteractivePageWrapper>
   );
 };
 

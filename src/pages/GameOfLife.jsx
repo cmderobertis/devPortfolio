@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import useGameOfLife from '../hooks/useGameOfLife.js';
 import GameCanvas from '../components/GameCanvas.jsx';
 import { Button } from '../components/design-system';
+import InteractivePageWrapper from '../components/InteractivePageWrapper';
+import '../components/InteractivePageWrapper.css';
 
 const GameOfLife = () => {
   const containerRef = useRef(null);
@@ -137,7 +139,8 @@ const GameOfLife = () => {
   };
 
   return (
-    <div 
+    <InteractivePageWrapper>
+      <div 
       ref={containerRef}
       className="gameoflife-container"
       style={{ 
@@ -232,7 +235,8 @@ const GameOfLife = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </InteractivePageWrapper>
   );
 };
 

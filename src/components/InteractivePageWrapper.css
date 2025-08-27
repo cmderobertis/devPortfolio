@@ -1,0 +1,46 @@
+.interactive-page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.interactive-page-content {
+  flex: 1;
+}
+
+/* Icon navigation hover effects */
+.interactive-page-wrapper .page-icon {
+  transition: all 0.2s ease-in-out;
+}
+
+.interactive-page-wrapper .page-icon:hover {
+  transform: translateY(-1px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .interactive-page-wrapper .d-flex.gap-2 {
+    gap: 0.5rem !important;
+    flex-wrap: wrap;
+  }
+  
+  .interactive-page-wrapper .page-icon {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  
+  .interactive-page-wrapper .page-icon i {
+    font-size: 1rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .interactive-page-wrapper .d-flex.justify-content-between {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .interactive-page-wrapper .d-flex.gap-2 {
+    justify-content: center;
+  }
+}
