@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { LocalStorageDB } from '../utils/localStorageDB.js';
-import { QueryBuilder as QueryEngine } from '../utils/queryEngine.js';
+import { QueryBuilder as QueryEngine, AggregationFunctions } from '../utils/queryEngine.js';
 
 export function QueryBuilder({ onResults, onClose }) {
   const [db] = useState(() => new LocalStorageDB());
@@ -15,6 +15,9 @@ export function QueryBuilder({ onResults, onClose }) {
   const [selectedFields, setSelectedFields] = useState(['*']);
   const [conditions, setConditions] = useState([]);
   const [sortBy, setSortBy] = useState([]);
+  const [groupBy, setGroupBy] = useState([]);
+  const [aggregations, setAggregations] = useState([]);
+  const [having, setHaving] = useState([]);
   const [limit, setLimit] = useState('');
   const [results, setResults] = useState([]);
   const [queryText, setQueryText] = useState('');
@@ -34,6 +37,19 @@ export function QueryBuilder({ onResults, onClose }) {
     { value: 'endsWith', label: 'Ends With' },
     { value: 'in', label: 'In List' },
     { value: 'between', label: 'Between' }
+  ];
+
+  // Aggregation functions
+  const aggregationOptions = [
+    { value: AggregationFunctions.COUNT, label: 'COUNT' },
+    { value: AggregationFunctions.COUNT_DISTINCT, label: 'COUNT DISTINCT' },
+    { value: AggregationFunctions.SUM, label: 'SUM' },
+    { value: AggregationFunctions.AVG, label: 'AVERAGE' },
+    { value: AggregationFunctions.MIN, label: 'MIN' },
+    { value: AggregationFunctions.MAX, label: 'MAX' },
+    { value: AggregationFunctions.FIRST, label: 'FIRST' },
+    { value: AggregationFunctions.LAST, label: 'LAST' },
+    { value: AggregationFunctions.STRING_AGG, label: 'STRING_AGG' }
   ];
 
   // Styles
@@ -141,6 +157,9 @@ export function QueryBuilder({ onResults, onClose }) {
         setSelectedFields(['*']);
         setConditions([]);
         setSortBy([]);
+        setGroupBy([]);
+        setAggregations([]);
+        setHaving([]);
       } catch (err) {
         setError(err.message);
       }
@@ -154,7 +173,29 @@ export function QueryBuilder({ onResults, onClose }) {
       return;
     }
 
-    const parts = [`SELECT ${selectedFields.join(', ')} FROM ${selectedTable}`];
+    let selectClause = selectedFields.join(', ');
+    
+    // If we have grouping or aggregations, modify the SELECT clause
+    if (groupBy.length > 0 || aggregations.length > 0) {
+      const selectParts = [];
+      
+      // Add group by fields
+      if (groupBy.length > 0) {
+        selectParts.push(...groupBy.map(g => g.field));
+      }
+      
+      // Add aggregations
+      if (aggregations.length > 0) {
+        selectParts.push(...aggregations.map(agg => {
+          const funcCall = agg.field ? `${agg.func}(${agg.field})` : `${agg.func}(*)`;
+          return agg.alias ? `${funcCall} AS ${agg.alias}` : funcCall;
+        }));
+      }
+      
+      selectClause = selectParts.length > 0 ? selectParts.join(', ') : '*';
+    }
+    
+    const parts = [`SELECT ${selectClause} FROM ${selectedTable}`];
 
     if (conditions.length > 0) {
       const whereClause = conditions
@@ -182,6 +223,28 @@ export function QueryBuilder({ onResults, onClose }) {
       }
     }
 
+    if (groupBy.length > 0) {
+      const groupClause = groupBy
+        .filter(g => g.field)
+        .map(g => g.field)
+        .join(', ');
+      
+      if (groupClause) {
+        parts.push(`GROUP BY ${groupClause}`);
+      }
+    }
+
+    if (having.length > 0) {
+      const havingClause = having
+        .filter(h => h.field && h.operator && h.value !== '')
+        .map(h => `${h.field} ${h.operator} '${h.value}'`)
+        .join(' AND ');
+      
+      if (havingClause) {
+        parts.push(`HAVING ${havingClause}`);
+      }
+    }
+
     if (sortBy.length > 0) {
       const orderClause = sortBy
         .filter(s => s.field)
@@ -198,7 +261,7 @@ export function QueryBuilder({ onResults, onClose }) {
     }
 
     setQueryText(parts.join(' '));
-  }, [selectedTable, selectedFields, conditions, sortBy, limit]);
+  }, [selectedTable, selectedFields, conditions, groupBy, aggregations, having, sortBy, limit]);
 
   // Handlers
   const handleAddCondition = useCallback(() => {
@@ -237,6 +300,61 @@ export function QueryBuilder({ onResults, onClose }) {
     ));
   }, []);
 
+  // Group By handlers
+  const handleAddGroupBy = useCallback(() => {
+    setGroupBy(prev => [...prev, {
+      field: fields[0] || ''
+    }]);
+  }, [fields]);
+
+  const handleRemoveGroupBy = useCallback((index) => {
+    setGroupBy(prev => prev.filter((_, i) => i !== index));
+  }, []);
+
+  const handleGroupByChange = useCallback((index, field, value) => {
+    setGroupBy(prev => prev.map((group, i) => 
+      i === index ? { ...group, [field]: value } : group
+    ));
+  }, []);
+
+  // Aggregation handlers
+  const handleAddAggregation = useCallback(() => {
+    setAggregations(prev => [...prev, {
+      func: AggregationFunctions.COUNT,
+      field: '',
+      alias: ''
+    }]);
+  }, []);
+
+  const handleRemoveAggregation = useCallback((index) => {
+    setAggregations(prev => prev.filter((_, i) => i !== index));
+  }, []);
+
+  const handleAggregationChange = useCallback((index, field, value) => {
+    setAggregations(prev => prev.map((agg, i) => 
+      i === index ? { ...agg, [field]: value } : agg
+    ));
+  }, []);
+
+  // Having handlers
+  const handleAddHaving = useCallback(() => {
+    setHaving(prev => [...prev, {
+      field: '',
+      operator: '=',
+      value: ''
+    }]);
+  }, []);
+
+  const handleRemoveHaving = useCallback((index) => {
+    setHaving(prev => prev.filter((_, i) => i !== index));
+  }, []);
+
+  const handleHavingChange = useCallback((index, field, value) => {
+    setHaving(prev => prev.map((having, i) => 
+      i === index ? { ...having, [field]: value } : having
+    ));
+  }, []);
+
   const executeQuery = useCallback(async () => {
     if (!selectedTable) {
       setError('Please select a table');
@@ -249,8 +367,8 @@ export function QueryBuilder({ onResults, onClose }) {
 
       const queryBuilder = new QueryEngine(selectedTable);
 
-      // Apply field selection
-      if (!selectedFields.includes('*')) {
+      // Apply field selection (only if no grouping/aggregation)
+      if (!selectedFields.includes('*') && groupBy.length === 0 && aggregations.length === 0) {
         queryBuilder.select(selectedFields);
       }
 
@@ -258,6 +376,28 @@ export function QueryBuilder({ onResults, onClose }) {
       conditions.forEach(condition => {
         if (condition.field && condition.operator && condition.value !== '') {
           queryBuilder.where(condition.field, condition.operator, condition.value);
+        }
+      });
+
+      // Apply grouping
+      if (groupBy.length > 0) {
+        const groupFields = groupBy.filter(g => g.field).map(g => g.field);
+        if (groupFields.length > 0) {
+          queryBuilder.groupBy(groupFields);
+        }
+      }
+
+      // Apply aggregations
+      aggregations.forEach(agg => {
+        if (agg.func) {
+          queryBuilder.aggregate(agg.func, agg.field || null, agg.alias || null);
+        }
+      });
+
+      // Apply having conditions
+      having.forEach(condition => {
+        if (condition.field && condition.operator && condition.value !== '') {
+          queryBuilder.having(condition.field, condition.operator, condition.value);
         }
       });
 
@@ -284,7 +424,7 @@ export function QueryBuilder({ onResults, onClose }) {
     } finally {
       setLoading(false);
     }
-  }, [db, selectedTable, selectedFields, conditions, sortBy, limit, queryText, onResults]);
+  }, [db, selectedTable, selectedFields, conditions, groupBy, aggregations, having, sortBy, limit, queryText, onResults]);
 
   return (
     <div style={containerStyle}>
@@ -475,10 +615,136 @@ export function QueryBuilder({ onResults, onClose }) {
           </div>
         )}
 
+        {/* GROUP BY */}
+        {selectedTable && (
+          <div style={sectionStyle}>
+            <h3 style={sectionTitleStyle}>5. Group By Fields</h3>
+            {groupBy.map((group, index) => (
+              <div key={index} style={conditionRowStyle}>
+                <select
+                  style={{ ...inputStyle, width: '120px' }}
+                  value={group.field}
+                  onChange={(e) => handleGroupByChange(index, 'field', e.target.value)}
+                >
+                  {fields.map(field => (
+                    <option key={field} value={field}>{field}</option>
+                  ))}
+                </select>
+                
+                <button
+                  style={{ ...buttonStyle('danger'), padding: '0.25rem 0.5rem' }}
+                  onClick={() => handleRemoveGroupBy(index)}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            
+            <button style={buttonStyle('secondary')} onClick={handleAddGroupBy}>
+              Add Group By
+            </button>
+          </div>
+        )}
+
+        {/* Aggregations */}
+        {selectedTable && (
+          <div style={sectionStyle}>
+            <h3 style={sectionTitleStyle}>6. Add Aggregations</h3>
+            {aggregations.map((agg, index) => (
+              <div key={index} style={conditionRowStyle}>
+                <select
+                  style={{ ...inputStyle, width: '120px' }}
+                  value={agg.func}
+                  onChange={(e) => handleAggregationChange(index, 'func', e.target.value)}
+                >
+                  {aggregationOptions.map(option => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+                
+                <select
+                  style={{ ...inputStyle, width: '120px' }}
+                  value={agg.field || ''}
+                  onChange={(e) => handleAggregationChange(index, 'field', e.target.value)}
+                  disabled={agg.func === AggregationFunctions.COUNT && !agg.field}
+                >
+                  <option value="">All (*)</option>
+                  {fields.map(field => (
+                    <option key={field} value={field}>{field}</option>
+                  ))}
+                </select>
+                
+                <input
+                  style={{ ...inputStyle, width: '100px' }}
+                  placeholder="Alias"
+                  value={agg.alias || ''}
+                  onChange={(e) => handleAggregationChange(index, 'alias', e.target.value)}
+                />
+                
+                <button
+                  style={{ ...buttonStyle('danger'), padding: '0.25rem 0.5rem' }}
+                  onClick={() => handleRemoveAggregation(index)}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            
+            <button style={buttonStyle('secondary')} onClick={handleAddAggregation}>
+              Add Aggregation
+            </button>
+          </div>
+        )}
+
+        {/* HAVING */}
+        {selectedTable && (groupBy.length > 0 || aggregations.length > 0) && (
+          <div style={sectionStyle}>
+            <h3 style={sectionTitleStyle}>7. Add Having Conditions</h3>
+            {having.map((condition, index) => (
+              <div key={index} style={conditionRowStyle}>
+                <input
+                  style={{ ...inputStyle, width: '120px' }}
+                  placeholder="Aggregate field"
+                  value={condition.field}
+                  onChange={(e) => handleHavingChange(index, 'field', e.target.value)}
+                />
+                
+                <select
+                  style={{ ...inputStyle, width: '120px' }}
+                  value={condition.operator}
+                  onChange={(e) => handleHavingChange(index, 'operator', e.target.value)}
+                >
+                  {operators.slice(0, 6).map(op => (
+                    <option key={op.value} value={op.value}>{op.label}</option>
+                  ))}
+                </select>
+                
+                <input
+                  style={{ ...inputStyle, width: '100px' }}
+                  placeholder="Value"
+                  value={condition.value}
+                  onChange={(e) => handleHavingChange(index, 'value', e.target.value)}
+                />
+                
+                <button
+                  style={{ ...buttonStyle('danger'), padding: '0.25rem 0.5rem' }}
+                  onClick={() => handleRemoveHaving(index)}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            
+            <button style={buttonStyle('secondary')} onClick={handleAddHaving}>
+              Add Having Condition
+            </button>
+          </div>
+        )}
+
         {/* Limit */}
         {selectedTable && (
           <div style={sectionStyle}>
-            <h3 style={sectionTitleStyle}>5. Limit Results</h3>
+            <h3 style={sectionTitleStyle}>8. Limit Results</h3>
             <input
               style={{ ...inputStyle, width: '100px' }}
               type="number"

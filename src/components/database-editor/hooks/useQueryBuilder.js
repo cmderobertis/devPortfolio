@@ -4,7 +4,7 @@
  */
 
 import { useState, useCallback, useMemo, useEffect } from 'react';
-import { QueryBuilder, QueryOperators, SortDirection, JoinType, executeQuery } from '../utils/queryEngine.js';
+import { QueryBuilder, QueryOperators, SortDirection, JoinType, AggregationFunctions, executeQuery } from '../utils/queryEngine.js';
 import { localStorageDB } from '../utils/localStorageDB.js';
 
 /**
@@ -34,6 +34,9 @@ export function useQueryBuilder(tableName, options = {}) {
   const [pagination, setPagination] = useState({ limit: null, offset: 0 });
   const [selectedFields, setSelectedFields] = useState(null);
   const [joins, setJoins] = useState([]);
+  const [groupByFields, setGroupByFields] = useState([]);
+  const [aggregations, setAggregations] = useState([]);
+  const [havingConditions, setHavingConditions] = useState([]);
 
   // Query history
   const [queryHistory, setQueryHistory] = useState([]);

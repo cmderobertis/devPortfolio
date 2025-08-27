@@ -1,4 +1,4 @@
-import DatabaseManager from '../components/DatabaseManager.jsx';
+import DatabaseManager from '../components/database-editor/DatabaseManager.jsx';
 import { Button, Typography } from '../components/design-system';
 import InteractivePageWrapper from '../components/InteractivePageWrapper';
 import '../components/InteractivePageWrapper.css';
@@ -33,38 +33,7 @@ const DatabaseEditor = () => {
 
   return (
     <InteractivePageWrapper>
-      <div style={containerStyle}>
-      <div style={headerStyle}>
-        <div style={contentWrapperStyle}>
-          <Typography
-            variant="display-large"
-            style={{
-              color: "var(--md-sys-color-primary)",
-              textAlign: "center",
-              marginBottom: "var(--md-sys-spacing-4)",
-            }}
-          >
-            LocalStorage Database Editor
-          </Typography>
-          <Typography
-            variant="body-large"
-            style={{
-              color: "var(--md-sys-color-on-surface-variant)",
-              maxWidth: "800px",
-              margin: "0 auto var(--md-sys-spacing-8)",
-              textAlign: "center",
-              lineHeight: 1.6,
-            }}
-          >
-            An interface that transforms localStorage into a powerful, queryable
-            database with visual tools for schema design, data manipulation, and
-            relationship mapping.
-          </Typography>
-
-        </div>
-      </div>
       <DatabaseManager />
-      </div>
     </InteractivePageWrapper>
   );
 };

@@ -306,6 +306,26 @@ export function DatabaseManager() {
           >
             <span>🔍</span> Query Builder
           </button>
+          {selectedTable && (
+            <>
+              <div style={{ height: '1px', backgroundColor: '#e5e7eb', margin: '0.5rem 0' }} />
+              <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#6b7280', padding: '0 1rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                {selectedTable}
+              </div>
+              <button 
+                style={buttonStyle('ghost', activeView === 'table')}
+                onClick={() => setActiveView('table')}
+              >
+                <span>📋</span> Table View
+              </button>
+              <button 
+                style={buttonStyle('ghost', activeView === 'schema')}
+                onClick={() => setActiveView('schema')}
+              >
+                <span>⚙️</span> Schema Editor
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -324,32 +344,37 @@ export function DatabaseManager() {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
             {tables.map(table => (
-              <div key={table} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div key={table} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                 <button
                   style={{
-                    ...buttonStyle('ghost', selectedTable === table && activeView === 'table'),
+                    ...buttonStyle('ghost', selectedTable === table),
                     flex: 1,
-                    justifyContent: 'flex-start'
+                    justifyContent: 'flex-start',
+                    fontWeight: selectedTable === table ? '600' : '400'
                   }}
                   onClick={() => {
-                    setSelectedTable(table);
-                    setActiveView('table');
+                    if (selectedTable === table) {
+                      // If already selected, cycle between views
+                      if (activeView === 'table') {
+                        setActiveView('schema');
+                      } else {
+                        setActiveView('table');
+                      }
+                    } else {
+                      setSelectedTable(table);
+                      setActiveView('table');
+                    }
                   }}
                 >
                   <span>📋</span> {table}
                   <span style={{ marginLeft: 'auto', fontSize: '0.75rem', color: '#6b7280' }}>
                     {stats.tableStats?.[table]?.records || 0}
                   </span>
-                </button>
-                <button
-                  style={{ ...buttonStyle('ghost'), padding: '0.25rem', fontSize: '0.75rem' }}
-                  onClick={() => {
-                    setSelectedTable(table);
-                    setActiveView('schema');
-                  }}
-                  title="Edit Schema"
-                >
-                  ⚙️
+                  {selectedTable === table && (
+                    <span style={{ fontSize: '0.75rem', color: '#3b82f6', marginLeft: '0.25rem' }}>
+                      {activeView === 'table' ? '📋' : activeView === 'schema' ? '⚙️' : ''}
+                    </span>
+                  )}
                 </button>
                 <button
                   style={{ ...buttonStyle('ghost'), padding: '0.25rem', fontSize: '0.75rem', color: '#ef4444' }}
@@ -516,13 +541,26 @@ export function DatabaseManager() {
   const getPageTitle = () => {
     switch (activeView) {
       case 'table':
-        return `Table: ${selectedTable}`;
+        return `Table View: ${selectedTable}`;
       case 'schema':
-        return `Schema: ${selectedTable}`;
+        return `Schema Editor: ${selectedTable}`;
       case 'query':
         return 'Query Builder';
       default:
         return 'Database Overview';
+    }
+  };
+
+  const getViewDescription = () => {
+    switch (activeView) {
+      case 'table':
+        return 'Browse, search, and manage table data';
+      case 'schema':
+        return 'Define table structure, fields, and constraints';
+      case 'query':
+        return 'Build complex queries with visual interface';
+      default:
+        return 'Manage your localStorage database';
     }
   };
 
@@ -532,9 +570,14 @@ export function DatabaseManager() {
       
       <div style={mainStyle}>
         <div style={headerStyle}>
-          <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: '600', color: '#111827' }}>
-            {getPageTitle()}
-          </h1>
+          <div>
+            <h1 style={{ margin: '0 0 0.25rem 0', fontSize: '1.5rem', fontWeight: '600', color: '#111827' }}>
+              {getPageTitle()}
+            </h1>
+            <p style={{ margin: 0, fontSize: '0.875rem', color: '#6b7280' }}>
+              {getViewDescription()}
+            </p>
+          </div>
           
           {error && (
             <div style={{

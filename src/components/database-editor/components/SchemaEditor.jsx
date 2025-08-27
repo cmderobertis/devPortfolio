@@ -11,7 +11,17 @@ export function SchemaEditor({ tableName, onSave, onClose }) {
   const [schema, setSchema] = useState({ fields: {} });
   const [newFieldName, setNewFieldName] = useState('');
   const [newFieldType, setNewFieldType] = useState('string');
+  const [newFieldConstraints, setNewFieldConstraints] = useState({
+    required: false,
+    nullable: true,
+    unique: false,
+    defaultValue: '',
+    minLength: '',
+    maxLength: '',
+    pattern: ''
+  });
   const [error, setError] = useState(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   // Data types
   const dataTypes = [
@@ -135,14 +145,28 @@ export function SchemaEditor({ tableName, onSave, onClose }) {
         ...prev.fields,
         [newFieldName]: {
           type: newFieldType,
-          required: false,
-          nullable: true
+          required: newFieldConstraints.required,
+          nullable: newFieldConstraints.nullable,
+          unique: newFieldConstraints.unique,
+          ...(newFieldConstraints.defaultValue && { defaultValue: newFieldConstraints.defaultValue }),
+          ...(newFieldConstraints.minLength && { minLength: parseInt(newFieldConstraints.minLength) }),
+          ...(newFieldConstraints.maxLength && { maxLength: parseInt(newFieldConstraints.maxLength) }),
+          ...(newFieldConstraints.pattern && { pattern: newFieldConstraints.pattern })
         }
       }
     }));
 
     setNewFieldName('');
     setNewFieldType('string');
+    setNewFieldConstraints({
+      required: false,
+      nullable: true,
+      unique: false,
+      defaultValue: '',
+      minLength: '',
+      maxLength: '',
+      pattern: ''
+    });
     setError(null);
   }, [newFieldName, newFieldType, schema.fields]);
 
@@ -253,7 +277,7 @@ export function SchemaEditor({ tableName, onSave, onClose }) {
           </select>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center' }}>
           <label style={{ display: 'flex', alignItems: 'center', fontSize: '0.875rem', color: '#374151' }}>
             <input
               type="checkbox"
@@ -275,6 +299,35 @@ export function SchemaEditor({ tableName, onSave, onClose }) {
             />
             Nullable
           </label>
+          
+          <label style={{ display: 'flex', alignItems: 'center', fontSize: '0.875rem', color: '#374151' }}>
+            <input
+              type="checkbox"
+              checked={field.unique || false}
+              onChange={(e) => handleFieldPropertyChange(fieldName, 'unique', e.target.checked)}
+              disabled={isIdField}
+              style={{ marginRight: '0.25rem' }}
+            />
+            Unique
+          </label>
+          
+          {field.defaultValue !== undefined && (
+            <div style={{ display: 'flex', alignItems: 'center', fontSize: '0.75rem', color: '#6b7280' }}>
+              Default: <code style={{ marginLeft: '0.25rem', padding: '0.125rem 0.25rem', backgroundColor: '#f3f4f6', borderRadius: '0.25rem' }}>{field.defaultValue || 'null'}</code>
+            </div>
+          )}
+          
+          {(field.minLength || field.maxLength) && (
+            <div style={{ display: 'flex', alignItems: 'center', fontSize: '0.75rem', color: '#6b7280' }}>
+              Length: {field.minLength || 0} - {field.maxLength || '∞'}
+            </div>
+          )}
+          
+          {field.pattern && (
+            <div style={{ display: 'flex', alignItems: 'center', fontSize: '0.75rem', color: '#6b7280' }}>
+              Pattern: <code style={{ marginLeft: '0.25rem', padding: '0.125rem 0.25rem', backgroundColor: '#f3f4f6', borderRadius: '0.25rem' }}>{field.pattern}</code>
+            </div>
+          )}
         </div>
 
         <div style={{ marginLeft: 'auto' }}>
@@ -354,10 +407,120 @@ export function SchemaEditor({ tableName, onSave, onClose }) {
             ))}
           </select>
           
+          <button 
+            style={{ ...buttonStyle('secondary'), fontSize: '0.75rem' }}
+            onClick={() => setShowAdvanced(!showAdvanced)}
+          >
+            {showAdvanced ? '▼ Less' : '▶ More'}
+          </button>
+          
           <button style={buttonStyle('primary')} onClick={handleAddField}>
             Add Field
           </button>
         </div>
+        
+        {/* Advanced Constraints */}
+        {showAdvanced && (
+          <div style={{
+            backgroundColor: '#f0f9ff',
+            padding: '1rem',
+            borderRadius: '0.375rem',
+            marginTop: '0.5rem',
+            border: '1px solid #e0f2fe'
+          }}>
+            <h4 style={{ margin: '0 0 0.75rem 0', fontSize: '0.875rem', fontWeight: '600', color: '#0369a1' }}>
+              Field Constraints
+            </h4>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
+              <div>
+                <label style={{ display: 'flex', alignItems: 'center', fontSize: '0.875rem', color: '#374151', marginBottom: '0.5rem' }}>
+                  <input
+                    type="checkbox"
+                    checked={newFieldConstraints.required}
+                    onChange={(e) => setNewFieldConstraints(prev => ({ ...prev, required: e.target.checked }))}
+                    style={{ marginRight: '0.25rem' }}
+                  />
+                  Required
+                </label>
+                
+                <label style={{ display: 'flex', alignItems: 'center', fontSize: '0.875rem', color: '#374151', marginBottom: '0.5rem' }}>
+                  <input
+                    type="checkbox"
+                    checked={newFieldConstraints.nullable}
+                    onChange={(e) => setNewFieldConstraints(prev => ({ ...prev, nullable: e.target.checked }))}
+                    style={{ marginRight: '0.25rem' }}
+                  />
+                  Nullable
+                </label>
+                
+                <label style={{ display: 'flex', alignItems: 'center', fontSize: '0.875rem', color: '#374151' }}>
+                  <input
+                    type="checkbox"
+                    checked={newFieldConstraints.unique}
+                    onChange={(e) => setNewFieldConstraints(prev => ({ ...prev, unique: e.target.checked }))}
+                    style={{ marginRight: '0.25rem' }}
+                  />
+                  Unique
+                </label>
+              </div>
+              
+              <div>
+                <label style={{ display: 'block', fontSize: '0.875rem', color: '#374151', marginBottom: '0.25rem' }}>
+                  Default Value:
+                </label>
+                <input
+                  style={{ ...inputStyle, width: '100%', marginBottom: '0.5rem' }}
+                  placeholder="Default value"
+                  value={newFieldConstraints.defaultValue}
+                  onChange={(e) => setNewFieldConstraints(prev => ({ ...prev, defaultValue: e.target.value }))}
+                />
+                
+                {newFieldType === 'string' && (
+                  <>
+                    <label style={{ display: 'block', fontSize: '0.875rem', color: '#374151', marginBottom: '0.25rem' }}>
+                      Pattern (RegEx):
+                    </label>
+                    <input
+                      style={{ ...inputStyle, width: '100%' }}
+                      placeholder="^[a-zA-Z]+$"
+                      value={newFieldConstraints.pattern}
+                      onChange={(e) => setNewFieldConstraints(prev => ({ ...prev, pattern: e.target.value }))}
+                    />
+                  </>
+                )}
+              </div>
+              
+              {(newFieldType === 'string' || newFieldType === 'array') && (
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.875rem', color: '#374151', marginBottom: '0.25rem' }}>
+                    Min Length:
+                  </label>
+                  <input
+                    style={{ ...inputStyle, width: '100%', marginBottom: '0.5rem' }}
+                    type="number"
+                    min="0"
+                    placeholder="0"
+                    value={newFieldConstraints.minLength}
+                    onChange={(e) => setNewFieldConstraints(prev => ({ ...prev, minLength: e.target.value }))}
+                  />
+                  
+                  <label style={{ display: 'block', fontSize: '0.875rem', color: '#374151', marginBottom: '0.25rem' }}>
+                    Max Length:
+                  </label>
+                  <input
+                    style={{ ...inputStyle, width: '100%' }}
+                    type="number"
+                    min="1"
+                    placeholder="No limit"
+                    value={newFieldConstraints.maxLength}
+                    onChange={(e) => setNewFieldConstraints(prev => ({ ...prev, maxLength: e.target.value }))}
+                  />
+                </div>
+              )}
+            </div>
+        </div>
+        )}
 
         {/* Schema Summary */}
         <div style={{
@@ -368,8 +531,10 @@ export function SchemaEditor({ tableName, onSave, onClose }) {
           fontSize: '0.875rem'
         }}>
           <strong style={{ color: '#1e40af' }}>Schema Summary:</strong>{' '}
-          {Object.keys(schema.fields || {}).length} fields, including{' '}
-          {Object.values(schema.fields || {}).filter(f => f.required).length} required fields
+          {Object.keys(schema.fields || {}).length} fields •{' '}
+          {Object.values(schema.fields || {}).filter(f => f.required).length} required •{' '}
+          {Object.values(schema.fields || {}).filter(f => f.unique).length} unique •{' '}
+          {Object.values(schema.fields || {}).filter(f => f.defaultValue !== undefined).length} with defaults
         </div>
 
         {/* Fields List */}
