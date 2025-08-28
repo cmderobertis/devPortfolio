@@ -1,4 +1,4 @@
-import DatabaseManager from '../components/database-editor/DatabaseManager.jsx';
+import DatabaseManager from '../components/database-editor/components/DatabaseManager.jsx';
 import { Button, Typography } from '../components/design-system';
 import InteractivePageWrapper from '../components/InteractivePageWrapper';
 import '../components/InteractivePageWrapper.css';

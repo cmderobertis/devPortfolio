@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { Button, Card, CardHeader, CardContent, Typography, TextField, Checkbox } from '../../design-system';
 import { LocalStorageDB } from '../utils/localStorageDB.js';
 import { QueryBuilder as QueryEngine, AggregationFunctions } from '../utils/queryEngine.js';
 
@@ -52,78 +53,6 @@ export function QueryBuilder({ onResults, onClose }) {
     { value: AggregationFunctions.STRING_AGG, label: 'STRING_AGG' }
   ];
 
-  // Styles
-  const containerStyle = {
-    backgroundColor: 'white',
-    borderRadius: '0.5rem',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-    overflow: 'hidden'
-  };
-
-  const headerStyle = {
-    backgroundColor: '#f9fafb',
-    padding: '1.5rem',
-    borderBottom: '1px solid #e5e7eb',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  };
-
-  const titleStyle = {
-    fontSize: '1.5rem',
-    fontWeight: '600',
-    color: '#111827',
-    margin: 0
-  };
-
-  const buttonStyle = (variant = 'primary') => {
-    const variants = {
-      primary: { backgroundColor: '#3b82f6', color: 'white' },
-      secondary: { backgroundColor: '#f3f4f6', color: '#374151' },
-      danger: { backgroundColor: '#ef4444', color: 'white' },
-      success: { backgroundColor: '#10b981', color: 'white' }
-    };
-
-    return {
-      padding: '0.5rem 1rem',
-      border: 'none',
-      borderRadius: '0.375rem',
-      fontSize: '0.875rem',
-      cursor: 'pointer',
-      margin: '0 0.25rem',
-      ...variants[variant]
-    };
-  };
-
-  const inputStyle = {
-    padding: '0.5rem',
-    border: '1px solid #d1d5db',
-    borderRadius: '0.375rem',
-    fontSize: '0.875rem',
-    margin: '0.25rem'
-  };
-
-  const sectionStyle = {
-    padding: '1rem',
-    borderBottom: '1px solid #f3f4f6'
-  };
-
-  const sectionTitleStyle = {
-    fontSize: '1rem',
-    fontWeight: '600',
-    color: '#374151',
-    marginBottom: '0.75rem'
-  };
-
-  const conditionRowStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-    marginBottom: '0.5rem',
-    padding: '0.5rem',
-    backgroundColor: '#f9fafb',
-    borderRadius: '0.375rem'
-  };
 
   // Load tables on mount
   useEffect(() => {
@@ -427,56 +356,76 @@ export function QueryBuilder({ onResults, onClose }) {
   }, [db, selectedTable, selectedFields, conditions, groupBy, aggregations, having, sortBy, limit, queryText, onResults]);
 
   return (
-    <div style={containerStyle}>
-      <div style={headerStyle}>
-        <h2 style={titleStyle}>Query Builder</h2>
-        <div>
-          <button style={buttonStyle('success')} onClick={executeQuery} disabled={loading}>
+    <Card variant="elevated">
+      <CardHeader style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="headline-medium">
+          Query Builder
+        </Typography>
+        <div style={{ display: 'flex', gap: 'var(--md-sys-spacing-2)' }}>
+          <Button variant="filled" onClick={executeQuery} disabled={loading}>
             {loading ? 'Running...' : 'Run Query'}
-          </button>
+          </Button>
           {onClose && (
-            <button style={buttonStyle('secondary')} onClick={onClose}>
+            <Button variant="text" onClick={onClose}>
               Close
-            </button>
+            </Button>
           )}
         </div>
-      </div>
+      </CardHeader>
 
-      <div style={{ maxHeight: '60vh', overflow: 'auto' }}>
+      <CardContent style={{ maxHeight: '60vh', overflow: 'auto' }}>
         {error && (
-          <div style={{
-            padding: '0.75rem 1.5rem',
-            backgroundColor: '#fee2e2',
-            color: '#991b1b',
-            fontSize: '0.875rem'
-          }}>
-            Error: {error}
-          </div>
+          <Card 
+            variant="filled"
+            style={{
+              padding: 'var(--md-sys-spacing-3)',
+              backgroundColor: 'var(--md-sys-color-error-container)',
+              color: 'var(--md-sys-color-on-error-container)',
+              marginBottom: 'var(--md-sys-spacing-4)'
+            }}
+          >
+            <Typography variant="body-small">
+              Error: {error}
+            </Typography>
+          </Card>
         )}
 
         {/* Table Selection */}
-        <div style={sectionStyle}>
-          <h3 style={sectionTitleStyle}>1. Select Table</h3>
-          <select
-            style={{ ...inputStyle, width: '200px' }}
-            value={selectedTable}
-            onChange={(e) => setSelectedTable(e.target.value)}
-          >
-            <option value="">Choose table...</option>
-            {tables.map(table => (
-              <option key={table} value={table}>{table}</option>
-            ))}
-          </select>
-        </div>
+        <Card variant="outlined" style={{ marginBottom: 'var(--md-sys-spacing-4)' }}>
+          <CardContent>
+            <Typography variant="title-medium" style={{ marginBottom: 'var(--md-sys-spacing-3)' }}>
+              1. Select Table
+            </Typography>
+            <select
+              value={selectedTable}
+              onChange={(e) => setSelectedTable(e.target.value)}
+              style={{
+                padding: 'var(--md-sys-spacing-3)',
+                border: '1px solid var(--md-sys-color-outline)',
+                borderRadius: 'var(--md-sys-shape-corner-small)',
+                backgroundColor: 'var(--md-sys-color-surface-container-low)',
+                color: 'var(--md-sys-color-on-surface)',
+                fontSize: 'var(--md-sys-typescale-body-medium-size)',
+                width: '200px'
+              }}
+            >
+              <option value="">Choose table...</option>
+              {tables.map(table => (
+                <option key={table} value={table}>{table}</option>
+              ))}
+            </select>
+          </CardContent>
+        </Card>
 
         {/* Field Selection */}
         {selectedTable && (
-          <div style={sectionStyle}>
-            <h3 style={sectionTitleStyle}>2. Select Fields</h3>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-              <label style={{ display: 'flex', alignItems: 'center', marginRight: '1rem' }}>
-                <input
-                  type="checkbox"
+          <Card variant="outlined" style={{ marginBottom: 'var(--md-sys-spacing-4)' }}>
+            <CardContent>
+              <Typography variant="title-medium" style={{ marginBottom: 'var(--md-sys-spacing-3)' }}>
+                2. Select Fields
+              </Typography>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--md-sys-spacing-3)' }}>
+                <Checkbox
                   checked={selectedFields.includes('*')}
                   onChange={(e) => {
                     if (e.target.checked) {
@@ -485,15 +434,12 @@ export function QueryBuilder({ onResults, onClose }) {
                       setSelectedFields([]);
                     }
                   }}
-                  style={{ marginRight: '0.25rem' }}
+                  label="All Fields (*)"
                 />
-                All Fields (*)
-              </label>
-              
-              {fields.map(field => (
-                <label key={field} style={{ display: 'flex', alignItems: 'center', marginRight: '1rem' }}>
-                  <input
-                    type="checkbox"
+                
+                {fields.map(field => (
+                  <Checkbox
+                    key={field}
                     checked={selectedFields.includes(field) || selectedFields.includes('*')}
                     onChange={(e) => {
                       if (selectedFields.includes('*')) {
@@ -507,84 +453,146 @@ export function QueryBuilder({ onResults, onClose }) {
                       }
                     }}
                     disabled={selectedFields.includes('*')}
-                    style={{ marginRight: '0.25rem' }}
+                    label={field}
                   />
-                  {field}
-                </label>
-              ))}
-            </div>
-          </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         {/* Conditions */}
         {selectedTable && (
-          <div style={sectionStyle}>
-            <h3 style={sectionTitleStyle}>3. Add Conditions (WHERE)</h3>
-            {conditions.map((condition, index) => (
-              <div key={index} style={conditionRowStyle}>
-                {index > 0 && (
-                  <select
-                    style={{ ...inputStyle, width: '80px' }}
-                    value={condition.logicalOperator}
-                    onChange={(e) => handleConditionChange(index, 'logicalOperator', e.target.value)}
-                  >
-                    <option value="AND">AND</option>
-                    <option value="OR">OR</option>
-                  </select>
-                )}
-                
-                <select
-                  style={{ ...inputStyle, width: '120px' }}
-                  value={condition.field}
-                  onChange={(e) => handleConditionChange(index, 'field', e.target.value)}
+          <Card variant="outlined" style={{ marginBottom: 'var(--md-sys-spacing-4)' }}>
+            <CardContent>
+              <Typography variant="title-medium" style={{ marginBottom: 'var(--md-sys-spacing-3)' }}>
+                3. Add Conditions (WHERE)
+              </Typography>
+              {conditions.map((condition, index) => (
+                <div 
+                  key={index} 
+                  style={{ 
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--md-sys-spacing-2)',
+                    marginBottom: 'var(--md-sys-spacing-2)',
+                    padding: 'var(--md-sys-spacing-2)',
+                    backgroundColor: 'var(--md-sys-color-surface-container)',
+                    borderRadius: 'var(--md-sys-shape-corner-small)'
+                  }}
                 >
-                  {fields.map(field => (
-                    <option key={field} value={field}>{field}</option>
-                  ))}
-                </select>
-                
-                <select
-                  style={{ ...inputStyle, width: '120px' }}
-                  value={condition.operator}
-                  onChange={(e) => handleConditionChange(index, 'operator', e.target.value)}
+                  {index > 0 && (
+                    <select
+                      value={condition.logicalOperator}
+                      onChange={(e) => handleConditionChange(index, 'logicalOperator', e.target.value)}
+                      style={{
+                        padding: 'var(--md-sys-spacing-2)',
+                        border: '1px solid var(--md-sys-color-outline)',
+                        borderRadius: 'var(--md-sys-shape-corner-small)',
+                        backgroundColor: 'var(--md-sys-color-surface-container-low)',
+                        color: 'var(--md-sys-color-on-surface)',
+                        fontSize: 'var(--md-sys-typescale-body-small-size)',
+                        width: '80px'
+                      }}
+                    >
+                      <option value="AND">AND</option>
+                      <option value="OR">OR</option>
+                    </select>
+                  )}
+                  
+                  <select
+                    value={condition.field}
+                    onChange={(e) => handleConditionChange(index, 'field', e.target.value)}
+                    style={{
+                      padding: 'var(--md-sys-spacing-2)',
+                      border: '1px solid var(--md-sys-color-outline)',
+                      borderRadius: 'var(--md-sys-shape-corner-small)',
+                      backgroundColor: 'var(--md-sys-color-surface-container-low)',
+                      color: 'var(--md-sys-color-on-surface)',
+                      fontSize: 'var(--md-sys-typescale-body-small-size)',
+                      width: '120px'
+                    }}
+                  >
+                    {fields.map(field => (
+                      <option key={field} value={field}>{field}</option>
+                    ))}
+                  </select>
+                  
+                  <select
+                    value={condition.operator}
+                    onChange={(e) => handleConditionChange(index, 'operator', e.target.value)}
+                    style={{
+                      padding: 'var(--md-sys-spacing-2)',
+                      border: '1px solid var(--md-sys-color-outline)',
+                      borderRadius: 'var(--md-sys-shape-corner-small)',
+                      backgroundColor: 'var(--md-sys-color-surface-container-low)',
+                      color: 'var(--md-sys-color-on-surface)',
+                      fontSize: 'var(--md-sys-typescale-body-small-size)',
+                      width: '120px'
+                    }}
                 >
                   {operators.map(op => (
                     <option key={op.value} value={op.value}>{op.label}</option>
                   ))}
                 </select>
                 
-                <input
-                  style={{ ...inputStyle, width: '150px' }}
+                <TextField
                   placeholder="Value"
                   value={condition.value}
                   onChange={(e) => handleConditionChange(index, 'value', e.target.value)}
+                  style={{ width: '150px' }}
                 />
                 
-                <button
-                  style={{ ...buttonStyle('danger'), padding: '0.25rem 0.5rem' }}
+                <Button
+                  variant="text"
+                  size="small"
                   onClick={() => handleRemoveCondition(index)}
+                  style={{ color: 'var(--md-sys-color-error)' }}
                 >
                   Remove
-                </button>
+                </Button>
               </div>
             ))}
             
-            <button style={buttonStyle('secondary')} onClick={handleAddCondition}>
+            <Button variant="outlined" onClick={handleAddCondition}>
               Add Condition
-            </button>
-          </div>
+            </Button>
+            </CardContent>
+          </Card>
         )}
 
         {/* Sorting */}
         {selectedTable && (
-          <div style={sectionStyle}>
-            <h3 style={sectionTitleStyle}>4. Add Sorting (ORDER BY)</h3>
+          <Card variant="outlined" style={{ marginBottom: 'var(--md-sys-spacing-4)' }}>
+            <CardContent>
+              <Typography variant="title-medium" style={{ marginBottom: 'var(--md-sys-spacing-3)' }}>
+                4. Add Sorting (ORDER BY)
+              </Typography>
             {sortBy.map((sort, index) => (
-              <div key={index} style={conditionRowStyle}>
+              <div 
+                key={index} 
+                style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'var(--md-sys-spacing-2)',
+                  marginBottom: 'var(--md-sys-spacing-2)',
+                  padding: 'var(--md-sys-spacing-2)',
+                  backgroundColor: 'var(--md-sys-color-surface-container)',
+                  borderRadius: 'var(--md-sys-shape-corner-small)'
+                }}
+              >
                 <select
-                  style={{ ...inputStyle, width: '120px' }}
                   value={sort.field}
                   onChange={(e) => handleSortChange(index, 'field', e.target.value)}
+                  style={{
+                    padding: 'var(--md-sys-spacing-2)',
+                    border: '1px solid var(--md-sys-color-outline)',
+                    borderRadius: 'var(--md-sys-shape-corner-small)',
+                    backgroundColor: 'var(--md-sys-color-surface-container-low)',
+                    color: 'var(--md-sys-color-on-surface)',
+                    fontSize: 'var(--md-sys-typescale-body-small-size)',
+                    width: '120px'
+                  }}
                 >
                   {fields.map(field => (
                     <option key={field} value={field}>{field}</option>
@@ -592,70 +600,128 @@ export function QueryBuilder({ onResults, onClose }) {
                 </select>
                 
                 <select
-                  style={{ ...inputStyle, width: '100px' }}
                   value={sort.direction}
                   onChange={(e) => handleSortChange(index, 'direction', e.target.value)}
+                  style={{
+                    padding: 'var(--md-sys-spacing-2)',
+                    border: '1px solid var(--md-sys-color-outline)',
+                    borderRadius: 'var(--md-sys-shape-corner-small)',
+                    backgroundColor: 'var(--md-sys-color-surface-container-low)',
+                    color: 'var(--md-sys-color-on-surface)',
+                    fontSize: 'var(--md-sys-typescale-body-small-size)',
+                    width: '100px'
+                  }}
                 >
                   <option value="ASC">Ascending</option>
                   <option value="DESC">Descending</option>
                 </select>
                 
-                <button
-                  style={{ ...buttonStyle('danger'), padding: '0.25rem 0.5rem' }}
+                <Button
+                  variant="text"
+                  size="small"
                   onClick={() => handleRemoveSort(index)}
+                  style={{ color: 'var(--md-sys-color-error)' }}
                 >
                   Remove
-                </button>
+                </Button>
               </div>
             ))}
             
-            <button style={buttonStyle('secondary')} onClick={handleAddSort}>
+            <Button variant="outlined" onClick={handleAddSort}>
               Add Sort
-            </button>
-          </div>
+            </Button>
+            </CardContent>
+          </Card>
         )}
 
         {/* GROUP BY */}
         {selectedTable && (
-          <div style={sectionStyle}>
-            <h3 style={sectionTitleStyle}>5. Group By Fields</h3>
+          <Card variant="outlined" style={{ marginBottom: 'var(--md-sys-spacing-4)' }}>
+            <CardContent>
+              <Typography variant="title-medium" style={{ marginBottom: 'var(--md-sys-spacing-3)' }}>
+                5. Group By Fields
+              </Typography>
             {groupBy.map((group, index) => (
-              <div key={index} style={conditionRowStyle}>
+              <div 
+                key={index} 
+                style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'var(--md-sys-spacing-2)',
+                  marginBottom: 'var(--md-sys-spacing-2)',
+                  padding: 'var(--md-sys-spacing-2)',
+                  backgroundColor: 'var(--md-sys-color-surface-container)',
+                  borderRadius: 'var(--md-sys-shape-corner-small)'
+                }}
+              >
                 <select
-                  style={{ ...inputStyle, width: '120px' }}
                   value={group.field}
                   onChange={(e) => handleGroupByChange(index, 'field', e.target.value)}
+                  style={{
+                    padding: 'var(--md-sys-spacing-2)',
+                    border: '1px solid var(--md-sys-color-outline)',
+                    borderRadius: 'var(--md-sys-shape-corner-small)',
+                    backgroundColor: 'var(--md-sys-color-surface-container-low)',
+                    color: 'var(--md-sys-color-on-surface)',
+                    fontSize: 'var(--md-sys-typescale-body-small-size)',
+                    width: '120px'
+                  }}
                 >
                   {fields.map(field => (
                     <option key={field} value={field}>{field}</option>
                   ))}
                 </select>
                 
-                <button
-                  style={{ ...buttonStyle('danger'), padding: '0.25rem 0.5rem' }}
+                <Button
+                  variant="text"
+                  size="small"
                   onClick={() => handleRemoveGroupBy(index)}
+                  style={{ color: 'var(--md-sys-color-error)' }}
                 >
                   Remove
-                </button>
+                </Button>
               </div>
             ))}
             
-            <button style={buttonStyle('secondary')} onClick={handleAddGroupBy}>
+            <Button variant="outlined" onClick={handleAddGroupBy}>
               Add Group By
-            </button>
-          </div>
+            </Button>
+            </CardContent>
+          </Card>
         )}
 
         {/* Aggregations */}
         {selectedTable && (
-          <div style={sectionStyle}>
-            <h3 style={sectionTitleStyle}>6. Add Aggregations</h3>
+          <Card variant="outlined" style={{ marginBottom: 'var(--md-sys-spacing-4)' }}>
+            <CardContent>
+              <Typography variant="title-medium" style={{ marginBottom: 'var(--md-sys-spacing-3)' }}>
+                6. Add Aggregations
+              </Typography>
             {aggregations.map((agg, index) => (
-              <div key={index} style={conditionRowStyle}>
+              <div 
+                key={index} 
+                style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'var(--md-sys-spacing-2)',
+                  marginBottom: 'var(--md-sys-spacing-2)',
+                  padding: 'var(--md-sys-spacing-2)',
+                  backgroundColor: 'var(--md-sys-color-surface-container)',
+                  borderRadius: 'var(--md-sys-shape-corner-small)'
+                }}
+              >
                 <select
-                  style={{ ...inputStyle, width: '120px' }}
                   value={agg.func}
                   onChange={(e) => handleAggregationChange(index, 'func', e.target.value)}
+                  style={{
+                    padding: 'var(--md-sys-spacing-2)',
+                    border: '1px solid var(--md-sys-color-outline)',
+                    borderRadius: 'var(--md-sys-shape-corner-small)',
+                    backgroundColor: 'var(--md-sys-color-surface-container-low)',
+                    color: 'var(--md-sys-color-on-surface)',
+                    fontSize: 'var(--md-sys-typescale-body-small-size)',
+                    width: '120px'
+                  }}
                 >
                   {aggregationOptions.map(option => (
                     <option key={option.value} value={option.value}>{option.label}</option>
@@ -663,10 +729,18 @@ export function QueryBuilder({ onResults, onClose }) {
                 </select>
                 
                 <select
-                  style={{ ...inputStyle, width: '120px' }}
                   value={agg.field || ''}
                   onChange={(e) => handleAggregationChange(index, 'field', e.target.value)}
                   disabled={agg.func === AggregationFunctions.COUNT && !agg.field}
+                  style={{
+                    padding: 'var(--md-sys-spacing-2)',
+                    border: '1px solid var(--md-sys-color-outline)',
+                    borderRadius: 'var(--md-sys-shape-corner-small)',
+                    backgroundColor: 'var(--md-sys-color-surface-container-low)',
+                    color: 'var(--md-sys-color-on-surface)',
+                    fontSize: 'var(--md-sys-typescale-body-small-size)',
+                    width: '120px'
+                  }}
                 >
                   <option value="">All (*)</option>
                   {fields.map(field => (
@@ -674,152 +748,201 @@ export function QueryBuilder({ onResults, onClose }) {
                   ))}
                 </select>
                 
-                <input
-                  style={{ ...inputStyle, width: '100px' }}
+                <TextField
                   placeholder="Alias"
                   value={agg.alias || ''}
                   onChange={(e) => handleAggregationChange(index, 'alias', e.target.value)}
+                  style={{ width: '100px' }}
                 />
                 
-                <button
-                  style={{ ...buttonStyle('danger'), padding: '0.25rem 0.5rem' }}
+                <Button
+                  variant="text"
+                  size="small"
                   onClick={() => handleRemoveAggregation(index)}
+                  style={{ color: 'var(--md-sys-color-error)' }}
                 >
                   Remove
-                </button>
+                </Button>
               </div>
             ))}
             
-            <button style={buttonStyle('secondary')} onClick={handleAddAggregation}>
+            <Button variant="outlined" onClick={handleAddAggregation}>
               Add Aggregation
-            </button>
-          </div>
+            </Button>
+            </CardContent>
+          </Card>
         )}
 
         {/* HAVING */}
         {selectedTable && (groupBy.length > 0 || aggregations.length > 0) && (
-          <div style={sectionStyle}>
-            <h3 style={sectionTitleStyle}>7. Add Having Conditions</h3>
-            {having.map((condition, index) => (
-              <div key={index} style={conditionRowStyle}>
-                <input
-                  style={{ ...inputStyle, width: '120px' }}
-                  placeholder="Aggregate field"
-                  value={condition.field}
-                  onChange={(e) => handleHavingChange(index, 'field', e.target.value)}
-                />
-                
-                <select
-                  style={{ ...inputStyle, width: '120px' }}
-                  value={condition.operator}
-                  onChange={(e) => handleHavingChange(index, 'operator', e.target.value)}
+          <Card variant="outlined" style={{ marginBottom: 'var(--md-sys-spacing-4)' }}>
+            <CardContent>
+              <Typography variant="title-medium" style={{ marginBottom: 'var(--md-sys-spacing-3)' }}>
+                7. Add Having Conditions
+              </Typography>
+              {having.map((condition, index) => (
+                <div 
+                  key={index} 
+                  style={{ 
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--md-sys-spacing-2)',
+                    marginBottom: 'var(--md-sys-spacing-2)',
+                    padding: 'var(--md-sys-spacing-2)',
+                    backgroundColor: 'var(--md-sys-color-surface-container)',
+                    borderRadius: 'var(--md-sys-shape-corner-small)'
+                  }}
                 >
-                  {operators.slice(0, 6).map(op => (
-                    <option key={op.value} value={op.value}>{op.label}</option>
-                  ))}
-                </select>
-                
-                <input
-                  style={{ ...inputStyle, width: '100px' }}
-                  placeholder="Value"
-                  value={condition.value}
-                  onChange={(e) => handleHavingChange(index, 'value', e.target.value)}
-                />
-                
-                <button
-                  style={{ ...buttonStyle('danger'), padding: '0.25rem 0.5rem' }}
-                  onClick={() => handleRemoveHaving(index)}
-                >
-                  Remove
-                </button>
+                  <TextField
+                    placeholder="Aggregate field"
+                    value={condition.field}
+                    onChange={(e) => handleHavingChange(index, 'field', e.target.value)}
+                    style={{ width: '120px' }}
+                  />
+                  
+                  <select
+                    value={condition.operator}
+                    onChange={(e) => handleHavingChange(index, 'operator', e.target.value)}
+                    style={{
+                      padding: 'var(--md-sys-spacing-2)',
+                      border: '1px solid var(--md-sys-color-outline)',
+                      borderRadius: 'var(--md-sys-shape-corner-small)',
+                      backgroundColor: 'var(--md-sys-color-surface-container-low)',
+                      color: 'var(--md-sys-color-on-surface)',
+                      fontSize: 'var(--md-sys-typescale-body-small-size)',
+                      width: '120px'
+                    }}
+                  >
+                    {operators.slice(0, 6).map(op => (
+                      <option key={op.value} value={op.value}>{op.label}</option>
+                    ))}
+                  </select>
+                  
+                  <TextField
+                    placeholder="Value"
+                    value={condition.value}
+                    onChange={(e) => handleHavingChange(index, 'value', e.target.value)}
+                    style={{ width: '100px' }}
+                  />
+                  
+                  <Button
+                    variant="text"
+                    size="small"
+                    onClick={() => handleRemoveHaving(index)}
+                    style={{ color: 'var(--md-sys-color-error)' }}
+                  >
+                    Remove
+                  </Button>
               </div>
             ))}
             
-            <button style={buttonStyle('secondary')} onClick={handleAddHaving}>
+            <Button variant="outlined" onClick={handleAddHaving}>
               Add Having Condition
-            </button>
-          </div>
+            </Button>
+            </CardContent>
+          </Card>
         )}
 
         {/* Limit */}
         {selectedTable && (
-          <div style={sectionStyle}>
-            <h3 style={sectionTitleStyle}>8. Limit Results</h3>
-            <input
-              style={{ ...inputStyle, width: '100px' }}
-              type="number"
-              placeholder="Limit"
-              value={limit}
-              onChange={(e) => setLimit(e.target.value)}
-            />
-          </div>
+          <Card variant="outlined" style={{ marginBottom: 'var(--md-sys-spacing-4)' }}>
+            <CardContent>
+              <Typography variant="title-medium" style={{ marginBottom: 'var(--md-sys-spacing-3)' }}>
+                8. Limit Results
+              </Typography>
+              <TextField
+                type="number"
+                placeholder="Limit"
+                value={limit}
+                onChange={(e) => setLimit(e.target.value)}
+                style={{ width: '100px' }}
+              />
+            </CardContent>
+          </Card>
         )}
 
         {/* Generated Query */}
         {queryText && (
-          <div style={sectionStyle}>
-            <h3 style={sectionTitleStyle}>Generated Query</h3>
-            <div style={{
-              backgroundColor: '#1f2937',
-              color: '#f9fafb',
-              padding: '1rem',
-              borderRadius: '0.375rem',
-              fontFamily: 'monospace',
-              fontSize: '0.875rem',
-              overflowX: 'auto'
-            }}>
-              {queryText}
-            </div>
-          </div>
+          <Card variant="outlined" style={{ marginBottom: 'var(--md-sys-spacing-4)' }}>
+            <CardContent>
+              <Typography variant="title-medium" style={{ marginBottom: 'var(--md-sys-spacing-3)' }}>
+                Generated Query
+              </Typography>
+              <div style={{
+                backgroundColor: 'var(--md-sys-color-surface-container-highest)',
+                color: 'var(--md-sys-color-on-surface)',
+                padding: 'var(--md-sys-spacing-4)',
+                borderRadius: 'var(--md-sys-shape-corner-medium)',
+                fontFamily: 'monospace',
+                fontSize: 'var(--md-sys-typescale-body-small-size)',
+                overflowX: 'auto',
+                border: '1px solid var(--md-sys-color-outline-variant)'
+              }}>
+                {queryText}
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         {/* Results */}
         {results.length > 0 && (
-          <div style={sectionStyle}>
-            <h3 style={sectionTitleStyle}>Results ({results.length} rows)</h3>
-            <div style={{
-              maxHeight: '300px',
-              overflow: 'auto',
-              border: '1px solid #e5e7eb',
-              borderRadius: '0.375rem'
-            }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
-                <thead style={{ backgroundColor: '#f9fafb', position: 'sticky', top: 0 }}>
-                  <tr>
-                    {results.length > 0 && Object.keys(results[0]).map(key => (
-                      <th key={key} style={{
-                        padding: '0.75rem',
-                        textAlign: 'left',
-                        fontWeight: '600',
-                        color: '#374151',
-                        borderBottom: '1px solid #e5e7eb'
-                      }}>
-                        {key}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {results.map((row, index) => (
-                    <tr key={index}>
-                      {Object.values(row).map((value, i) => (
-                        <td key={i} style={{
-                          padding: '0.75rem',
-                          borderBottom: '1px solid #f3f4f6',
-                          color: '#6b7280'
+          <Card variant="outlined">
+            <CardContent>
+              <Typography variant="title-medium" style={{ marginBottom: 'var(--md-sys-spacing-3)' }}>
+                Results ({results.length} rows)
+              </Typography>
+              <div style={{
+                maxHeight: '300px',
+                overflow: 'auto',
+                border: '1px solid var(--md-sys-color-outline-variant)',
+                borderRadius: 'var(--md-sys-shape-corner-medium)'
+              }}>
+                <table style={{ 
+                  width: '100%', 
+                  borderCollapse: 'collapse', 
+                  fontSize: 'var(--md-sys-typescale-body-small-size)' 
+                }}>
+                  <thead style={{ 
+                    backgroundColor: 'var(--md-sys-color-surface-container)', 
+                    position: 'sticky', 
+                    top: 0 
+                  }}>
+                    <tr>
+                      {results.length > 0 && Object.keys(results[0]).map(key => (
+                        <th key={key} style={{
+                          padding: 'var(--md-sys-spacing-3)',
+                          textAlign: 'left',
+                          fontWeight: '600',
+                          color: 'var(--md-sys-color-on-surface)',
+                          borderBottom: '1px solid var(--md-sys-color-outline-variant)'
                         }}>
-                          {String(value)}
-                        </td>
+                          {key}
+                        </th>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                  </thead>
+                  <tbody>
+                    {results.map((row, index) => (
+                      <tr key={index}>
+                        {Object.values(row).map((value, i) => (
+                          <td key={i} style={{
+                            padding: 'var(--md-sys-spacing-3)',
+                            borderBottom: '1px solid var(--md-sys-color-outline-variant)',
+                            color: 'var(--md-sys-color-on-surface-variant)'
+                          }}>
+                            {String(value)}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 

@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { Button, Card, CardHeader, CardContent, Typography } from '../../design-system';
 import DataTable from './DataTable.jsx';
 import { LocalStorageDB } from '../utils/localStorageDB.js';
 
@@ -16,88 +17,6 @@ export function TableViewer({ tableName, onClose }) {
   const [error, setError] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [newRecord, setNewRecord] = useState({});
-
-  // Styles
-  const containerStyle = {
-    backgroundColor: 'white',
-    borderRadius: '0.5rem',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-    overflow: 'hidden'
-  };
-
-  const headerStyle = {
-    backgroundColor: '#f9fafb',
-    padding: '1.5rem',
-    borderBottom: '1px solid #e5e7eb',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  };
-
-  const titleStyle = {
-    fontSize: '1.5rem',
-    fontWeight: '600',
-    color: '#111827',
-    margin: 0
-  };
-
-  const buttonStyle = (variant = 'primary') => {
-    const variants = {
-      primary: { backgroundColor: '#3b82f6', color: 'white' },
-      secondary: { backgroundColor: '#f3f4f6', color: '#374151' },
-      danger: { backgroundColor: '#ef4444', color: 'white' }
-    };
-
-    return {
-      padding: '0.5rem 1rem',
-      border: 'none',
-      borderRadius: '0.375rem',
-      fontSize: '0.875rem',
-      cursor: 'pointer',
-      margin: '0 0.25rem',
-      ...variants[variant]
-    };
-  };
-
-  const modalStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 1000
-  };
-
-  const modalContentStyle = {
-    backgroundColor: 'white',
-    borderRadius: '0.5rem',
-    padding: '2rem',
-    maxWidth: '500px',
-    width: '90%',
-    maxHeight: '80vh',
-    overflow: 'auto'
-  };
-
-  const inputStyle = {
-    width: '100%',
-    padding: '0.5rem',
-    border: '1px solid #d1d5db',
-    borderRadius: '0.375rem',
-    fontSize: '0.875rem',
-    marginBottom: '1rem'
-  };
-
-  const labelStyle = {
-    display: 'block',
-    fontSize: '0.875rem',
-    fontWeight: '500',
-    color: '#374151',
-    marginBottom: '0.25rem'
-  };
 
   // Load table data
   const loadData = useCallback(async () => {
@@ -259,13 +178,57 @@ export function TableViewer({ tableName, onClose }) {
     return schema.fields?.[field]?.type || 'text';
   };
 
+  const modalStyle = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000
+  };
+
+  const modalContentStyle = {
+    backgroundColor: 'var(--md-sys-color-surface)',
+    padding: 'var(--md-sys-spacing-6)',
+    borderRadius: 'var(--md-sys-shape-corner-large)',
+    width: '90%',
+    maxWidth: '500px',
+    maxHeight: '80%',
+    overflow: 'auto'
+  };
+
+  const labelStyle = {
+    display: 'block',
+    marginBottom: 'var(--md-sys-spacing-2)',
+    color: 'var(--md-sys-color-on-surface)',
+    fontSize: 'var(--md-sys-typescale-body-medium-size)',
+    fontWeight: '500'
+  };
+
+  const inputStyle = {
+    width: '100%',
+    padding: 'var(--md-sys-spacing-3)',
+    marginBottom: 'var(--md-sys-spacing-4)',
+    border: '1px solid var(--md-sys-color-outline)',
+    borderRadius: 'var(--md-sys-shape-corner-small)',
+    fontSize: 'var(--md-sys-typescale-body-medium-size)',
+    backgroundColor: 'var(--md-sys-color-surface-container-low)',
+    color: 'var(--md-sys-color-on-surface)'
+  };
+
   const renderAddModal = () => {
     if (!showAddModal) return null;
 
     return (
       <div style={modalStyle} onClick={() => setShowAddModal(false)}>
-        <div style={modalContentStyle} onClick={(e) => e.stopPropagation()}>
-          <h3 style={{ marginBottom: '1rem', color: '#111827' }}>Add New Record</h3>
+        <Card variant="elevated" style={modalContentStyle} onClick={(e) => e.stopPropagation()}>
+          <Typography variant="headline-small" style={{ marginBottom: 'var(--md-sys-spacing-4)' }}>
+            Add New Record
+          </Typography>
           
           {columns.map(field => (
             <div key={field}>
@@ -298,75 +261,82 @@ export function TableViewer({ tableName, onClose }) {
             </div>
           ))}
 
-          <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.5rem' }}>
-            <button style={buttonStyle('primary')} onClick={handleSaveNew}>
-              Save
-            </button>
-            <button 
-              style={buttonStyle('secondary')} 
-              onClick={() => setShowAddModal(false)}
-            >
+          <div style={{ display: 'flex', gap: 'var(--md-sys-spacing-2)', marginTop: 'var(--md-sys-spacing-6)', justifyContent: 'flex-end' }}>
+            <Button variant="text" onClick={() => setShowAddModal(false)}>
               Cancel
-            </button>
+            </Button>
+            <Button variant="filled" onClick={handleSaveNew}>
+              Save
+            </Button>
           </div>
-        </div>
+        </Card>
       </div>
     );
   };
 
   if (loading) {
     return (
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '1rem', color: '#6b7280' }}>Loading table...</div>
+      <div style={{ padding: 'var(--md-sys-spacing-8)', textAlign: 'center' }}>
+        <Typography variant="body-medium" color="on-surface-variant">
+          Loading table...
+        </Typography>
       </div>
     );
   }
 
   return (
-    <div style={containerStyle}>
-      <div style={headerStyle}>
-        <h2 style={titleStyle}>Table: {tableName}</h2>
-        <div>
-          <button style={buttonStyle('secondary')} onClick={handleExport}>
+    <Card variant="elevated">
+      <CardHeader style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="headline-medium">
+          Table: {tableName}
+        </Typography>
+        <div style={{ display: 'flex', gap: 'var(--md-sys-spacing-2)' }}>
+          <Button variant="outlined" onClick={handleExport}>
             Export JSON
-          </button>
-          <button style={buttonStyle('primary')} onClick={handleAdd}>
+          </Button>
+          <Button variant="filled" onClick={handleAdd}>
             Add Record
-          </button>
+          </Button>
           {onClose && (
-            <button style={buttonStyle('secondary')} onClick={onClose}>
+            <Button variant="text" onClick={onClose}>
               Close
-            </button>
+            </Button>
           )}
         </div>
-      </div>
+      </CardHeader>
 
-      <div style={{ padding: '1.5rem' }}>
+      <CardContent>
         {error && (
-          <div style={{
-            padding: '0.75rem',
-            backgroundColor: '#fee2e2',
-            color: '#991b1b',
-            borderRadius: '0.375rem',
-            marginBottom: '1rem',
-            fontSize: '0.875rem'
-          }}>
-            Error: {error}
-          </div>
+          <Card 
+            variant="filled"
+            style={{
+              padding: 'var(--md-sys-spacing-3)',
+              backgroundColor: 'var(--md-sys-color-error-container)',
+              color: 'var(--md-sys-color-on-error-container)',
+              marginBottom: 'var(--md-sys-spacing-4)'
+            }}
+          >
+            <Typography variant="body-small">
+              Error: {error}
+            </Typography>
+          </Card>
         )}
 
         {schema.fields && (
-          <div style={{
-            backgroundColor: '#f9fafb',
-            padding: '1rem',
-            borderRadius: '0.375rem',
-            marginBottom: '1rem',
-            fontSize: '0.875rem'
-          }}>
-            <strong>Schema:</strong> {Object.entries(schema.fields).map(([field, fieldSchema]) => 
-              `${field} (${fieldSchema.type})`
-            ).join(', ')}
-          </div>
+          <Card 
+            variant="filled"
+            style={{
+              backgroundColor: 'var(--md-sys-color-surface-container)',
+              padding: 'var(--md-sys-spacing-4)',
+              marginBottom: 'var(--md-sys-spacing-4)'
+            }}
+          >
+            <Typography variant="body-medium">
+              <strong>Schema:</strong> {Object.entries(schema.fields).map(([field, fieldSchema]) => 
+                `${field} (${fieldSchema.type})`
+              ).join(', ')}
+            </Typography>
+          </Card>
         )}
 
         <DataTable
@@ -384,10 +354,10 @@ export function TableViewer({ tableName, onClose }) {
           selectable={true}
           pageSize={10}
         />
-      </div>
+      </CardContent>
 
       {renderAddModal()}
-    </div>
+    </Card>
   );
 }
 

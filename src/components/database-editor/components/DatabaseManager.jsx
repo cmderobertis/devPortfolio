@@ -5,7 +5,8 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { LocalStorageDB } from '../utils/localStorageDB.js';
-import { exportImport } from '../utils/exportImport.js';
+import { exportImportManager } from '../utils/exportImport.js';
+import { Button, Card, CardHeader, CardContent, Typography, Container } from '../../design-system';
 import TableViewer from './TableViewer.jsx';
 import SchemaEditor from './SchemaEditor.jsx';
 import QueryBuilder from './QueryBuilder.jsx';
@@ -40,80 +41,6 @@ export function DatabaseManager() {
     ]
   };
 
-  // Styles
-  const containerStyle = {
-    display: 'flex',
-    height: '100vh',
-    backgroundColor: '#f8fafc'
-  };
-
-  const sidebarStyle = {
-    width: '300px',
-    backgroundColor: 'white',
-    borderRight: '1px solid #e5e7eb',
-    display: 'flex',
-    flexDirection: 'column'
-  };
-
-  const mainStyle = {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden'
-  };
-
-  const headerStyle = {
-    backgroundColor: 'white',
-    padding: '1rem 1.5rem',
-    borderBottom: '1px solid #e5e7eb',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  };
-
-  const contentStyle = {
-    flex: 1,
-    padding: '1.5rem',
-    overflow: 'auto'
-  };
-
-  const buttonStyle = (variant = 'primary', active = false) => {
-    const variants = {
-      primary: { backgroundColor: active ? '#2563eb' : '#3b82f6', color: 'white' },
-      secondary: { backgroundColor: active ? '#e5e7eb' : '#f3f4f6', color: '#374151' },
-      danger: { backgroundColor: '#ef4444', color: 'white' },
-      ghost: { backgroundColor: active ? '#f3f4f6' : 'transparent', color: active ? '#374151' : '#6b7280' }
-    };
-
-    return {
-      padding: '0.5rem 1rem',
-      border: 'none',
-      borderRadius: '0.375rem',
-      fontSize: '0.875rem',
-      cursor: 'pointer',
-      margin: '0.125rem',
-      width: variant === 'ghost' ? '100%' : 'auto',
-      textAlign: 'left',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem',
-      ...variants[variant]
-    };
-  };
-
-  const cardStyle = {
-    backgroundColor: 'white',
-    borderRadius: '0.5rem',
-    padding: '1.5rem',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-    marginBottom: '1rem'
-  };
-
-  const statCardStyle = {
-    ...cardStyle,
-    textAlign: 'center',
-    padding: '1rem'
-  };
 
   // Load data
   const loadData = useCallback(async () => {
@@ -287,71 +214,89 @@ export function DatabaseManager() {
   }, [db, tables, loadData]);
 
   const renderSidebar = () => (
-    <div style={sidebarStyle}>
-      <div style={{ padding: '1.5rem', borderBottom: '1px solid #e5e7eb' }}>
-        <h2 style={{ margin: '0 0 1rem 0', fontSize: '1.25rem', fontWeight: '600', color: '#111827' }}>
+    <Card 
+      variant="outlined" 
+      className="database-manager-sidebar"
+      style={{ 
+        width: '300px', 
+        height: '100vh', 
+        borderRadius: 0, 
+        display: 'flex', 
+        flexDirection: 'column',
+        borderTop: 'none',
+        borderBottom: 'none',
+        borderLeft: 'none'
+      }}
+    >
+      <CardHeader style={{ borderBottom: '1px solid var(--md-sys-color-outline-variant)' }}>
+        <Typography variant="title-large">
           Database Manager
-        </h2>
+        </Typography>
         
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-          <button 
-            style={buttonStyle('ghost', activeView === 'overview')}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--md-sys-spacing-1)', marginTop: 'var(--md-sys-spacing-4)' }}>
+          <Button 
+            variant={activeView === 'overview' ? 'tonal' : 'text'}
             onClick={() => setActiveView('overview')}
+            icon={<span>📊</span>}
+            style={{ justifyContent: 'flex-start' }}
           >
-            <span>📊</span> Overview
-          </button>
-          <button 
-            style={buttonStyle('ghost', activeView === 'query')}
+            Overview
+          </Button>
+          <Button 
+            variant={activeView === 'query' ? 'tonal' : 'text'}
             onClick={() => setActiveView('query')}
+            icon={<span>🔍</span>}
+            style={{ justifyContent: 'flex-start' }}
           >
-            <span>🔍</span> Query Builder
-          </button>
+            Query Builder
+          </Button>
           {selectedTable && (
             <>
-              <div style={{ height: '1px', backgroundColor: '#e5e7eb', margin: '0.5rem 0' }} />
-              <div style={{ fontSize: '0.75rem', fontWeight: '600', color: '#6b7280', padding: '0 1rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <div style={{ height: '1px', backgroundColor: 'var(--md-sys-color-outline-variant)', margin: 'var(--md-sys-spacing-2) 0' }} />
+              <Typography variant="label-medium" color="on-surface-variant" style={{ padding: '0 var(--md-sys-spacing-4)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                 {selectedTable}
-              </div>
-              <button 
-                style={buttonStyle('ghost', activeView === 'table')}
+              </Typography>
+              <Button 
+                variant={activeView === 'table' ? 'tonal' : 'text'}
                 onClick={() => setActiveView('table')}
+                icon={<span>📋</span>}
+                style={{ justifyContent: 'flex-start' }}
               >
-                <span>📋</span> Table View
-              </button>
-              <button 
-                style={buttonStyle('ghost', activeView === 'schema')}
+                Table View
+              </Button>
+              <Button 
+                variant={activeView === 'schema' ? 'tonal' : 'text'}
                 onClick={() => setActiveView('schema')}
+                icon={<span>⚙️</span>}
+                style={{ justifyContent: 'flex-start' }}
               >
-                <span>⚙️</span> Schema Editor
-              </button>
+                Schema Editor
+              </Button>
             </>
           )}
         </div>
-      </div>
+      </CardHeader>
 
-      <div style={{ padding: '1rem', borderBottom: '1px solid #e5e7eb' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-          <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: '600', color: '#374151' }}>Tables</h3>
-          <button style={buttonStyle('primary')} onClick={handleCreateTable}>
+      <CardContent style={{ flex: 1, display: 'flex', flexDirection: 'column', borderBottom: '1px solid var(--md-sys-color-outline-variant)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--md-sys-spacing-2)' }}>
+          <Typography variant="title-medium">Tables</Typography>
+          <Button variant="filled" onClick={handleCreateTable} size="small">
             +
-          </button>
+          </Button>
         </div>
         
         {tables.length === 0 ? (
-          <div style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', padding: '1rem' }}>
-            No tables found
+          <div style={{ textAlign: 'center', padding: 'var(--md-sys-spacing-6)' }}>
+            <Typography variant="body-medium" color="on-surface-variant">
+              No tables found
+            </Typography>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--md-sys-spacing-1)' }}>
             {tables.map(table => (
-              <div key={table} style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                <button
-                  style={{
-                    ...buttonStyle('ghost', selectedTable === table),
-                    flex: 1,
-                    justifyContent: 'flex-start',
-                    fontWeight: selectedTable === table ? '600' : '400'
-                  }}
+              <div key={table} style={{ display: 'flex', alignItems: 'center', gap: 'var(--md-sys-spacing-1)' }}>
+                <Button
+                  variant={selectedTable === table ? 'tonal' : 'text'}
                   onClick={() => {
                     if (selectedTable === table) {
                       // If already selected, cycle between views
@@ -365,139 +310,173 @@ export function DatabaseManager() {
                       setActiveView('table');
                     }
                   }}
+                  style={{ flex: 1, justifyContent: 'space-between' }}
+                  icon={<span>📋</span>}
                 >
-                  <span>📋</span> {table}
-                  <span style={{ marginLeft: 'auto', fontSize: '0.75rem', color: '#6b7280' }}>
+                  <span style={{ flex: 1, textAlign: 'left' }}>{table}</span>
+                  <Typography variant="label-small" color="on-surface-variant">
                     {stats.tableStats?.[table]?.records || 0}
-                  </span>
+                  </Typography>
                   {selectedTable === table && (
-                    <span style={{ fontSize: '0.75rem', color: '#3b82f6', marginLeft: '0.25rem' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--md-sys-color-primary)', marginLeft: 'var(--md-sys-spacing-1)' }}>
                       {activeView === 'table' ? '📋' : activeView === 'schema' ? '⚙️' : ''}
                     </span>
                   )}
-                </button>
-                <button
-                  style={{ ...buttonStyle('ghost'), padding: '0.25rem', fontSize: '0.75rem', color: '#ef4444' }}
+                </Button>
+                <Button
+                  variant="text"
                   onClick={() => handleDeleteTable(table)}
                   title="Delete Table"
+                  size="small"
+                  style={{ color: 'var(--md-sys-color-error)', minWidth: 'auto', padding: 'var(--md-sys-spacing-1)' }}
                 >
                   🗑️
-                </button>
+                </Button>
               </div>
             ))}
           </div>
         )}
-      </div>
+      </CardContent>
 
-      <div style={{ padding: '1rem', marginTop: 'auto' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <button style={buttonStyle('secondary')} onClick={handleExportData}>
+      <div style={{ padding: 'var(--md-sys-spacing-4)', marginTop: 'auto' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--md-sys-spacing-2)' }}>
+          <Button variant="outlined" onClick={handleExportData}>
             Export All Data
-          </button>
-          <label style={buttonStyle('secondary')}>
+          </Button>
+          <Button variant="outlined" onClick={() => document.getElementById('import-input').click()}>
             Import Data
             <input
+              id="import-input"
               type="file"
               accept=".json"
               onChange={handleImportData}
               style={{ display: 'none' }}
             />
-          </label>
-          <button style={buttonStyle('danger')} onClick={handleClearAll}>
+          </Button>
+          <Button variant="outlined" onClick={handleClearAll} style={{ color: 'var(--md-sys-color-error)' }}>
             Clear All Data
-          </button>
+          </Button>
         </div>
       </div>
-    </div>
+    </Card>
   );
 
   const renderOverview = () => (
-    <div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
-        <div style={statCardStyle}>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#3b82f6' }}>{stats.tables || 0}</div>
-          <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>Tables</div>
-        </div>
-        <div style={statCardStyle}>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#10b981' }}>{stats.totalRecords || 0}</div>
-          <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>Total Records</div>
-        </div>
-        <div style={statCardStyle}>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#f59e0b' }}>
+    <Container>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 'var(--md-sys-spacing-4)', marginBottom: 'var(--md-sys-spacing-8)' }}>
+        <Card variant="elevated" style={{ textAlign: 'center', padding: 'var(--md-sys-spacing-4)' }}>
+          <Typography variant="display-small" color="primary" style={{ margin: 0 }}>
+            {stats.tables || 0}
+          </Typography>
+          <Typography variant="body-medium" color="on-surface-variant">
+            Tables
+          </Typography>
+        </Card>
+        <Card variant="elevated" style={{ textAlign: 'center', padding: 'var(--md-sys-spacing-4)' }}>
+          <Typography variant="display-small" color="secondary" style={{ margin: 0 }}>
+            {stats.totalRecords || 0}
+          </Typography>
+          <Typography variant="body-medium" color="on-surface-variant">
+            Total Records
+          </Typography>
+        </Card>
+        <Card variant="elevated" style={{ textAlign: 'center', padding: 'var(--md-sys-spacing-4)' }}>
+          <Typography variant="display-small" color="tertiary" style={{ margin: 0 }}>
             {Object.keys(localStorage).filter(key => key.startsWith('lsdb_')).length}
-          </div>
-          <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>Storage Keys</div>
-        </div>
+          </Typography>
+          <Typography variant="body-medium" color="on-surface-variant">
+            Storage Keys
+          </Typography>
+        </Card>
       </div>
 
-      <div style={cardStyle}>
-        <h3 style={{ marginBottom: '1rem', color: '#111827' }}>Table Overview</h3>
-        {tables.length === 0 ? (
-          <div style={{ textAlign: 'center', color: '#6b7280', padding: '2rem' }}>
-            <p>No tables found. Create a table or import data to get started.</p>
-            <button style={buttonStyle('primary')} onClick={handleCreateTable}>
-              Create Your First Table
-            </button>
-          </div>
-        ) : (
-          <DataTable
-            data={tables.map(table => ({
-              name: table,
-              records: stats.tableStats?.[table]?.records || 0,
-              fields: stats.tableStats?.[table]?.fields || 0,
-              actions: table
-            }))}
-            columns={[
-              { field: 'name', label: 'Table Name' },
-              { field: 'records', label: 'Records' },
-              { field: 'fields', label: 'Fields' }
-            ]}
-            pageSize={10}
-            searchable={true}
-            sortable={true}
-          />
-        )}
-      </div>
+      <Card variant="elevated" style={{ marginBottom: 'var(--md-sys-spacing-6)' }}>
+        <CardHeader>
+          <Typography variant="title-large">Table Overview</Typography>
+        </CardHeader>
+        <CardContent>
+          {tables.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: 'var(--md-sys-spacing-8)' }}>
+              <Typography variant="body-large" color="on-surface-variant" style={{ marginBottom: 'var(--md-sys-spacing-4)' }}>
+                No tables found. Create a table or import data to get started.
+              </Typography>
+              <Button variant="filled" onClick={handleCreateTable}>
+                Create Your First Table
+              </Button>
+            </div>
+          ) : (
+            <DataTable
+              data={tables.map(table => ({
+                name: table,
+                records: stats.tableStats?.[table]?.records || 0,
+                fields: stats.tableStats?.[table]?.fields || 0,
+                actions: table
+              }))}
+              columns={[
+                { field: 'name', label: 'Table Name' },
+                { field: 'records', label: 'Records' },
+                { field: 'fields', label: 'Fields' }
+              ]}
+              pageSize={10}
+              searchable={true}
+              sortable={true}
+            />
+          )}
+        </CardContent>
+      </Card>
 
-      <div style={cardStyle}>
-        <h3 style={{ marginBottom: '1rem', color: '#111827' }}>Quick Actions</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-          <div>
-            <h4 style={{ fontSize: '0.875rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
-              Create & Manage
-            </h4>
-            <button style={{ ...buttonStyle('primary'), width: '100%', marginBottom: '0.5rem' }} onClick={handleCreateTable}>
-              Create New Table
-            </button>
-            <button 
-              style={{ ...buttonStyle('secondary'), width: '100%' }} 
-              onClick={() => setActiveView('query')}
-            >
-              Open Query Builder
-            </button>
+      <Card variant="elevated">
+        <CardHeader>
+          <Typography variant="title-large">Quick Actions</Typography>
+        </CardHeader>
+        <CardContent>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--md-sys-spacing-6)' }}>
+            <div>
+              <Typography variant="title-small" style={{ marginBottom: 'var(--md-sys-spacing-3)' }}>
+                Create & Manage
+              </Typography>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--md-sys-spacing-2)' }}>
+                <Button variant="filled" onClick={handleCreateTable}>
+                  Create New Table
+                </Button>
+                <Button variant="outlined" onClick={() => setActiveView('query')}>
+                  Open Query Builder
+                </Button>
+              </div>
+            </div>
+            <div>
+              <Typography variant="title-small" style={{ marginBottom: 'var(--md-sys-spacing-3)' }}>
+                Import & Export
+              </Typography>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--md-sys-spacing-2)' }}>
+                <Button variant="outlined" onClick={handleExportData}>
+                  Export All Data
+                </Button>
+                <Button variant="outlined" onClick={() => document.getElementById('overview-import-input').click()}>
+                  Import JSON File
+                  <input 
+                    id="overview-import-input"
+                    type="file" 
+                    accept=".json" 
+                    onChange={handleImportData} 
+                    style={{ display: 'none' }} 
+                  />
+                </Button>
+              </div>
+            </div>
           </div>
-          <div>
-            <h4 style={{ fontSize: '0.875rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
-              Import & Export
-            </h4>
-            <button style={{ ...buttonStyle('secondary'), width: '100%', marginBottom: '0.5rem' }} onClick={handleExportData}>
-              Export All Data
-            </button>
-            <label style={{ ...buttonStyle('secondary'), width: '100%', display: 'block', textAlign: 'center' }}>
-              Import JSON File
-              <input type="file" accept=".json" onChange={handleImportData} style={{ display: 'none' }} />
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
+        </CardContent>
+      </Card>
+    </Container>
   );
 
   const renderContent = () => {
     if (loading) {
       return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
-          <div style={{ color: '#6b7280' }}>Loading...</div>
+          <Typography variant="body-medium" color="on-surface-variant">
+            Loading...
+          </Typography>
         </div>
       );
     }
@@ -565,34 +544,61 @@ export function DatabaseManager() {
   };
 
   return (
-    <div style={containerStyle}>
+    <div style={{ 
+      display: 'flex', 
+      height: '100vh', 
+      backgroundColor: 'var(--md-sys-color-surface-container-lowest)' 
+    }}>
       {renderSidebar()}
       
-      <div style={mainStyle}>
-        <div style={headerStyle}>
+      <div style={{ 
+        flex: 1, 
+        display: 'flex', 
+        flexDirection: 'column', 
+        overflow: 'hidden' 
+      }}>
+        <Card 
+          variant="filled" 
+          style={{
+            borderRadius: 0,
+            padding: 'var(--md-sys-spacing-6)',
+            borderBottom: '1px solid var(--md-sys-color-outline-variant)',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
           <div>
-            <h1 style={{ margin: '0 0 0.25rem 0', fontSize: '1.5rem', fontWeight: '600', color: '#111827' }}>
+            <Typography variant="headline-medium" style={{ margin: '0 0 var(--md-sys-spacing-1) 0' }}>
               {getPageTitle()}
-            </h1>
-            <p style={{ margin: 0, fontSize: '0.875rem', color: '#6b7280' }}>
+            </Typography>
+            <Typography variant="body-medium" color="on-surface-variant" style={{ margin: 0 }}>
               {getViewDescription()}
-            </p>
+            </Typography>
           </div>
           
           {error && (
-            <div style={{
-              padding: '0.5rem 1rem',
-              backgroundColor: '#fee2e2',
-              color: '#991b1b',
-              borderRadius: '0.375rem',
-              fontSize: '0.875rem'
-            }}>
-              {error}
-            </div>
+            <Card 
+              variant="filled"
+              style={{
+                padding: 'var(--md-sys-spacing-2) var(--md-sys-spacing-4)',
+                backgroundColor: 'var(--md-sys-color-error-container)',
+                color: 'var(--md-sys-color-on-error-container)'
+              }}
+            >
+              <Typography variant="body-small">
+                {error}
+              </Typography>
+            </Card>
           )}
-        </div>
+        </Card>
         
-        <div style={contentStyle}>
+        <div style={{ 
+          flex: 1, 
+          padding: 'var(--md-sys-spacing-6)', 
+          overflow: 'auto',
+          backgroundColor: 'var(--md-sys-color-surface-container-lowest)'
+        }}>
           {renderContent()}
         </div>
       </div>
