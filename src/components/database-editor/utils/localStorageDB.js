@@ -131,25 +131,14 @@ export class LocalStorageDB {
    * @returns {Array} Array of table names
    */
   discoverTables() {
-    const tables = [];
-    const excludeKeys = new Set([this.metaKey, this.indexKey, this.schemaKey]);
+    const metadata = this.getMetadata();
     
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && !excludeKeys.has(key)) {
-        // Try to parse as JSON to see if it's structured data
-        try {
-          const value = localStorage.getItem(key);
-          JSON.parse(value);
-          tables.push(key);
-        } catch {
-          // Not JSON, might be a simple string value
-          tables.push(key);
-        }
-      }
+    // Only return tables that are registered in metadata
+    if (metadata.tables) {
+      return Object.keys(metadata.tables).sort();
     }
     
-    return tables.sort();
+    return [];
   }
 
   /**
@@ -220,6 +209,171 @@ export class LocalStorageDB {
       console.error(`Error deleting table ${tableName}:`, error);
       return false;
     }
+  }
+
+  /**
+   * Insert a record into a table
+   * @param {string} tableName - Name of the table
+   * @param {Object} record - Record to insert
+   * @returns {boolean} Success status
+   */
+  insert(tableName, record) {
+    try {
+      // Get existing data or create empty array
+      const existingData = this.getTable(tableName);
+      const tableData = Array.isArray(existingData) ? existingData : [];
+      
+      // Add the new record
+      tableData.push(record);
+      
+      // Save back to storage
+      return this.setTable(tableName, tableData);
+    } catch (error) {
+      console.error(`Error inserting record into ${tableName}:`, error);
+      return false;
+    }
+  }
+
+  /**
+   * Select records from a table
+   * @param {string} tableName - Name of the table
+   * @returns {Array} Array of records
+   */
+  select(tableName) {
+    const data = this.getTable(tableName);
+    return Array.isArray(data) ? data : [];
+  }
+
+  /**
+   * Delete a record from a table by ID
+   * @param {string} tableName - Name of the table
+   * @param {string} id - ID of the record to delete
+   * @returns {boolean} Success status
+   */
+  delete(tableName, id) {
+    try {
+      const tableData = this.select(tableName);
+      const filteredData = tableData.filter(record => record.id !== id);
+      return this.setTable(tableName, filteredData);
+    } catch (error) {
+      console.error(`Error deleting record from ${tableName}:`, error);
+      return false;
+    }
+  }
+
+  /**
+   * Set schema for a table
+   * @param {string} tableName - Name of the table
+   * @param {Object} schema - Schema definition
+   * @returns {boolean} Success status
+   */
+  setSchema(tableName, schema) {
+    try {
+      const metadata = this.getMetadata();
+      if (!metadata.tables) {
+        metadata.tables = {};
+      }
+      if (!metadata.tables[tableName]) {
+        metadata.tables[tableName] = {};
+      }
+      metadata.tables[tableName].schema = schema;
+      this.updateMetadata(metadata);
+      return true;
+    } catch (error) {
+      console.error(`Error setting schema for ${tableName}:`, error);
+      return false;
+    }
+  }
+
+  /**
+   * Get schema for a table
+   * @param {string} tableName - Name of the table
+   * @returns {Object|null} Schema definition or null if not found
+   */
+  getSchema(tableName) {
+    try {
+      const metadata = this.getMetadata();
+      if (metadata.tables && metadata.tables[tableName] && metadata.tables[tableName].schema) {
+        return metadata.tables[tableName].schema;
+      }
+      
+      // If no explicit schema exists, try to infer one from the data
+      const data = this.getTable(tableName);
+      if (data && Array.isArray(data) && data.length > 0) {
+        return this.inferSchemaFromTableData(tableName, data);
+      }
+      
+      return null;
+    } catch (error) {
+      console.error(`Error getting schema for ${tableName}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Infer schema from table data in the expected format
+   * @param {string} tableName - Name of the table
+   * @param {Array} data - Table data
+   * @returns {Object} Inferred schema in the expected format
+   */
+  inferSchemaFromTableData(tableName, data) {
+    if (!Array.isArray(data) || data.length === 0) {
+      return { fields: {} };
+    }
+
+    const fields = {};
+    const sampleSize = Math.min(data.length, 10);
+
+    // Get all unique field names from sample data
+    const allFields = new Set();
+    for (let i = 0; i < sampleSize; i++) {
+      if (typeof data[i] === 'object' && data[i] !== null) {
+        Object.keys(data[i]).forEach(key => allFields.add(key));
+      }
+    }
+
+    // Analyze each field
+    allFields.forEach(fieldName => {
+      const fieldValues = [];
+      let nullCount = 0;
+      
+      for (let i = 0; i < sampleSize; i++) {
+        const record = data[i];
+        if (typeof record === 'object' && record !== null) {
+          if (record[fieldName] === null || record[fieldName] === undefined) {
+            nullCount++;
+          } else {
+            fieldValues.push(record[fieldName]);
+          }
+        }
+      }
+
+      // Determine field type
+      let fieldType = 'string';
+      if (fieldValues.length > 0) {
+        const firstValue = fieldValues[0];
+        if (typeof firstValue === 'number') {
+          fieldType = 'number';
+        } else if (typeof firstValue === 'boolean') {
+          fieldType = 'boolean';
+        } else if (firstValue instanceof Date || isDateString(String(firstValue))) {
+          fieldType = 'date';
+        } else if (Array.isArray(firstValue)) {
+          fieldType = 'array';
+        } else if (typeof firstValue === 'object') {
+          fieldType = 'json';
+        }
+      }
+
+      fields[fieldName] = {
+        type: fieldType,
+        required: nullCount === 0,
+        nullable: nullCount > 0,
+        primaryKey: fieldName === 'id' // Assume 'id' field is primary key
+      };
+    });
+
+    return { fields };
   }
 
   /**

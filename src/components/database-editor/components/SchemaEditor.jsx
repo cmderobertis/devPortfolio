@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { Button, Card, CardHeader, CardContent, Typography, TextField, Checkbox } from '../../design-system';
 import { LocalStorageDB } from '../utils/localStorageDB.js';
 
 export function SchemaEditor({ tableName, onSave, onClose }) {
@@ -11,7 +12,17 @@ export function SchemaEditor({ tableName, onSave, onClose }) {
   const [schema, setSchema] = useState({ fields: {} });
   const [newFieldName, setNewFieldName] = useState('');
   const [newFieldType, setNewFieldType] = useState('string');
+  const [newFieldConstraints, setNewFieldConstraints] = useState({
+    required: false,
+    nullable: true,
+    unique: false,
+    defaultValue: '',
+    minLength: '',
+    maxLength: '',
+    pattern: ''
+  });
   const [error, setError] = useState(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   // Data types
   const dataTypes = [
@@ -23,74 +34,8 @@ export function SchemaEditor({ tableName, onSave, onClose }) {
     { value: 'array', label: 'Array', color: '#ec4899' }
   ];
 
-  // Styles
-  const containerStyle = {
-    backgroundColor: 'white',
-    borderRadius: '0.5rem',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-    overflow: 'hidden'
-  };
 
-  const headerStyle = {
-    backgroundColor: '#f9fafb',
-    padding: '1.5rem',
-    borderBottom: '1px solid #e5e7eb',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  };
 
-  const titleStyle = {
-    fontSize: '1.5rem',
-    fontWeight: '600',
-    color: '#111827',
-    margin: 0
-  };
-
-  const buttonStyle = (variant = 'primary') => {
-    const variants = {
-      primary: { backgroundColor: '#3b82f6', color: 'white' },
-      secondary: { backgroundColor: '#f3f4f6', color: '#374151' },
-      danger: { backgroundColor: '#ef4444', color: 'white' },
-      success: { backgroundColor: '#10b981', color: 'white' }
-    };
-
-    return {
-      padding: '0.5rem 1rem',
-      border: 'none',
-      borderRadius: '0.375rem',
-      fontSize: '0.875rem',
-      cursor: 'pointer',
-      margin: '0 0.25rem',
-      ...variants[variant]
-    };
-  };
-
-  const inputStyle = {
-    padding: '0.5rem',
-    border: '1px solid #d1d5db',
-    borderRadius: '0.375rem',
-    fontSize: '0.875rem',
-    margin: '0.25rem'
-  };
-
-  const fieldRowStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0.75rem',
-    borderBottom: '1px solid #f3f4f6',
-    gap: '1rem'
-  };
-
-  const badgeStyle = (color) => ({
-    display: 'inline-block',
-    padding: '0.25rem 0.75rem',
-    backgroundColor: `${color}20`,
-    color: color,
-    borderRadius: '9999px',
-    fontSize: '0.75rem',
-    fontWeight: '500'
-  });
 
   // Load schema
   useEffect(() => {
@@ -135,14 +80,28 @@ export function SchemaEditor({ tableName, onSave, onClose }) {
         ...prev.fields,
         [newFieldName]: {
           type: newFieldType,
-          required: false,
-          nullable: true
+          required: newFieldConstraints.required,
+          nullable: newFieldConstraints.nullable,
+          unique: newFieldConstraints.unique,
+          ...(newFieldConstraints.defaultValue && { defaultValue: newFieldConstraints.defaultValue }),
+          ...(newFieldConstraints.minLength && { minLength: parseInt(newFieldConstraints.minLength) }),
+          ...(newFieldConstraints.maxLength && { maxLength: parseInt(newFieldConstraints.maxLength) }),
+          ...(newFieldConstraints.pattern && { pattern: newFieldConstraints.pattern })
         }
       }
     }));
 
     setNewFieldName('');
     setNewFieldType('string');
+    setNewFieldConstraints({
+      required: false,
+      nullable: true,
+      unique: false,
+      defaultValue: '',
+      minLength: '',
+      maxLength: '',
+      pattern: ''
+    });
     setError(null);
   }, [newFieldName, newFieldType, schema.fields]);
 
@@ -226,23 +185,53 @@ export function SchemaEditor({ tableName, onSave, onClose }) {
 
   const renderFieldRow = (fieldName, field) => {
     const isIdField = fieldName === 'id';
+    const dataTypeConfig = dataTypes.find(dt => dt.value === field.type) || dataTypes[0];
     
     return (
-      <div key={fieldName} style={fieldRowStyle}>
+      <div 
+        key={fieldName} 
+        style={{ 
+          display: 'flex',
+          alignItems: 'center',
+          padding: 'var(--md-sys-spacing-3)',
+          borderBottom: '1px solid var(--md-sys-color-outline-variant)',
+          gap: 'var(--md-sys-spacing-4)'
+        }}
+      >
         <div style={{ minWidth: '150px' }}>
-          <strong style={{ color: '#374151' }}>{fieldName}</strong>
+          <Typography variant="body-medium" style={{ fontWeight: '500' }}>
+            {fieldName}
+          </Typography>
           {isIdField && (
-            <span style={{ ...badgeStyle('#3b82f6'), marginLeft: '0.5rem' }}>
+            <Typography 
+              variant="label-small" 
+              color="primary"
+              style={{ 
+                display: 'inline-block',
+                marginLeft: 'var(--md-sys-spacing-2)',
+                padding: 'var(--md-sys-spacing-1) var(--md-sys-spacing-2)',
+                backgroundColor: 'var(--md-sys-color-primary-container)',
+                color: 'var(--md-sys-color-on-primary-container)',
+                borderRadius: 'var(--md-sys-shape-corner-full)',
+              }}
+            >
               Primary Key
-            </span>
+            </Typography>
           )}
         </div>
         
         <div style={{ minWidth: '120px' }}>
           <select
-            style={inputStyle}
             value={field.type}
             onChange={(e) => handleFieldTypeChange(fieldName, e.target.value)}
+            style={{
+              padding: 'var(--md-sys-spacing-2)',
+              border: '1px solid var(--md-sys-color-outline)',
+              borderRadius: 'var(--md-sys-shape-corner-small)',
+              backgroundColor: 'var(--md-sys-color-surface-container-low)',
+              color: 'var(--md-sys-color-on-surface)',
+              fontSize: 'var(--md-sys-typescale-body-small-size)',
+            }}
             disabled={isIdField}
           >
             {dataTypes.map(type => (
@@ -253,41 +242,82 @@ export function SchemaEditor({ tableName, onSave, onClose }) {
           </select>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <label style={{ display: 'flex', alignItems: 'center', fontSize: '0.875rem', color: '#374151' }}>
-            <input
-              type="checkbox"
-              checked={field.required || false}
-              onChange={(e) => handleFieldPropertyChange(fieldName, 'required', e.target.checked)}
-              disabled={isIdField}
-              style={{ marginRight: '0.25rem' }}
-            />
-            Required
-          </label>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--md-sys-spacing-3)', alignItems: 'center' }}>
+          <Checkbox
+            checked={field.required || false}
+            onChange={(e) => handleFieldPropertyChange(fieldName, 'required', e.target.checked)}
+            disabled={isIdField}
+            label="Required"
+          />
           
-          <label style={{ display: 'flex', alignItems: 'center', fontSize: '0.875rem', color: '#374151' }}>
-            <input
-              type="checkbox"
-              checked={field.nullable !== false}
-              onChange={(e) => handleFieldPropertyChange(fieldName, 'nullable', e.target.checked)}
-              disabled={isIdField}
-              style={{ marginRight: '0.25rem' }}
-            />
-            Nullable
-          </label>
+          <Checkbox
+            checked={field.nullable !== false}
+            onChange={(e) => handleFieldPropertyChange(fieldName, 'nullable', e.target.checked)}
+            disabled={isIdField}
+            label="Nullable"
+          />
+          
+          <Checkbox
+            checked={field.unique || false}
+            onChange={(e) => handleFieldPropertyChange(fieldName, 'unique', e.target.checked)}
+            disabled={isIdField}
+            label="Unique"
+          />
+          
+          {field.defaultValue !== undefined && (
+            <Typography variant="label-small" color="on-surface-variant">
+              Default: <code style={{ 
+                marginLeft: 'var(--md-sys-spacing-1)', 
+                padding: 'var(--md-sys-spacing-1) var(--md-sys-spacing-2)', 
+                backgroundColor: 'var(--md-sys-color-surface-container)', 
+                borderRadius: 'var(--md-sys-shape-corner-small)' 
+              }}>
+                {field.defaultValue || 'null'}
+              </code>
+            </Typography>
+          )}
+          
+          {(field.minLength || field.maxLength) && (
+            <Typography variant="label-small" color="on-surface-variant">
+              Length: {field.minLength || 0} - {field.maxLength || '∞'}
+            </Typography>
+          )}
+          
+          {field.pattern && (
+            <Typography variant="label-small" color="on-surface-variant">
+              Pattern: <code style={{ 
+                marginLeft: 'var(--md-sys-spacing-1)', 
+                padding: 'var(--md-sys-spacing-1) var(--md-sys-spacing-2)', 
+                backgroundColor: 'var(--md-sys-color-surface-container)', 
+                borderRadius: 'var(--md-sys-shape-corner-small)' 
+              }}>
+                {field.pattern}
+              </code>
+            </Typography>
+          )}
         </div>
 
-        <div style={{ marginLeft: 'auto' }}>
-          <span style={badgeStyle(getTypeColor(field.type))}>
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 'var(--md-sys-spacing-2)' }}>
+          <Typography 
+            variant="label-small" 
+            style={{ 
+              padding: 'var(--md-sys-spacing-1) var(--md-sys-spacing-2)',
+              backgroundColor: dataTypeConfig.color + '20',
+              color: dataTypeConfig.color,
+              borderRadius: 'var(--md-sys-shape-corner-full)'
+            }}
+          >
             {field.type}
-          </span>
+          </Typography>
           {!isIdField && (
-            <button
-              style={{ ...buttonStyle('danger'), marginLeft: '0.5rem', padding: '0.25rem 0.5rem' }}
+            <Button
+              variant="text"
+              size="small"
               onClick={() => handleRemoveField(fieldName)}
+              style={{ color: 'var(--md-sys-color-error)' }}
             >
               Remove
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -295,57 +325,72 @@ export function SchemaEditor({ tableName, onSave, onClose }) {
   };
 
   return (
-    <div style={containerStyle}>
-      <div style={headerStyle}>
-        <h2 style={titleStyle}>Schema Editor: {tableName}</h2>
-        <div>
-          <button style={buttonStyle('success')} onClick={handleSave}>
+    <Card variant="elevated">
+      <CardHeader style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="headline-medium">
+          Schema Editor: {tableName}
+        </Typography>
+        <div style={{ display: 'flex', gap: 'var(--md-sys-spacing-2)' }}>
+          <Button variant="filled" onClick={handleSave}>
             Save Schema
-          </button>
+          </Button>
           {onClose && (
-            <button style={buttonStyle('secondary')} onClick={onClose}>
+            <Button variant="text" onClick={onClose}>
               Close
-            </button>
+            </Button>
           )}
         </div>
-      </div>
+      </CardHeader>
 
-      <div style={{ padding: '1.5rem' }}>
+      <CardContent>
         {error && (
-          <div style={{
-            padding: '0.75rem',
-            backgroundColor: '#fee2e2',
-            color: '#991b1b',
-            borderRadius: '0.375rem',
-            marginBottom: '1rem',
-            fontSize: '0.875rem'
-          }}>
-            Error: {error}
-          </div>
+          <Card 
+            variant="filled"
+            style={{
+              padding: 'var(--md-sys-spacing-3)',
+              backgroundColor: 'var(--md-sys-color-error-container)',
+              color: 'var(--md-sys-color-on-error-container)',
+              marginBottom: 'var(--md-sys-spacing-4)'
+            }}
+          >
+            <Typography variant="body-small">
+              Error: {error}
+            </Typography>
+          </Card>
         )}
 
         {/* Add Field Form */}
-        <div style={{
-          backgroundColor: '#f9fafb',
-          padding: '1rem',
-          borderRadius: '0.375rem',
-          marginBottom: '1.5rem',
-          display: 'flex',
-          gap: '0.5rem',
-          alignItems: 'center',
-          flexWrap: 'wrap'
-        }}>
-          <input
-            style={inputStyle}
+        <Card 
+          variant="filled"
+          style={{
+            backgroundColor: 'var(--md-sys-color-surface-container)',
+            padding: 'var(--md-sys-spacing-4)',
+            marginBottom: 'var(--md-sys-spacing-6)',
+            display: 'flex',
+            gap: 'var(--md-sys-spacing-2)',
+            alignItems: 'center',
+            flexWrap: 'wrap'
+          }}
+        >
+          <TextField
             placeholder="Field name"
             value={newFieldName}
             onChange={(e) => setNewFieldName(e.target.value)}
+            style={{ minWidth: '150px' }}
           />
           
           <select
-            style={inputStyle}
             value={newFieldType}
             onChange={(e) => setNewFieldType(e.target.value)}
+            style={{
+              padding: 'var(--md-sys-spacing-3)',
+              border: '1px solid var(--md-sys-color-outline)',
+              borderRadius: 'var(--md-sys-shape-corner-small)',
+              backgroundColor: 'var(--md-sys-color-surface-container-low)',
+              color: 'var(--md-sys-color-on-surface)',
+              fontSize: 'var(--md-sys-typescale-body-medium-size)',
+              minWidth: '120px'
+            }}
           >
             {dataTypes.map(type => (
               <option key={type.value} value={type.value}>
@@ -354,75 +399,138 @@ export function SchemaEditor({ tableName, onSave, onClose }) {
             ))}
           </select>
           
-          <button style={buttonStyle('primary')} onClick={handleAddField}>
+          <Button 
+            variant="text"
+            size="small"
+            onClick={() => setShowAdvanced(!showAdvanced)}
+          >
+            {showAdvanced ? '▼ Less' : '▶ More'}
+          </Button>
+          
+          <Button variant="filled" onClick={handleAddField}>
             Add Field
-          </button>
-        </div>
+          </Button>
+        </Card>
+        
+        {/* Advanced Constraints */}
+        {showAdvanced && (
+          <Card 
+            variant="filled"
+            style={{
+              backgroundColor: 'var(--md-sys-color-primary-container)',
+              padding: 'var(--md-sys-spacing-4)',
+              marginTop: 'var(--md-sys-spacing-2)',
+              border: '1px solid var(--md-sys-color-primary)'
+            }}
+          >
+            <Typography variant="title-small" color="on-primary-container" style={{ marginBottom: 'var(--md-sys-spacing-3)' }}>
+              Field Constraints
+            </Typography>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--md-sys-spacing-3)' }}>
+              <div>
+                <Checkbox
+                  checked={newFieldConstraints.required}
+                  onChange={(e) => setNewFieldConstraints(prev => ({ ...prev, required: e.target.checked }))}
+                  label="Required"
+                />
+                
+                <Checkbox
+                  checked={newFieldConstraints.nullable}
+                  onChange={(e) => setNewFieldConstraints(prev => ({ ...prev, nullable: e.target.checked }))}
+                  label="Nullable"
+                />
+                
+                <Checkbox
+                  checked={newFieldConstraints.unique}
+                  onChange={(e) => setNewFieldConstraints(prev => ({ ...prev, unique: e.target.checked }))}
+                  label="Unique"
+                />
+              </div>
+              
+              <div>
+                <TextField
+                  label="Default Value"
+                  value={newFieldConstraints.defaultValue}
+                  onChange={(e) => setNewFieldConstraints(prev => ({ ...prev, defaultValue: e.target.value }))}
+                  style={{ marginBottom: 'var(--md-sys-spacing-2)' }}
+                />
+                
+                {(newFieldType === 'string' || newFieldType === 'array') && (
+                  <>
+                    <TextField
+                      label="Min Length"
+                      type="number"
+                      placeholder="0"
+                      value={newFieldConstraints.minLength}
+                      onChange={(e) => setNewFieldConstraints(prev => ({ ...prev, minLength: e.target.value }))}
+                      style={{ marginBottom: 'var(--md-sys-spacing-2)' }}
+                    />
+                    
+                    <TextField
+                      label="Max Length"
+                      type="number"
+                      placeholder="100"
+                      value={newFieldConstraints.maxLength}
+                      onChange={(e) => setNewFieldConstraints(prev => ({ ...prev, maxLength: e.target.value }))}
+                      style={{ marginBottom: 'var(--md-sys-spacing-2)' }}
+                    />
+                  </>
+                )}
+                
+                {newFieldType === 'string' && (
+                  <TextField
+                    label="Pattern (RegEx)"
+                    placeholder="^[a-zA-Z]+$"
+                    value={newFieldConstraints.pattern}
+                    onChange={(e) => setNewFieldConstraints(prev => ({ ...prev, pattern: e.target.value }))}
+                  />
+                )}
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Current Schema Fields */}
+        <Typography variant="title-medium" style={{ margin: 'var(--md-sys-spacing-6) 0 var(--md-sys-spacing-4) 0' }}>
+          Current Fields ({Object.keys(schema.fields || {}).length})
+        </Typography>
+        
+        <Card variant="outlined">
+          {Object.keys(schema.fields || {}).length === 0 ? (
+            <CardContent style={{ textAlign: 'center', padding: 'var(--md-sys-spacing-8)' }}>
+              <Typography variant="body-medium" color="on-surface-variant">
+                No fields defined. Add a field to get started.
+              </Typography>
+            </CardContent>
+          ) : (
+            <div>
+              {Object.entries(schema.fields).map(([fieldName, field]) => 
+                renderFieldRow(fieldName, field)
+              )}
+            </div>
+          )}
+        </Card>
 
         {/* Schema Summary */}
-        <div style={{
-          backgroundColor: '#dbeafe',
-          padding: '1rem',
-          borderRadius: '0.375rem',
-          marginBottom: '1.5rem',
-          fontSize: '0.875rem'
-        }}>
-          <strong style={{ color: '#1e40af' }}>Schema Summary:</strong>{' '}
-          {Object.keys(schema.fields || {}).length} fields, including{' '}
-          {Object.values(schema.fields || {}).filter(f => f.required).length} required fields
-        </div>
-
-        {/* Fields List */}
-        <div style={{
-          border: '1px solid #e5e7eb',
-          borderRadius: '0.375rem',
-          overflow: 'hidden'
-        }}>
-          <div style={{
-            backgroundColor: '#f9fafb',
-            padding: '0.75rem 1rem',
-            borderBottom: '1px solid #e5e7eb',
-            fontSize: '0.875rem',
-            fontWeight: '600',
-            color: '#374151'
-          }}>
-            Table Fields
-          </div>
-          
-          {Object.keys(schema.fields || {}).length === 0 ? (
-            <div style={{
-              padding: '2rem',
-              textAlign: 'center',
-              color: '#6b7280',
-              fontSize: '0.875rem'
-            }}>
-              No fields defined. Add fields using the form above.
-            </div>
-          ) : (
-            Object.entries(schema.fields).map(([fieldName, field]) =>
-              renderFieldRow(fieldName, field)
-            )
-          )}
-        </div>
-
-        {/* Type Legend */}
-        <div style={{
-          marginTop: '1.5rem',
-          padding: '1rem',
-          backgroundColor: '#f9fafb',
-          borderRadius: '0.375rem'
-        }}>
-          <h4 style={{ margin: '0 0 0.5rem 0', color: '#374151' }}>Data Types:</h4>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-            {dataTypes.map(type => (
-              <span key={type.value} style={badgeStyle(type.color)}>
-                {type.label}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+        <Card 
+          variant="filled"
+          style={{
+            backgroundColor: 'var(--md-sys-color-primary-container)',
+            padding: 'var(--md-sys-spacing-4)',
+            marginTop: 'var(--md-sys-spacing-6)'
+          }}
+        >
+          <Typography variant="body-medium" color="on-primary-container">
+            <strong>Schema Summary:</strong>{' '}
+            {Object.keys(schema.fields || {}).length} fields •{' '}
+            {Object.values(schema.fields || {}).filter(f => f.required).length} required •{' '}
+            {Object.values(schema.fields || {}).filter(f => f.unique).length} unique •{' '}
+            {Object.values(schema.fields || {}).filter(f => f.defaultValue !== undefined).length} with defaults
+          </Typography>
+        </Card>
+      </CardContent>
+    </Card>
   );
 }
 

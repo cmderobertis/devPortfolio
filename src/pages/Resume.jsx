@@ -18,12 +18,6 @@ const Resume = () => {
       text: "cmderobertis@gmail.com" 
     },
     { 
-      href: "tel:(661)904-3866", 
-      icon: "fas fa-phone", 
-      text: "(661) 904-3866", 
-      isPhone: true 
-    },
-    { 
       href: "https://www.linkedin.com/in/cmderobertis/", 
       icon: "fab fa-linkedin", 
       text: "LinkedIn" 
@@ -33,11 +27,6 @@ const Resume = () => {
       icon: "fab fa-github", 
       text: "GitHub" 
     },
-    { 
-      href: "https://cmderobertis.net", 
-      icon: "fas fa-globe", 
-      text: "Portfolio" 
-    }
   ];
 
   return (
