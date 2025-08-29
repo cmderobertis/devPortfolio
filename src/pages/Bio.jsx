@@ -5,7 +5,7 @@ import {
   Section, 
   Grid, 
   Button 
-} from '../components/design-system';
+} from '../design-system';
 // Using Material Design 3 global styles from enhanced-material.css
 
 const Bio = () => {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { NavLink, useLocation } from "react-router-dom"
 import { useTheme } from "../context/ThemeContext"
-import { Button, Typography } from "../components/design-system"
+import { Button, Typography } from "../design-system"
 import { ThemeToggleWithColorSelector } from "./ThemeToggle"
 import "./Navbar.css"
 

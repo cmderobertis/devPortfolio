@@ -1,51 +1,14 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { createGameOfLifeAnimationManager, ANIMATION_PRESETS } from '../utils/animations/index.js';
 
-// Game of Life themes
-export const themes = {
-  minesweeper: {
-    bg: '#c0c0c0',
-    dead: '#c0c0c0',
-    live: '#000000',
-    grid: '#808080',
-    borderLight: '#ffffff',
-    borderDark: '#808080',
-  },
-  aperture: {
-    bg: '#e0e0e0',
-    dead: '#ffffff',
-    live: '#ff6f00',
-    grid: '#cccccc',
-    borderLight: '#f0f0f0',
-    borderDark: '#a0a0a0',
-    bombColor: '#0077c2'
-  },
-  lego: {
-    bg: '#a0a0a0',
-    dead: '#d3d3d3',
-    live: '#ffde00',
-    grid: '#606060',
-    borderLight: '#f0f0f0',
-    borderDark: '#808080',
-    bombColor: '#d9000d'
-  },
-  pixel: {
-    bg: '#554862',
-    dead: '#7A6A83',
-    live: '#F7A4A4',
-    grid: '#3E3546',
-    borderLight: '#9D8DA9',
-    borderDark: '#3E3546',
-    bombColor: '#FFF8BC'
-  },
-  neon: {
-    bg: '#0a011a',
-    dead: '#1a0a3a',
-    live: '#ff00ff',
-    grid: '#3a1a5a',
-    borderLight: '#5a3a7a',
-    borderDark: '#100525',
-    bombColor: '#00ffff'
-  }
+// Game of Life theme using Material Design 3 color tokens
+export const theme = {
+  bg: 'var(--md-sys-color-surface-container-low)',
+  dead: 'var(--md-sys-color-surface-container-low)',
+  live: 'var(--md-sys-color-primary)',
+  grid: 'var(--md-sys-color-outline-variant)',
+  borderLight: 'var(--md-sys-color-surface-container-high)',
+  borderDark: 'var(--md-sys-color-outline-variant)',
 };
 
 const useGameOfLife = (initialCellsX = 20) => {
@@ -55,7 +18,8 @@ const useGameOfLife = (initialCellsX = 20) => {
   const [grid, setGrid] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [generationsPerSecond, setGenerationsPerSecond] = useState(3);
-  const [currentTheme, setCurrentTheme] = useState(themes.minesweeper);
+  const [currentTheme] = useState(theme);
+  const [animateTransitions, setAnimateTransitions] = useState(true);
   
   const lastUpdateTimeRef = useRef(0);
   const animationIdRef = useRef(null);
@@ -83,12 +47,12 @@ const useGameOfLife = (initialCellsX = 20) => {
     return { cellSize: newCellSize, numCellsY: newNumCellsY };
   }, [numCellsX, createGrid]);
 
-  // Randomize the grid with less chaos
+  // Randomize the grid with live cells
   const randomizeGrid = useCallback(() => {
     const newGrid = createGrid(numCellsX, numCellsY);
     for (let x = 0; x < numCellsX; x++) {
       for (let y = 0; y < numCellsY; y++) {
-        // Reduced randomness for more stable patterns
+        // 15% chance for live cells - good balance for interesting patterns
         newGrid[x][y] = Math.random() > 0.85 ? 1 : 0;
       }
     }
@@ -109,46 +73,47 @@ const useGameOfLife = (initialCellsX = 20) => {
     return count;
   }, [numCellsX, numCellsY]);
 
-  // Compute next generation
+  // Compute next generation using functional update to avoid stale closure
   const computeNextGeneration = useCallback(() => {
-    if (!grid.length) return;
-    
-    const newGrid = createGrid(numCellsX, numCellsY);
-    
-    for (let x = 0; x < numCellsX; x++) {
-      for (let y = 0; y < numCellsY; y++) {
-        const neighbors = countNeighbors(x, y, grid);
-        const isAlive = grid[x][y] === 1;
+    setGrid(currentGrid => {
+      if (!currentGrid.length) return currentGrid;
+      
+      const newGrid = createGrid(numCellsX, numCellsY);
+      
+      for (let x = 0; x < numCellsX; x++) {
+        for (let y = 0; y < numCellsY; y++) {
+          const neighbors = countNeighbors(x, y, currentGrid);
+          const isAlive = currentGrid[x][y] === 1;
 
-        // Conway's Game of Life rules:
-        // 1. Any live cell with fewer than two live neighbors dies (underpopulation)
-        // 2. Any live cell with two or three live neighbors lives on to the next generation
-        // 3. Any live cell with more than three live neighbors dies (overpopulation)
-        // 4. Any dead cell with exactly three live neighbors becomes a live cell (reproduction)
-        
-        if (isAlive) {
-          // Live cell rules
-          if (neighbors < 2) {
-            newGrid[x][y] = 0; // Dies from underpopulation
-          } else if (neighbors === 2 || neighbors === 3) {
-            newGrid[x][y] = 1; // Survives
+          // Conway's Game of Life rules:
+          // 1. Any live cell with fewer than two live neighbors dies (underpopulation)
+          // 2. Any live cell with two or three live neighbors lives on to the next generation
+          // 3. Any live cell with more than three live neighbors dies (overpopulation)
+          // 4. Any dead cell with exactly three live neighbors becomes a live cell (reproduction)
+          
+          if (isAlive) {
+            // Live cell rules
+            if (neighbors < 2) {
+              newGrid[x][y] = 0; // Dies from underpopulation
+            } else if (neighbors === 2 || neighbors === 3) {
+              newGrid[x][y] = 1; // Survives
+            } else {
+              newGrid[x][y] = 0; // Dies from overpopulation
+            }
           } else {
-            newGrid[x][y] = 0; // Dies from overpopulation
-          }
-        } else {
-          // Dead cell rules
-          if (neighbors === 3) {
-            newGrid[x][y] = 1; // Becomes alive through reproduction
-          } else {
-            newGrid[x][y] = 0; // Stays dead
+            // Dead cell rules
+            if (neighbors === 3) {
+              newGrid[x][y] = 1; // Becomes alive through reproduction
+            } else {
+              newGrid[x][y] = 0; // Stays dead
+            }
           }
         }
       }
-    }
 
-    // Update the grid
-    setGrid(newGrid);
-  }, [grid, numCellsX, numCellsY, countNeighbors, createGrid]);
+      return newGrid;
+    });
+  }, [numCellsX, numCellsY, countNeighbors, createGrid]);
 
   // Toggle cell state
   const toggleCell = useCallback((x, y) => {
@@ -164,6 +129,11 @@ const useGameOfLife = (initialCellsX = 20) => {
   // Game loop
   const gameLoop = useCallback((timestamp) => {
     if (!isPlaying) {
+      // Clear animation frame when not playing
+      if (animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current);
+        animationIdRef.current = null;
+      }
       return;
     }
 
@@ -175,15 +145,19 @@ const useGameOfLife = (initialCellsX = 20) => {
       computeNextGeneration();
     }
 
-    animationIdRef.current = requestAnimationFrame(gameLoop);
+    // Only request next frame if still playing
+    if (isPlaying) {
+      animationIdRef.current = requestAnimationFrame(gameLoop);
+    }
   }, [isPlaying, generationsPerSecond, computeNextGeneration]);
 
   // Start/stop the game loop
   const startGameLoop = useCallback(() => {
-    if (!animationIdRef.current) {
+    if (!animationIdRef.current && isPlaying) {
+      lastUpdateTimeRef.current = performance.now();
       animationIdRef.current = requestAnimationFrame(gameLoop);
     }
-  }, [gameLoop]);
+  }, [gameLoop, isPlaying]);
 
   const stopGameLoop = useCallback(() => {
     if (animationIdRef.current) {
@@ -200,10 +174,19 @@ const useGameOfLife = (initialCellsX = 20) => {
   // Start/stop game loop based on isPlaying state
   useEffect(() => {
     if (isPlaying) {
+      lastUpdateTimeRef.current = performance.now();
       startGameLoop();
     } else {
       stopGameLoop();
     }
+    
+    // Cleanup function to ensure no hanging animation frames
+    return () => {
+      if (animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current);
+        animationIdRef.current = null;
+      }
+    };
   }, [isPlaying, startGameLoop, stopGameLoop]);
 
   const resetGrid = useCallback(() => {
@@ -215,64 +198,11 @@ const useGameOfLife = (initialCellsX = 20) => {
     setGenerationsPerSecond(speed);
   }, []);
 
-  const setTheme = useCallback((themeName) => {
-    if (themes[themeName]) {
-      setCurrentTheme(themes[themeName]);
-    }
+  const setAnimate = useCallback((animate) => {
+    setAnimateTransitions(animate);
   }, []);
 
-  // Load a test pattern (Multiple interesting patterns)
-  const loadTestPattern = useCallback(() => {
-    if (!numCellsX || !numCellsY) return;
-    
-    const newGrid = createGrid(numCellsX, numCellsY);
-    
-    // Glider pattern
-    const glider = [
-      [0, 1, 0],
-      [0, 0, 1], 
-      [1, 1, 1]
-    ];
-    
-    // Oscillator pattern (blinker)
-    const blinker = [
-      [1],
-      [1],
-      [1]
-    ];
-    
-    // Small exploder
-    const smallExploder = [
-      [0, 1, 0],
-      [1, 1, 1],
-      [1, 0, 1],
-      [0, 1, 0]
-    ];
-    
-    // Place multiple patterns
-    const patterns = [
-      { pattern: glider, x: 5, y: 5 },
-      { pattern: blinker, x: 15, y: 8 },
-      { pattern: smallExploder, x: 25, y: 10 },
-      { pattern: glider, x: 35, y: 15 }
-    ];
-    
-    patterns.forEach(({ pattern, x: startX, y: startY }) => {
-      pattern.forEach((row, dy) => {
-        row.forEach((cell, dx) => {
-          const x = startX + dx;
-          const y = startY + dy;
-          if (x < numCellsX && y < numCellsY) {
-            newGrid[x][y] = cell;
-          }
-        });
-      });
-    });
-    
-    setGrid(newGrid);
-    // Don't automatically pause the game when loading patterns
-    // setIsPlaying(false);
-  }, [numCellsX, numCellsY, createGrid]);
+
 
   // Cleanup on unmount
   useEffect(() => {
@@ -290,6 +220,7 @@ const useGameOfLife = (initialCellsX = 20) => {
     isPlaying,
     generationsPerSecond,
     currentTheme,
+    animateTransitions,
     
     // Actions
     initializeGrids,
@@ -298,13 +229,9 @@ const useGameOfLife = (initialCellsX = 20) => {
     togglePlayPause,
     resetGrid,
     setSpeed,
-    setTheme,
+    setAnimate,
     startGameLoop,
-    stopGameLoop,
-    loadTestPattern,
-    
-    // Themes
-    themes
+    stopGameLoop
   };
 };
 

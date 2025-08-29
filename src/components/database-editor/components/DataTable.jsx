@@ -4,7 +4,7 @@
  */
 
 import { useState, useMemo, useCallback } from 'react';
-import { TextField, Combobox, Checkbox } from '../../design-system';
+import { TextField, Combobox, Checkbox } from '../../../design-system';
 
 console.log('DataTable module loaded!');
 

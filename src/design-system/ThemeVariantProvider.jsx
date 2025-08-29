@@ -28,7 +28,6 @@ export const useThemeVariant = () => {
  * 
  * Supports theme variants like:
  * - 'default': Standard Material Design 3
- * - 'retro-98': Windows 98 themed styling
  * - 'minimal': Ultra-clean reduced visual weight
  * - 'neon': Cyberpunk/neon themed
  */
@@ -61,7 +60,6 @@ const ThemeVariantProvider = ({ children, variant = 'default' }) => {
     
     // Convenience checks
     isDefault: variant === 'default',
-    isRetro98: variant === 'retro-98',
     isMinimal: variant === 'minimal',
     isNeon: variant === 'neon',
   };
@@ -77,7 +75,7 @@ const ThemeVariantProvider = ({ children, variant = 'default' }) => {
 
 ThemeVariantProvider.propTypes = {
   children: PropTypes.node.isRequired,
-  variant: PropTypes.oneOf(['default', 'retro-98', 'minimal', 'neon']),
+  variant: PropTypes.oneOf(['default', 'minimal', 'neon']),
 };
 
 export default ThemeVariantProvider;

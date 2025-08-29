@@ -22,29 +22,27 @@ function App() {
     <ThemeProvider>
       <BrowserRouter>
         {/* Conditionally render Navbar unless it's the DVD route */}
-        <Routes>
-          <Route path="/*" element={ // Wrap other routes
-            <>
-              <Navbar />
-              <Routes>
-                <Route path="/" element={<Resume />} />
-                <Route path="/resume" element={<Resume />} />
-                <Route path="/about" element={<Bio />} />
-                <Route path="/sim-interactive" element={<InteractiveShowcase />} />
-                <Route path="/sim-interactive/dvd" element={<DvdBouncer />} />
-                <Route path="/sim-interactive/breakout" element={<Breakout />} />
-                <Route path="/sim-interactive/emergence" element={<EmergenceEngine />} /> {/* Added route */}
-                <Route path="/sim-interactive/duck-konundrum" element={<DuckKonundrum />} /> {/* Duck Konundrum puzzle */}
-                <Route path="/sim-interactive/prisms" element={<Prisms />} /> {/* Prism Simulation */}
-                <Route path="/sim-interactive/prisms3d" element={<Prisms3D />} /> {/* 3D Prism Simulation */}
-                <Route path="/sim-interactive/gameoflife" element={<GameOfLife />} /> {/* Game of Life */}
-                <Route path="/sim-interactive/maze" element={<MazeStudio />} /> {/* Maze Studio */}
-                <Route path="/sim-interactive/database-editor" element={<DatabaseEditor />} /> {/* Database Editor */}
-                {/* Add other non-fullscreen routes here */}
-              </Routes>
-            </>
-          }/>
-        </Routes>
+        <div className="navbar-fixed">
+          <Navbar />
+        </div>
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={<Resume />} />
+            <Route path="/resume" element={<Resume />} />
+            <Route path="/about" element={<Bio />} />
+            <Route path="/sim-interactive" element={<InteractiveShowcase />} />
+            <Route path="/sim-interactive/dvd" element={<DvdBouncer />} />
+            <Route path="/sim-interactive/breakout" element={<Breakout />} />
+            <Route path="/sim-interactive/emergence" element={<EmergenceEngine />} /> {/* Added route */}
+            <Route path="/sim-interactive/duck-konundrum" element={<DuckKonundrum />} /> {/* Duck Konundrum puzzle */}
+            <Route path="/sim-interactive/prisms" element={<Prisms />} /> {/* Prism Simulation */}
+            <Route path="/sim-interactive/prisms3d" element={<Prisms3D />} /> {/* 3D Prism Simulation */}
+            <Route path="/sim-interactive/gameoflife" element={<GameOfLife />} /> {/* Game of Life */}
+            <Route path="/sim-interactive/maze" element={<MazeStudio />} /> {/* Maze Studio */}
+            <Route path="/sim-interactive/database-editor" element={<DatabaseEditor />} /> {/* Database Editor */}
+            {/* Add other non-fullscreen routes here */}
+          </Routes>
+        </div>
       </BrowserRouter>
     </ThemeProvider>
   )

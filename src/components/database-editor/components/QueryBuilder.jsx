@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Button, Card, CardHeader, CardContent, Typography, TextField, Checkbox } from '../../design-system';
+import { Button, Card, CardHeader, CardContent, Typography, TextField, Checkbox } from '../../../design-system';
 import { LocalStorageDB } from '../utils/localStorageDB.js';
 import { QueryBuilder as QueryEngine, AggregationFunctions } from '../utils/queryEngine.js';
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Button, Container } from './design-system';
-import IconButton from './design-system/IconButton';
+import { Button, Container } from '../design-system';
+import IconButton from '../design-system/IconButton';
 
 const InteractivePageWrapper = ({ children }) => {
   const location = useLocation();

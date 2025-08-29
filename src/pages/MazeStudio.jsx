@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import { Button } from '../components/design-system';
+import { Button } from '../design-system';
 import "../styles/MazeStudio.css";
 import InteractivePageWrapper from '../components/InteractivePageWrapper';
 import '../components/InteractivePageWrapper.css';

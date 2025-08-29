@@ -19,7 +19,7 @@ import {
   Stack, 
   Button,
   Card
-} from '../components/design-system';
+} from '../design-system';
 
 // Basic usage with default Material Design 3
 function MyPage() {
@@ -36,13 +36,13 @@ function MyPage() {
   );
 }
 
-// With theme variant (e.g., Windows 98 style)
-function RetroPage() {
+// With theme variant (e.g., minimal style)
+function MinimalPage() {
   return (
     <ThemeProvider>
-      <ThemeVariantProvider variant="retro-98">
+      <ThemeVariantProvider variant="minimal">
         <Page>
-          <Button>Windows 98 styled button</Button>
+          <Button>Minimal styled button</Button>
         </Page>
       </ThemeVariantProvider>
     </ThemeProvider>
@@ -61,7 +61,6 @@ Controls light/dark mode switching:
 ### Theme Variants
 Specialized styling overlays:
 - `default`: Standard Material Design 3
-- `retro-98`: Windows 98 themed (for GameOfLife, etc.)
 - `minimal`: Ultra-clean reduced visual weight
 - `neon`: Cyberpunk/neon themed
 
@@ -210,17 +209,17 @@ The database-editor primitives have been consolidated:
 
 ## 🧪 Theme Variant Usage
 
-### GameOfLife with Retro-98 Theme
+### GameOfLife with Default Theme
 ```jsx
-import { ThemeVariantProvider } from '../components/design-system';
+import { ThemeVariantProvider } from '../design-system';
 
 function GameOfLife() {
   return (
-    <ThemeVariantProvider variant="retro-98">
+    <ThemeVariantProvider variant="default">
       <Page>
-        {/* All components automatically get Windows 98 styling */}
-        <Button>98-style button</Button>
-        <Card>98-style card</Card>
+        {/* All components use standard Material Design 3 styling */}
+        <Button>Standard button</Button>
+        <Card>Standard card</Card>
       </Page>
     </ThemeVariantProvider>
   );
@@ -230,7 +229,7 @@ function GameOfLife() {
 ### Per-Component Variants
 ```jsx
 // Theme variant can be applied to individual components via CSS classes
-<Button className="md3-button--retro-98">
+<Button className="md3-button--minimal">
   Individual variant
 </Button>
 ```

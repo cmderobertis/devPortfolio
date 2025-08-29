@@ -6,7 +6,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { LocalStorageDB } from '../utils/localStorageDB.js';
 import { exportImportManager } from '../utils/exportImport.js';
-import { Button, Card, CardHeader, CardContent, Typography, Container } from '../../design-system';
+import { Button, Card, CardHeader, CardContent, Typography, Container } from '../../../design-system';
 import TableViewer from './TableViewer.jsx';
 import SchemaEditor from './SchemaEditor.jsx';
 import QueryBuilder from './QueryBuilder.jsx';

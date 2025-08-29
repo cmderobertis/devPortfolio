@@ -9,8 +9,8 @@ import ControlPanel, {
     ButtonControl, 
     InfoDisplay, 
     StatusIndicator 
-} from '../components/design-system/ControlPanel';
-import '../components/design-system/ControlPanel.css';
+} from '../design-system/ControlPanel';
+import '../design-system/ControlPanel.css';
 
 // Entity classes
 class Duck {

@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { vec } from '../utils/vectorMath.js';
 import { N_AIR, calculateRefractiveIndices, COLOR_MAP } from '../utils/opticsUtils.js';
 import { getLineIntersection, getNormal, refract } from '../utils/rayTracing.js';
-import { Button } from '../components/design-system';
+import { Button } from '../design-system';
 import InteractivePageWrapper from '../components/InteractivePageWrapper';
 import '../components/InteractivePageWrapper.css';
 

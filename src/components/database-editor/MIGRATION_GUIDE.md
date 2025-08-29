@@ -19,7 +19,7 @@ src/components/database-editor/primitives/
 
 ### After (Unified System)
 ```
-src/components/design-system/
+s../design-system/
 ├── All components available with consistent API
 ├── Theme variant support (minimal, retro-98, neon, default)
 ├── Material Design 3 tokens throughout
