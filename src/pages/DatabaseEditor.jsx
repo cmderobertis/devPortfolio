@@ -1,5 +1,5 @@
 import DatabaseManager from '../components/database-editor/components/DatabaseManager.jsx';
-import { Button, Typography } from '../components/design-system';
+import { Button, Typography } from '../design-system';
 import InteractivePageWrapper from '../components/InteractivePageWrapper';
 import '../components/InteractivePageWrapper.css';
 

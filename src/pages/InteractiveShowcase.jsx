@@ -9,7 +9,7 @@ import {
   Section, 
   Grid, 
   Button 
-} from '../components/design-system';
+} from '../design-system';
 
 const InteractiveShowcase = () => {
   // Interactive simulations and demos

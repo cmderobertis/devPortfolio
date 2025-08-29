@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Card, CardContent, CardActions, Button, Typography, Combobox, TextField, Checkbox } from './design-system';
+import { Card, CardContent, CardActions, Button, Typography, Combobox, TextField, Checkbox } from ../design-system';
 
 // Simple LocalStorage Database Implementation
 class SimpleDB {

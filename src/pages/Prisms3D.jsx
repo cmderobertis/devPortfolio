@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { vec3, matrix3D } from '../utils/vector3D.js';
 import { N_AIR, calculateRefractiveIndices, COLOR_MAP } from '../utils/opticsUtils.js';
 import { createTriangularPrism, createSquarePrism, transformPrism, rayFaceIntersection, PRISM_SHAPES } from '../utils/prism3D.js';
-import { Button } from '../components/design-system';
+import { Button } from '../design-system';
 import InteractivePageWrapper from '../components/InteractivePageWrapper';
 import '../components/InteractivePageWrapper.css';
 

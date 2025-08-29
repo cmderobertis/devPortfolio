@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Button, Card, CardHeader, CardContent, Typography } from '../../design-system';
+import { Button, Card, CardHeader, CardContent, Typography } from '../../../design-system';
 import DataTable from './DataTable.jsx';
 import { LocalStorageDB } from '../utils/localStorageDB.js';
 

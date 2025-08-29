@@ -12,8 +12,8 @@ import ControlPanel, {
     ToggleControl,
     InfoDisplay, 
     StatusIndicator 
-} from '../components/design-system/ControlPanel';
-import '../components/design-system/ControlPanel.css';
+} from '../design-system/ControlPanel';
+import '../design-system/ControlPanel.css';
 
 // Import functions from engine
 import { initializeAgents, updateAgents } from '../engine/EmergenceEngineCore.js';

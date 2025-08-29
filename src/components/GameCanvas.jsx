@@ -12,63 +12,31 @@ const GameCanvas = ({
 }) => {
   const canvasRef = useRef(null);
 
-  // Draw a single cell with minesweeper style
+  // Draw a single cell with simple flat style
   const drawCell = useCallback((ctx, x, y, isAlive) => {
     const px = x * cellSize;
     const py = y * cellSize;
 
-    // Draw the beveled cell background
-    ctx.fillStyle = theme.dead;
+    // Draw cell background
+    if (isAlive) {
+      // Live cell - use primary color
+      ctx.fillStyle = getComputedStyle(document.documentElement)
+        .getPropertyValue('--md-sys-color-primary').trim();
+    } else {
+      // Dead cell - use container background
+      ctx.fillStyle = getComputedStyle(document.documentElement)
+        .getPropertyValue('--md-sys-color-surface-container-low').trim();
+    }
+    
     ctx.fillRect(px, py, cellSize, cellSize);
 
-    // Light border (top and left)
-    ctx.strokeStyle = theme.borderLight;
-    ctx.beginPath();
-    ctx.moveTo(px, py + cellSize);
-    ctx.lineTo(px, py);
-    ctx.lineTo(px + cellSize, py);
-    ctx.stroke();
+    // Draw subtle grid lines
+    ctx.strokeStyle = getComputedStyle(document.documentElement)
+      .getPropertyValue('--md-sys-color-outline-variant').trim();
+    ctx.lineWidth = 0.5;
+    ctx.strokeRect(px, py, cellSize, cellSize);
+  }, [cellSize]);
 
-    // Dark border (bottom and right)
-    ctx.strokeStyle = theme.borderDark;
-    ctx.beginPath();
-    ctx.moveTo(px + cellSize, py);
-    ctx.lineTo(px + cellSize, py + cellSize);
-    ctx.lineTo(px, py + cellSize);
-    ctx.stroke();
-
-    if (isAlive) {
-      drawBomb(ctx, px, py);
-    }
-  }, [cellSize, theme]);
-
-  // Draw bomb/living cell
-  const drawBomb = useCallback((ctx, px, py) => {
-    const centerX = px + cellSize / 2;
-    const centerY = py + cellSize / 2;
-    const radius = cellSize * 0.35;
-
-    // Bomb body
-    ctx.fillStyle = theme.live;
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Bomb shine
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-    ctx.beginPath();
-    ctx.arc(centerX - radius * 0.3, centerY - radius * 0.3, radius * 0.2, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Fuse
-    ctx.strokeStyle = theme.bombColor || theme.live;
-    ctx.lineWidth = Math.max(1, cellSize * 0.1);
-    ctx.beginPath();
-    ctx.moveTo(centerX, centerY - radius);
-    ctx.lineTo(centerX + radius * 0.5, centerY - radius * 1.5);
-    ctx.stroke();
-    ctx.lineWidth = 1;
-  }, [cellSize, theme]);
 
   // Draw the entire grid
   const drawGrid = useCallback(() => {
@@ -78,8 +46,9 @@ const GameCanvas = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     
-    // Clear canvas with background color
-    ctx.fillStyle = theme.bg;
+    // Clear canvas with container background color
+    ctx.fillStyle = getComputedStyle(document.documentElement)
+      .getPropertyValue('--md-sys-color-surface-container-low').trim();
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Draw all cells with bounds checking
@@ -90,7 +59,7 @@ const GameCanvas = ({
         drawCell(ctx, x, y, isAlive);
       }
     }
-  }, [grid, numCellsX, numCellsY, theme, drawCell]);
+  }, [grid, numCellsX, numCellsY, drawCell]);
 
   // Handle canvas click/touch
   const handleCanvasInteraction = useCallback((e) => {

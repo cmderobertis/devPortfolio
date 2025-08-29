@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTheme, THEME_MODES } from '../context/ThemeContext';
 import ColorSchemeSelector from './ColorSchemeSelector';
-import IconButton from './design-system/IconButton';
+import IconButton from '../design-system/IconButton';
 import './ThemeToggle.css';
 
 // Theme toggle component with accessibility and MD3 design
