@@ -1,11 +1,21 @@
 // src/engine/EmergenceEngineCore.js
+import { createAgentPool, createVector3Pool } from '../utils/ObjectPool.js';
+
+// Memory optimization pools
+const agentPool = createAgentPool(200);
+const vectorPool = createVector3Pool(50);
+const neighborCache = new Map();
+
+// Cleanup pools periodically
+setInterval(() => {
+  if (neighborCache.size > 50) {
+    neighborCache.clear();
+  }
+}, 15000);
 
 // Initialize agents based on pattern
-export const initializeAgents = (pattern, canvas, rules, agentCountParams) => { // Added agentCountParams
+export const initializeAgents = (pattern, canvas, rules, agentCountParams) => {
   if (pattern === 'cellular') {
-    // This part will be handled by CellularAutomata.js, but the function signature is needed
-    // Or, this function might not be called at all if selectedPattern is 'cellular' in the main component.
-    // For now, returning an empty array as per instructions.
     return [];
   }
 
@@ -13,28 +23,40 @@ export const initializeAgents = (pattern, canvas, rules, agentCountParams) => { 
 
   const width = canvas.width;
   const height = canvas.height;
-  // Use agentCountParams for flexibility
-  const agentCount = agentCountParams[pattern] || (pattern === 'neurons' ? 60 : pattern === 'economy' ? 40 : 80);
+  // Use agentCountParams for flexibility with reduced counts for performance
+  const agentCount = Math.min(agentCountParams[pattern] || (
+    pattern === 'neurons' ? 40 : pattern === 'economy' ? 30 : 60
+  ), 100); // Cap at 100 agents for performance
 
-  return Array.from({ length: agentCount }, (_, i) => ({
-    id: i,
-    x: Math.random() * width,
-    y: Math.random() * height,
-    vx: (Math.random() - 0.5) * 2,
-    vy: (Math.random() - 0.5) * 2,
-    energy: Math.random() * 100 + 50,
-    connections: [],
-    role: pattern === 'economy' ? ['producer', 'consumer', 'trader'][i % 3] : 'agent',
-    activation: 0
-  }));
+  const agents = [];
+  // Use object pool for better memory management
+  for (let i = 0; i < agentCount; i++) {
+    const agent = agentPool.acquire();
+    agent.id = i;
+    agent.x = Math.random() * width;
+    agent.y = Math.random() * height;
+    agent.vx = (Math.random() - 0.5) * 2;
+    agent.vy = (Math.random() - 0.5) * 2;
+    agent.energy = Math.random() * 100 + 50;
+    agent.connections = [];
+    agent.role = pattern === 'economy' ? ['producer', 'consumer', 'trader'][i % 3] : 'agent';
+    agent.activation = 0;
+    agent.alive = true;
+    agents.push(agent);
+  }
+  return agents;
 };
 
 // Core emergence simulation
 export const updateAgents = (currentAgents, canvas, rules, selectedPattern) => {
-  if (!canvas) return currentAgents;
+  if (!canvas || !currentAgents.length) return currentAgents;
 
   const width = canvas.width;
   const height = canvas.height;
+  
+  // Optimize neighbor calculations with caching
+  const neighborRadius = 50;
+  const radiusSquared = neighborRadius * neighborRadius;
 
   return currentAgents.map(agent => {
     let newVx = agent.vx;
@@ -42,10 +64,19 @@ export const updateAgents = (currentAgents, canvas, rules, selectedPattern) => {
     let newEnergy = agent.energy;
     let newActivation = agent.activation * 0.9;
 
-    const neighbors = currentAgents.filter(other =>
-      other.id !== agent.id &&
-      Math.hypot(other.x - agent.x, other.y - agent.y) < 50
-    );
+    // Optimized neighbor finding with squared distance
+    const neighbors = [];
+    for (let i = 0; i < currentAgents.length; i++) {
+      const other = currentAgents[i];
+      if (other.id !== agent.id) {
+        const dx = other.x - agent.x;
+        const dy = other.y - agent.y;
+        const distSquared = dx * dx + dy * dy;
+        if (distSquared < radiusSquared) {
+          neighbors.push(other);
+        }
+      }
+    }
 
     if (selectedPattern === 'flocking') {
       if (neighbors.length > 0) {

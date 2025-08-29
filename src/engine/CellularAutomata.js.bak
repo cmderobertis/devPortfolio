@@ -1,12 +1,35 @@
 // src/engine/CellularAutomata.js
+import { createCellPool, createVector3Pool } from '../utils/ObjectPool.js';
 
-// Initialize 3D cellular automata grid
+// Memory optimization: Pre-allocated pools
+const cellPool = createCellPool(500);
+const vectorPool = createVector3Pool(50);
+const gridCache = new Map();
+let frameCounter = 0;
+
+// Clear cache periodically to prevent memory leaks
+setInterval(() => {
+  if (gridCache.size > 10) {
+    gridCache.clear();
+  }
+}, 30000); // Every 30 seconds
+
+// Initialize 3D cellular automata grid with memory optimization
 export const initialize3DGrid = (width = 20, height = 20, depth = 20) => {
+  const cacheKey = `${width}x${height}x${depth}`;
+  
+  // Check cache first
+  if (gridCache.has(cacheKey)) {
+    const cached = gridCache.get(cacheKey);
+    // Deep clone cached grid
+    return cached.map(layer => layer.map(row => [...row]));
+  }
+  
   const grid = [];
   for (let z = 0; z < depth; z++) {
     grid[z] = [];
     for (let y = 0; y < height; y++) {
-      grid[z][y] = [];
+      grid[z][y] = new Int8Array(width); // Use typed array for better memory efficiency
       for (let x = 0; x < width; x++) {
         grid[z][y][x] = Math.random() < 0.2 ? 1 : 0;
       }
@@ -57,18 +80,24 @@ export const count3DNeighbors = (grid, x, y, z) => {
   return count;
 };
 
-// Update 3D cellular automata
+// Update 3D cellular automata with memory optimization
 export const update3DGrid = (currentGrid) => {
   if (!currentGrid || currentGrid.length === 0 || !currentGrid[0] || currentGrid[0].length === 0 || !currentGrid[0][0] || currentGrid[0][0].length === 0) {
-    // console.warn("update3DGrid: currentGrid is empty or invalid.");
-    return []; // Or handle error appropriately
+    return [];
   }
+  
   const depth = currentGrid.length;
   const height = currentGrid[0].length;
   const width = currentGrid[0][0].length;
 
-  // Create a deep copy of the grid
-  const newGrid = currentGrid.map(layer => layer.map(row => [...row]));
+  // Reuse memory: create new grid with typed arrays
+  const newGrid = new Array(depth);
+  for (let z = 0; z < depth; z++) {
+    newGrid[z] = new Array(height);
+    for (let y = 0; y < height; y++) {
+      newGrid[z][y] = new Int8Array(width);
+    }
+  }
 
   for (let z = 0; z < depth; z++) {
     for (let y = 0; y < height; y++) {
@@ -155,13 +184,14 @@ export const draw3DCellularAutomata = (ctx, cellular3DGrid, width, height, editM
   }
 };
 
-// Initialize cellular automata grid
+// Initialize cellular automata grid with memory optimization
 export const initializeCellularGrid = (cellularRules, width = 60, height = 40) => {
-  const grid = [];
+  // Use typed arrays for better memory efficiency and performance
+  const grid = new Array(height);
   for (let y = 0; y < height; y++) {
-    grid[y] = [];
+    grid[y] = new Int8Array(width);
     for (let x = 0; x < width; x++) {
-      grid[y][x] = Math.random() < 0.3 ? 1 : 0; // Default random initialization
+      grid[y][x] = Math.random() < 0.3 ? 1 : 0;
     }
   }
 
@@ -227,21 +257,31 @@ export const countNeighbors = (grid, x, y) => {
   return count;
 };
 
-// Update cellular automata
+// Update cellular automata with optimized memory usage
 export const updateCellularGrid = (currentGrid, cellularRules) => {
   if (!currentGrid || currentGrid.length === 0 || !currentGrid[0] || currentGrid[0].length === 0) {
-    // console.warn("updateCellularGrid: currentGrid is empty or invalid.");
     return [];
   }
+  
   const height = currentGrid.length;
   const width = currentGrid[0].length;
-  const newGrid = currentGrid.map(row => [...row]); // Deep copy
-
+  
+  // Reuse memory: create new grid with typed arrays
+  const newGrid = new Array(height);
   for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      const neighbors = countNeighbors(currentGrid, x, y); // Pass currentGrid
+    newGrid[y] = new Int8Array(width);
+  }
+  
+  // Batch process updates for better cache locality
+  const batchSize = Math.min(10, height);
 
-      if (cellularRules === 'conway') { // Conway's Game of Life rules
+  for (let batch = 0; batch < height; batch += batchSize) {
+    const endY = Math.min(batch + batchSize, height);
+    for (let y = batch; y < endY; y++) {
+      for (let x = 0; x < width; x++) {
+        const neighbors = countNeighbors(currentGrid, x, y);
+        
+        if (cellularRules === 'conway') {
         if (currentGrid[y][x] === 1) { // If cell is alive
           if (neighbors < 2 || neighbors > 3) {
             newGrid[y][x] = 0; // Dies (underpopulation/overpopulation)

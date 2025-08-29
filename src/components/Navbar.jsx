@@ -3,7 +3,7 @@ import { NavLink, useLocation } from "react-router-dom"
 import { useTheme } from "../context/ThemeContext"
 import { Button, Typography } from "../design-system"
 import { ThemeToggleWithColorSelector } from "./ThemeToggle"
-import { focusManagement, generateAriaLabel } from "../utils/accessibility"
+import { focusManagement, generateAriaLabel, liveRegionManager, keyboardNavigation } from "../utils/accessibility"
 import "./Navbar.css"
 
 const Navbar = () => {

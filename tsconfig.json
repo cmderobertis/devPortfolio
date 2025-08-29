@@ -42,9 +42,7 @@
     "tsBuildInfoFile": ".tsbuildinfo"
   },
   "include": [
-    "src",
-    "vite.config.ts",
-    "vitest.config.ts"
+    "src"
   ],
   "exclude": [
     "node_modules",
