@@ -1,8 +1,8 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { VitePWA } from 'vite-plugin-pwa'
-import { visualizer } from 'rollup-plugin-visualizer'
-import { resolve } from 'path'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
+import { visualizer } from 'rollup-plugin-visualizer';
+import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,7 +11,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        globPatterns: ['**/*.{js,ts,tsx,css,html,ico,png,svg}'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -20,7 +20,7 @@ export default defineConfig({
               cacheName: 'google-fonts-cache',
               expiration: {
                 maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // <== 365 days
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 365 days
               },
               cacheKeyWillBeUsed: async ({ request }) => {
                 return `${request.url}`;
@@ -57,7 +57,7 @@ export default defineConfig({
   build: {
     target: 'esnext',
     minify: 'esbuild',
-    sourcemap: false,
+    sourcemap: process.env.NODE_ENV === 'development',
     reportCompressedSize: false,
     chunkSizeWarningLimit: 500,
     rollupOptions: {
@@ -72,8 +72,8 @@ export default defineConfig({
             './src/pages/GameOfLife.jsx',
             './src/pages/Breakout.tsx',
             './src/pages/DvdBouncer.jsx',
-            './src/engine/EmergenceEngineCore.js',
-            './src/engine/CellularAutomata.js'
+            './src/engine/EmergenceEngineCore.ts',
+            './src/engine/CellularAutomata.ts'
           ]
         }
       }
@@ -84,6 +84,15 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
+      '@/components': resolve(__dirname, 'src/components'),
+      '@/pages': resolve(__dirname, 'src/pages'),
+      '@/utils': resolve(__dirname, 'src/utils'),
+      '@/styles': resolve(__dirname, 'src/styles'),
+      '@/design-system': resolve(__dirname, 'src/design-system'),
+      '@/engine': resolve(__dirname, 'src/engine'),
+      '@/hooks': resolve(__dirname, 'src/hooks'),
+      '@/types': resolve(__dirname, 'src/types'),
+      // Legacy aliases for backward compatibility
       '@components': resolve(__dirname, 'src/components'),
       '@pages': resolve(__dirname, 'src/pages'),
       '@utils': resolve(__dirname, 'src/utils'),
@@ -101,11 +110,23 @@ export default defineConfig({
       'bootstrap',
       'lucide-react'
     ],
-    exclude: []
+    exclude: ['@vitejs/plugin-react']
   },
-  // Performance monitoring in development
+  // Environment variables and build-time constants
   define: {
     __DEV__: JSON.stringify(process.env.NODE_ENV === 'development'),
-    __PERFORMANCE_MONITORING__: JSON.stringify(true)
+    __PERFORMANCE_MONITORING__: JSON.stringify(true),
+    __ENABLE_TESTING__: JSON.stringify(process.env.NODE_ENV === 'test')
+  },
+  // TypeScript support
+  esbuild: {
+    target: 'esnext',
+    format: 'esm'
+  },
+  // Testing mode configuration
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts']
   }
-})
+});

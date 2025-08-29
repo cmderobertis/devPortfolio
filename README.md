@@ -176,7 +176,7 @@ Private project - All rights reserved.
 
 ## 🔗 Links
 
-- **Portfolio**: [Live Site](https://your-firebase-url.web.app)
+- **Portfolio**: [Live Site](https://cmderobertis.net)
 - **GitHub**: [Repository](https://github.com/cmderobertis/devPortfolio)
 - **LinkedIn**: [Cameron DeRobertis](https://linkedin.com/in/cameronderobertis)
 

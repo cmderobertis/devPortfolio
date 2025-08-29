@@ -1,21 +1,41 @@
-import React from "react"
+import React, { Suspense, lazy } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Navbar from "./components/Navbar"
 import Bio from "./pages/Bio"
 import Resume from "./pages/Resume"
 import InteractiveShowcase from "./pages/InteractiveShowcase";
-import DvdBouncer from "./pages/DvdBouncer"; // Import the new DVD component
-import Breakout from "./pages/Breakout"; // Import the Breakout game component
-import EmergenceEngine from "./pages/EmergenceEngine"; // Added import
-import DuckKonundrum from "./pages/DuckKonundrum"; // Import Duck Konundrum puzzle
-import Prisms from "./pages/Prisms"; // Import Prism Simulation
-import Prisms3D from "./pages/Prisms3D"; // Import 3D Prism Simulation
-import GameOfLife from "./pages/GameOfLife"; // Import Game of Life
-import MazeStudio from "./pages/MazeStudio"; // Import Maze Studio
-import DatabaseEditor from "./pages/DatabaseEditor"; // Import Database Editor
+import PerformanceMonitor, { usePerformanceMonitorToggle } from "./components/PerformanceMonitor";
 import "./styles/enhanced-material.css" // Import enhanced Material 3 styling
+import "./styles/performance-optimization.css" // Import performance optimization styles
 //import "bootstrap/dist/css/bootstrap.min.css" // Import Bootstrap CSS
 import { ThemeProvider } from "./context/ThemeContext"; // Import ThemeProvider
+
+// Lazy load heavy simulation components for better performance
+const DvdBouncer = lazy(() => import("./pages/DvdBouncer"));
+const Breakout = lazy(() => import("./pages/Breakout"));
+const EmergenceEngine = lazy(() => import("./pages/EmergenceEngine"));
+const DuckKonundrum = lazy(() => import("./pages/DuckKonundrum"));
+const Prisms = lazy(() => import("./pages/Prisms"));
+const Prisms3D = lazy(() => import("./pages/Prisms3D"));
+const GameOfLife = lazy(() => import("./pages/GameOfLife"));
+const GameOfLifeModern = lazy(() => import("./pages/GameOfLifeModern"));
+const MazeStudio = lazy(() => import("./pages/MazeStudio"));
+const DatabaseEditor = lazy(() => import("./pages/DatabaseEditor"));
+
+// Loading fallback component for simulations
+const SimulationLoader = () => (
+  <div className="simulation-loader">
+    <div className="simulation-skeleton">
+      <div className="skeleton-header"></div>
+      <div className="skeleton-canvas"></div>
+      <div className="skeleton-controls">
+        <div className="skeleton-button"></div>
+        <div className="skeleton-button"></div>
+        <div className="skeleton-button"></div>
+      </div>
+    </div>
+  </div>
+);
 
 function App() {
   return (
@@ -31,15 +51,86 @@ function App() {
             <Route path="/resume" element={<Resume />} />
             <Route path="/about" element={<Bio />} />
             <Route path="/sim-interactive" element={<InteractiveShowcase />} />
-            <Route path="/sim-interactive/dvd" element={<DvdBouncer />} />
-            <Route path="/sim-interactive/breakout" element={<Breakout />} />
-            <Route path="/sim-interactive/emergence" element={<EmergenceEngine />} /> {/* Added route */}
-            <Route path="/sim-interactive/duck-konundrum" element={<DuckKonundrum />} /> {/* Duck Konundrum puzzle */}
-            <Route path="/sim-interactive/prisms" element={<Prisms />} /> {/* Prism Simulation */}
-            <Route path="/sim-interactive/prisms3d" element={<Prisms3D />} /> {/* 3D Prism Simulation */}
-            <Route path="/sim-interactive/gameoflife" element={<GameOfLife />} /> {/* Game of Life */}
-            <Route path="/sim-interactive/maze" element={<MazeStudio />} /> {/* Maze Studio */}
-            <Route path="/sim-interactive/database-editor" element={<DatabaseEditor />} /> {/* Database Editor */}
+            <Route 
+              path="/sim-interactive/dvd" 
+              element={
+                <Suspense fallback={<SimulationLoader />}>
+                  <DvdBouncer />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/sim-interactive/breakout" 
+              element={
+                <Suspense fallback={<SimulationLoader />}>
+                  <Breakout />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/sim-interactive/emergence" 
+              element={
+                <Suspense fallback={<SimulationLoader />}>
+                  <EmergenceEngine />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/sim-interactive/duck-konundrum" 
+              element={
+                <Suspense fallback={<SimulationLoader />}>
+                  <DuckKonundrum />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/sim-interactive/prisms" 
+              element={
+                <Suspense fallback={<SimulationLoader />}>
+                  <Prisms />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/sim-interactive/prisms3d" 
+              element={
+                <Suspense fallback={<SimulationLoader />}>
+                  <Prisms3D />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/sim-interactive/gameoflife" 
+              element={
+                <Suspense fallback={<SimulationLoader />}>
+                  <GameOfLife />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/sim-interactive/gameoflife-modern" 
+              element={
+                <Suspense fallback={<SimulationLoader />}>
+                  <GameOfLifeModern />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/sim-interactive/maze" 
+              element={
+                <Suspense fallback={<SimulationLoader />}>
+                  <MazeStudio />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="/sim-interactive/database-editor" 
+              element={
+                <Suspense fallback={<SimulationLoader />}>
+                  <DatabaseEditor />
+                </Suspense>
+              } 
+            />
             {/* Add other non-fullscreen routes here */}
           </Routes>
         </div>

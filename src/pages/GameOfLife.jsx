@@ -19,6 +19,7 @@ const GameOfLife = () => {
     generationsPerSecond,
     currentTheme,
     animateTransitions,
+    generation,
     
     // Actions
     initializeGrids,
@@ -141,6 +142,8 @@ const GameOfLife = () => {
                 cellSize={cellSize}
                 theme={currentTheme}
                 onCellClick={toggleCell}
+                isPlaying={isPlaying}
+                generation={generation || 0}
               />
             </div>
           </div>

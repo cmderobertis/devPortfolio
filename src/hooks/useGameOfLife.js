@@ -16,8 +16,8 @@ const useGameOfLife = (initialCellsX = 20) => {
   const [cellSize, setCellSize] = useState(10);
   const [numCellsY, setNumCellsY] = useState(30);
   const [grid, setGrid] = useState([]);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [generationsPerSecond, setGenerationsPerSecond] = useState(3);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [generationsPerSecond, setGenerationsPerSecond] = useState(20);
   const [currentTheme] = useState(theme);
   const [animateTransitions, setAnimateTransitions] = useState(true);
   

@@ -1,0 +1,172 @@
+{
+  "agents": {
+    "project-coordinator": {
+      "name": "Project Coordination Specialist",
+      "status": "active",
+      "responsibilities": [
+        "Phase orchestration and dependency management",
+        "Inter-agent communication coordination",
+        "Progress tracking and milestone monitoring",
+        "Resource allocation optimization",
+        "Blocking issue resolution"
+      ],
+      "currentTask": "Phase 0 → Phase 1 transition management",
+      "activePeriod": "continuous"
+    },
+    "foundation-specialist": {
+      "name": "Foundation & Performance Specialist",
+      "status": "ready",
+      "phase": "phase-1",
+      "weeks": "1-4",
+      "responsibilities": [
+        "Vite configuration enhancement",
+        "Bundle size optimization",
+        "Core Web Vitals improvement",
+        "Memory management implementation",
+        "Performance monitoring setup"
+      ],
+      "expertise": [
+        "Build optimization",
+        "Bundle analysis",
+        "Performance metrics",
+        "Memory profiling",
+        "Web vitals monitoring"
+      ],
+      "deliverables": {
+        "week1": "Enhanced Vite config + bundle analysis",
+        "week2": "Core Web Vitals optimization",
+        "week3": "Memory management + performance monitoring",
+        "week4": "Phase 1 validation + handoff preparation"
+      },
+      "handoffTo": "ux-accessibility-specialist"
+    },
+    "ux-accessibility-specialist": {
+      "name": "UX/Accessibility Specialist", 
+      "status": "standby",
+      "phase": "phase-2",
+      "weeks": "5-8",
+      "dependencies": ["foundation-specialist"],
+      "responsibilities": [
+        "WCAG 2.1 AA compliance implementation",
+        "Keyboard navigation enhancement",
+        "Screen reader compatibility",
+        "Mobile experience optimization",
+        "Color contrast validation"
+      ],
+      "expertise": [
+        "Accessibility testing",
+        "ARIA implementation",
+        "Mobile UX design",
+        "Screen reader testing",
+        "Color theory"
+      ],
+      "handoffFrom": "foundation-specialist",
+      "handoffTo": "architecture-specialist"
+    },
+    "architecture-specialist": {
+      "name": "Modern React Architecture Specialist",
+      "status": "standby",
+      "phase": "phase-3", 
+      "weeks": "9-12",
+      "dependencies": ["ux-accessibility-specialist"],
+      "responsibilities": [
+        "Zustand state management modernization",
+        "React 18 concurrent features",
+        "Component architecture enhancement",
+        "Advanced custom hooks",
+        "Error boundary implementation"
+      ],
+      "expertise": [
+        "React 18 patterns",
+        "State management",
+        "Component design",
+        "Performance optimization",
+        "Modern React hooks"
+      ],
+      "handoffFrom": "ux-accessibility-specialist",
+      "handoffTo": "typescript-testing-specialist"
+    },
+    "typescript-testing-specialist": {
+      "name": "TypeScript & Testing Specialist",
+      "status": "standby",
+      "phase": "phase-4",
+      "weeks": "13-16", 
+      "dependencies": ["architecture-specialist"],
+      "responsibilities": [
+        "TypeScript gradual migration (>70% coverage)",
+        "Type safety implementation",
+        "Testing framework setup (Vitest)",
+        "Component testing patterns",
+        "CI/CD integration"
+      ],
+      "expertise": [
+        "TypeScript migration",
+        "Testing frameworks",
+        "Type system design",
+        "Test automation",
+        "Quality assurance"
+      ],
+      "handoffFrom": "architecture-specialist",
+      "handoffTo": "monitoring-specialist"
+    },
+    "monitoring-specialist": {
+      "name": "Monitoring System Specialist",
+      "status": "standby",
+      "phase": "phase-5",
+      "weeks": "17-20",
+      "dependencies": ["typescript-testing-specialist"],
+      "responsibilities": [
+        "Hive-mind monitoring agents (5 agents)",
+        "Real-time dashboard implementation",
+        "Agent coordination system",
+        "Alert aggregation and escalation",
+        "Performance metrics collection"
+      ],
+      "expertise": [
+        "Monitoring systems",
+        "Real-time data processing",
+        "Dashboard development",
+        "Alert systems",
+        "Agent coordination"
+      ],
+      "handoffFrom": "typescript-testing-specialist",
+      "canOverlapWith": "advanced-features-specialist"
+    },
+    "advanced-features-specialist": {
+      "name": "Advanced Features Specialist",
+      "status": "standby",
+      "phase": "phase-6",
+      "weeks": "21-24",
+      "dependencies": ["monitoring-specialist"],
+      "responsibilities": [
+        "Service Worker & PWA capabilities",
+        "Advanced caching strategies", 
+        "User behavior analytics",
+        "SEO optimization",
+        "WebAssembly integration"
+      ],
+      "expertise": [
+        "PWA development",
+        "Service workers",
+        "Analytics integration",
+        "SEO optimization",
+        "WebAssembly"
+      ],
+      "handoffFrom": "monitoring-specialist",
+      "canOverlapWith": "monitoring-specialist"
+    }
+  },
+  "communicationProtocols": {
+    "handoffRequirements": [
+      "Complete phase deliverables documentation",
+      "Test all implemented features",
+      "Update coordination memory system",
+      "Prepare knowledge transfer session",
+      "Validate success criteria achievement"
+    ],
+    "coordinationMeetings": "Weekly progress reviews",
+    "escalationProcess": "Project coordinator intervention for blocking issues",
+    "documentationStandards": "All implementations documented in coordination/"
+  },
+  "lastUpdated": "2025-08-29T00:00:00Z"
+}

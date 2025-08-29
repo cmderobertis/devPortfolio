@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { NavLink, useLocation } from "react-router-dom"
 import { useTheme } from "../context/ThemeContext"
 import { Button, Typography } from "../design-system"
 import { ThemeToggleWithColorSelector } from "./ThemeToggle"
+import { focusManagement, generateAriaLabel } from "../utils/accessibility"
 import "./Navbar.css"
 
 const Navbar = () => {
@@ -11,6 +12,9 @@ const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("all");
   const location = useLocation();
+  const sidePanelRef = useRef(null);
+  const hamburgerButtonRef = useRef(null);
+  const focusTrapCleanup = useRef(null);
 
   // Close side panel when route changes
   useEffect(() => {
@@ -110,11 +114,40 @@ const Navbar = () => {
   };
 
   const toggleSidePanel = () => {
-    setIsSidePanelOpen(!isSidePanelOpen);
+    const newState = !isSidePanelOpen;
+    setIsSidePanelOpen(newState);
+    
+    if (newState) {
+      // Opening side panel - set up focus trap
+      setTimeout(() => {
+        if (sidePanelRef.current) {
+          focusTrapCleanup.current = focusManagement.trapFocus(sidePanelRef.current, {
+            returnFocus: hamburgerButtonRef.current
+          });
+        }
+      }, 150); // Wait for animation
+    } else {
+      // Closing side panel - clean up focus trap
+      if (focusTrapCleanup.current) {
+        focusTrapCleanup.current();
+        focusTrapCleanup.current = null;
+      }
+    }
   };
 
   const closeSidePanel = () => {
     setIsSidePanelOpen(false);
+    
+    // Clean up focus trap and return focus
+    if (focusTrapCleanup.current) {
+      focusTrapCleanup.current();
+      focusTrapCleanup.current = null;
+    }
+    
+    // Return focus to hamburger button
+    if (hamburgerButtonRef.current) {
+      focusManagement.setFocus(hamburgerButtonRef.current, { delay: 150 });
+    }
   };
 
   return (
@@ -177,10 +210,13 @@ const Navbar = () => {
                   className="me-2" 
                 />
                 <button
+                  ref={hamburgerButtonRef}
                   className="navbar-toggler border-0"
                   type="button"
                   onClick={toggleSidePanel}
-                  aria-label="Toggle navigation"
+                  aria-label={isSidePanelOpen ? "Close navigation menu" : "Open navigation menu"}
+                  aria-expanded={isSidePanelOpen}
+                  aria-controls="mobile-navigation-panel"
                   style={{ background: 'none', boxShadow: 'none' }}
                 >
                   <div className={`hamburger-icon ${isSidePanelOpen ? 'open' : ''}`}>
@@ -201,9 +237,17 @@ const Navbar = () => {
       )}
 
       {/* Animated Side Panel */}
-      <div className={`side-panel ${isSidePanelOpen ? 'open' : ''}`}>
+      <div 
+        ref={sidePanelRef}
+        id="mobile-navigation-panel"
+        className={`side-panel ${isSidePanelOpen ? 'open' : ''}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="side-panel-title"
+        aria-hidden={!isSidePanelOpen}
+      >
         <div className="side-panel-header">
-          <Typography variant="headline-small" className="mb-3">
+          <Typography variant="headline-small" className="mb-3" id="side-panel-title">
             Portfolio Navigation
           </Typography>
           
@@ -229,22 +273,32 @@ const Navbar = () => {
 
           {/* Search */}
           <div className="search-container mb-3">
-            <i className="fas fa-search search-icon"></i>
+            <label htmlFor="module-search" className="sr-only">
+              Search modules
+            </label>
+            <i className="fas fa-search search-icon" aria-hidden="true"></i>
             <input
+              id="module-search"
               type="text"
               placeholder="Search modules..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
+              aria-describedby="search-results-count"
             />
           </div>
 
           {/* Filter */}
           <div className="filter-container mb-4">
+            <label htmlFor="module-filter" className="sr-only">
+              Filter modules by type
+            </label>
             <select
+              id="module-filter"
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
               className="filter-select"
+              aria-describedby="search-results-count"
             >
               <option value="all">All Types</option>
               <option value="game">Games</option>
@@ -272,15 +326,17 @@ const Navbar = () => {
           {/* Module List */}
           <div className="modules-section">
             <Typography variant="title-small" className="section-title mb-2">
-              Interactive Modules ({filteredModules.length})
+              Interactive Modules (<span id="search-results-count">{filteredModules.length}</span>)
             </Typography>
-            <div className="modules-list">
+            <div className="modules-list" role="list">
               {filteredModules.map((module) => (
                 <NavLink
                   key={module.path}
                   to={module.path}
                   className="module-item"
                   onClick={closeSidePanel}
+                  role="listitem"
+                  aria-label={generateAriaLabel.navigation(module.title, location.pathname === module.path)}
                 >
                   <div className="module-icon">
                     <i className={module.icon}></i>
