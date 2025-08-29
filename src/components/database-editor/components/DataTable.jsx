@@ -20,7 +20,7 @@ export function DataTable({
   editable = false,
   selectable = false
 }) {
-  console.log('DataTable rendering with filters!', { data, columns });
+
   const [currentPage, setCurrentPage] = useState(1);
   const [sortField, setSortField] = useState(null);
   const [sortDirection, setSortDirection] = useState('asc');
