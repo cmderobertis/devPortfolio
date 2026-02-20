@@ -7,7 +7,7 @@
     background-color: var(--md-sys-color-background);
     touch-action: none;
     display: flex;
-    height: calc(100vh - var(--interactive-header-height, 88px)); /* Dynamic header height with fallback */
+    height: 100%;
     width: 100vw;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     position: relative;
