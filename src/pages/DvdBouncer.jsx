@@ -433,7 +433,7 @@ const DvdBouncer = () => {
         <div className={`dvd-controls-sidebar ${controlsVisible ? 'open' : 'closed'}`}>
           <ControlPanel
             title="DVD Bouncer Controls"
-            position="static"
+            position="right"
             collapsible={false}
             className="sidebar-control-panel"
           >
@@ -500,13 +500,6 @@ const DvdBouncer = () => {
             Reset
           </ButtonControl>
 
-          <ButtonControl
-            variant="text"
-            onClick={handleToggleControlsClick}
-            icon={`fas ${controlsVisible ? "fa-eye-slash" : "fa-eye"}`}
-          >
-            {controlsVisible ? "Hide" : "Show"}
-          </ButtonControl>
           </ControlGroup>
           </ControlPanel>
 

@@ -36,10 +36,10 @@
 /* Sidebar for controls */
 .dvd-controls-sidebar {
     position: fixed;
-    top: var(--interactive-header-height, 88px); /* Start below header */
+    /* top: var(--interactive-header-height, 88px); Start below header */
     right: 0;
     width: 320px;
-    height: calc(100vh - var(--interactive-header-height, 88px)); /* Adjust for header */
+    height: calc(100vh -  var(--interactive-header-height, 88px)); /* Adjust for header */
     background: var(--md-sys-color-surface-container);
     border-left: 1px solid var(--md-sys-color-outline-variant);
     z-index: 100;
